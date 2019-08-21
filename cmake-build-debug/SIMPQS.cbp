@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="SIMPQS"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SIMQS_Worker">
+				<Option output="/home/andysnake/Desktop/tenPrj/cmake-build-debug/SIMQS_Worker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/Desktop/tenPrj/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Worker"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SIMQS_Worker/fast">
+				<Option output="/home/andysnake/Desktop/tenPrj/cmake-build-debug/SIMQS_Worker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/Desktop/tenPrj/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Worker/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SIMQS_Master">
+				<Option output="/home/andysnake/Desktop/tenPrj/cmake-build-debug/SIMQS_Master" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/Desktop/tenPrj/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Master"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SIMQS_Master/fast">
+				<Option output="/home/andysnake/Desktop/tenPrj/cmake-build-debug/SIMQS_Master" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/Desktop/tenPrj/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Master/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/CONFIGURATION.h">
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/SIMPQS.h">
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/master/masterMain.c">
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/gmp_patch.c">
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/gmp_patch.h">
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/utils.c">
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/utils.h">
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.c">
+			<Option target="SIMQS_Worker"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.h">
+			<Option target="SIMQS_Worker"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/workerMain.c">
+			<Option target="SIMQS_Worker"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

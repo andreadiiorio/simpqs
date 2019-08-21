@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+.././SIMPQS.h
+sys/types.h
+-
+gmp.h
+-
+
+/home/andysnake/Desktop/tenPrj/master/masterMain.c
+stdlib.h
+-
+stdio.h
+-
+
+/home/andysnake/Desktop/tenPrj/utils/gmp_patch.c
+stdlib.h
+-
+stdbool.h
+-
+gmp.h
+/home/andysnake/Desktop/tenPrj/utils/gmp.h
+
+/home/andysnake/Desktop/tenPrj/utils/utils.c
+SIMPQS.h
+/home/andysnake/Desktop/tenPrj/utils/SIMPQS.h
+utils.h
+/home/andysnake/Desktop/tenPrj/utils/utils.h
+stdio.h
+-
+
+/home/andysnake/Desktop/tenPrj/utils/utils.h
+

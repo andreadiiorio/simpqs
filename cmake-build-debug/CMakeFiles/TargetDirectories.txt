@@ -1,0 +1,4 @@
+/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir
+/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Master.dir
