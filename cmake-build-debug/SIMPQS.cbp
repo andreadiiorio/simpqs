@@ -141,6 +141,12 @@
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/factorizerQuick.c">
+			<Option target="SIMQS_Worker"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/factorizerQuick.h">
+			<Option target="SIMQS_Worker"/>
+		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/master/masterMain.c">
 			<Option target="SIMQS_Master"/>
 		</Unit>

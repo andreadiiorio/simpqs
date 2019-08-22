@@ -136,6 +136,33 @@ SIMQS_Master/fast:
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/build
 .PHONY : SIMQS_Master/fast
 
+factorizerQuick.o: factorizerQuick.c.o
+
+.PHONY : factorizerQuick.o
+
+# target to build an object file
+factorizerQuick.c.o:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorizerQuick.c.o
+.PHONY : factorizerQuick.c.o
+
+factorizerQuick.i: factorizerQuick.c.i
+
+.PHONY : factorizerQuick.i
+
+# target to preprocess a source file
+factorizerQuick.c.i:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorizerQuick.c.i
+.PHONY : factorizerQuick.c.i
+
+factorizerQuick.s: factorizerQuick.c.s
+
+.PHONY : factorizerQuick.s
+
+# target to generate assembly for a file
+factorizerQuick.c.s:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorizerQuick.c.s
+.PHONY : factorizerQuick.c.s
+
 master/masterMain.o: master/masterMain.c.o
 
 .PHONY : master/masterMain.o
@@ -287,6 +314,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... SIMQS_Worker"
 	@echo "... SIMQS_Master"
+	@echo "... factorizerQuick.o"
+	@echo "... factorizerQuick.i"
+	@echo "... factorizerQuick.s"
 	@echo "... master/masterMain.o"
 	@echo "... master/masterMain.i"
 	@echo "... master/masterMain.s"

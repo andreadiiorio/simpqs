@@ -6,11 +6,13 @@
 #include "SIMPQS.h"
 #include "utils/utils.h"
 #include "utils/gmp_patch.h"
+#include "sievingSIMPQS.h"
 
 mpz_t N;
+SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
 
 ///polinomial family coeff
-struct polynomial_actual ActualPolynomial;
+struct polynomial_actual* ActualPolynomial;
 struct Configuration Config;
 int genFactorBase(mpz_t B, struct Precomputes* precomputes){
     //generate factor base of prime up to B that make n quadratic residue mod p
@@ -56,18 +58,18 @@ int genSqrtN_modp(struct Precomputes *precomputation) {
 int genSievingJumps(struct Precomputes *precomputations,const mpz_t* b) {
     //GEN sol1,2_p for each p in FB for the sieving phase for actual polynomial
     //allocate enough space for sol1,2_p
-    if(!(precomputations->polPrecomputedData.sol1p=calloc(precomputations->factorbaseSize, sizeof(uint64_t)))){
+    if(!(precomputations->polPrecomputedData.sol1p=calloc(precomputations->factorbaseSize, sizeof(u_int64_t)))){
         fprintf(stderr,"calloc fail for sol1,p\n");
         return EXIT_FAILURE;
     }
-    if(!(precomputations->polPrecomputedData.sol2p=calloc(precomputations->factorbaseSize, sizeof(uint64_t)))){
+    if(!(precomputations->polPrecomputedData.sol2p=calloc(precomputations->factorbaseSize, sizeof(u_int64_t)))){
         fprintf(stderr,"calloc fail for sol2,p\n");
         return EXIT_FAILURE;
     }
     //pointers to p_th sieving jumps in precomputations
     mpz_t sol1_p_tmp, sol2_p_tmp,sub,add;
     mpz_inits(sol1_p_tmp,sol2_p_tmp,sub,add,NULL);
-    uint64_t p;
+    u_int64_t p;
     for(u_int64_t i=0;i<precomputations->factorbaseSize;i++){
         p = precomputations->factorbase[i];
         mpz_sub(sub,precomputations->sqrtN_mod_p[i],*b);    //tmem_p-b
@@ -130,8 +132,12 @@ void initializationVars(char** argv){
  N: 100000030925519250968982645360649 B: 17330 M: 7330
 
      */
-    //TODO MOCKED ARGV
+    if(!(ActualPolynomial=malloc(sizeof(struct polynomial_actual)))){
+        fprintf(stderr,"malloc failed for actual polynomio instantiation");
+        exit(EXIT_FAILURE);
+    }
 
+    //TODO MOCKED ARGV
     //char* _N=argv[1];
     //char* _M=argv[2];
     //char* _B=argv[3];
@@ -148,12 +154,12 @@ void initializationVars(char** argv){
     strToMpz(Config.M,_M)
     mpz_init(Config.B);
     strToMpz(Config.B,_B)
-    mpz_init(a);
-    strToMpz(a,_a)
-    mpz_init(b);
-    strToMpz(b,_b)
-    mpz_init(c);
-    strToMpz(c,_c)
+    mpz_init((*ActualPolynomial).a);
+    strToMpz((*ActualPolynomial).a,_a)
+    mpz_init((*ActualPolynomial).b);
+    strToMpz((*ActualPolynomial).b,_b)
+    mpz_init((*ActualPolynomial).c);
+    strToMpz((*ActualPolynomial).c,_c)
 }
 int preComputations(const mpz_t* a){
     //smart precomputations stored to reduce computational cost for each sieve iteration on each polynomial
@@ -182,7 +188,7 @@ int preComputations(const mpz_t* a){
     }
 
     //soln1,2_p GENERATION ---> SIEVING JUMPS
-    if(genSievingJumps(&Precomputations,&b)==EXIT_FAILURE){
+    if(genSievingJumps(&Precomputations,&(ActualPolynomial.b))==EXIT_FAILURE){
         fprintf(stderr,"error in Sieving jumps precomputations \n");
         return EXIT_FAILURE;
     }
@@ -197,8 +203,19 @@ int main(int argc, char** argv){
         //exit(EXIT_FAILURE);
     }
     initializationVars(argv);
-    preComputations(&a);
-    gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n",a,b,N);
+    preComputations(&((*ActualPolynomial).a));
+    gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n",ActualPolynomial->a,ActualPolynomial->b,N);
     printPrecomputations(&Precomputations,5);
-    //TODO SIEVE FORK
+
+    /// sieve array allocate
+    if(!(SieveArrayBlock=malloc(Config.ARRAY_IN_MEMORY_MAX_SIZE* sizeof(*SieveArrayBlock)))){   //TODO DEBUG ALLOCATED SIZE
+        fprintf(stderr,"sieve array block in mem malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
+    if(Sieve(&Config,&Precomputations,SieveArrayBlock)==EXIT_FAILURE){
+        fprintf(stderr,"sieve error \n");
+        exit(EXIT_FAILURE);
+    } //TODO ITERATE UNTIL MATRIX IS FILLED --> EVENTUALLY CHANGE POLYNOMIAL
+
+    //TODO MATRIX STAGE CALLBACK TO MASTER
 }

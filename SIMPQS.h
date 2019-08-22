@@ -32,10 +32,11 @@ struct Precomputes{ //precomputation for the SELF INIT of SIMPQS
 
 /// worker constants params
 struct Configuration {
-    mpz_t B;
-    mpz_t M;
+    u_int64_t B;        //FactorBase threshold
+    u_int64_t M;        //sieve array of size 2*M
     int s;          //num of coeff. a's factors TODO redundant
     mpz_t* a;       //sieving polynomial families identified by a coeff. passed from master
+    double LOG_SIEVING_THREASHOLD;   //threshold that above it an array element A(j)=log(p1)+..+log(pn) is likely to be Bsmooth
     /// memory configuration
     u_int64_t ARRAY_IN_MEMORY_MAX_SIZE;
     /// concurrency configuration
@@ -48,4 +49,5 @@ struct polynomial_actual{   //actual polynomial in sieving
     mpz_t b;
     mpz_t c;
 };
+extern struct polynomial_actual* ActualPolynomial;
 #endif //SIMPQS_SIMPQS_H

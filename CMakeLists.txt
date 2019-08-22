@@ -11,7 +11,7 @@ set(SOURCES
         utils/utils.c
         utils/gmp_patch.c
         utils/gmp_patch.h SIMPQS.h)
-add_executable(SIMQS_Worker ${SOURCES} worker/workerMain.c worker/sievingSIMPQS.c worker/sievingSIMPQS.h)
+add_executable(SIMQS_Worker ${SOURCES} worker/workerMain.c worker/sievingSIMPQS.c worker/sievingSIMPQS.h factorizerQuick.c factorizerQuick.h)
 add_executable(SIMQS_Master ${SOURCES} master/masterMain.c CONFIGURATION.h)
 
 set(CMAKE_C_FLAGS "-Wall -lgmp")
