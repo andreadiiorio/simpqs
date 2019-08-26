@@ -1,9 +1,8 @@
+#include "SIMPQS.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <gmp.h>
-#include <gmpxx.h>
 #include <CONFIGURATION.h>
-#include "SIMPQS.h"
 #include "utils/utils.h"
 #include "utils/gmp_patch.h"
 #include "sievingSIMPQS.h"
@@ -188,7 +187,7 @@ int preComputations(const mpz_t* a){
     }
 
     //soln1,2_p GENERATION ---> SIEVING JUMPS
-    if(genSievingJumps(&Precomputations,&(ActualPolynomial.b))==EXIT_FAILURE){
+    if(genSievingJumps(&Precomputations,&(ActualPolynomial->b))==EXIT_FAILURE){
         fprintf(stderr,"error in Sieving jumps precomputations \n");
         return EXIT_FAILURE;
     }

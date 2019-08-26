@@ -1,7 +1,6 @@
 CC=gcc
 #libs
-#CFLAGS=-pthread -lm -pthread -lpthread -lrt #-Wall     #TODO OLD
-CFLAGS=-lgmp
+CFLAGS=-lgmp -pthread -lm -Wall     #TODO OLD
 #add header in path of compilation
 CFLAGS+= -I .
 
@@ -34,11 +33,13 @@ TESTCONFIG_MACRO+= -D TEST_QUIET_PRINT		#DISABLE SOME PRINT DURING TEST
 ##basic source files vars
 MASTER=$(shell find master -iname "*.c" )
 WORKER=$(shell find worker -iname "*.c" )
-CFILES=$(shell find utils -iname "*.c" )
-HEADERS=SIMPQS.h
-HEADERS+=$(shell find utils -iname "*.h" )
-worker.o:  $(WORKER) $(CFILES) $(HEADERS)
-	$(CC) -o $@ $(WORKER) $(CFLAGS)  $(CFILES)
+CFILES_COMMON=$(shell find utils -iname "*.c" )
+CFILES_FACTORIZE=$(shell find factorization -iname "*.c" )
+HEADERS=$(shell find -iname "*.h" )
+testFactorize.o: $(CFILES_COMMON) $(CFILES_FACTORIZE) $(HEADERS)
+	$(CC) -o $@ $(CFLAGS)  $(CFILES_COMMON) $(CFILES_FACTORIZE)
+worker.o:  $(WORKER) $(CFILES_COMMON) $(CFILES_FACTORIZE) $(HEADERS)
+	$(CC) -o $@ $(WORKER) $(CFLAGS)  $(CFILES_COMMON) $(CFILES_FACTORIZE)
 print:
 	@echo ${TESTCONFIG_MACRO} $(_EXIT_SUCCESS)
 test: all

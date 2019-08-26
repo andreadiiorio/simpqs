@@ -5,6 +5,7 @@
 #ifndef SIMPQS_SIMPQS_H
 #define SIMPQS_SIMPQS_H
 
+#include <stdlib.h>
 #include <sys/types.h>
 #include <gmp.h>
 
@@ -42,6 +43,7 @@ struct Configuration {
     /// concurrency configuration
     int SIEVING_THREAD_NUM;
 };
+
 
 
 struct polynomial_actual{   //actual polynomial in sieving

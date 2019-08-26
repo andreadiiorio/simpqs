@@ -2,10 +2,13 @@
 #include <stdio.h>
 #include <utils/utils.h>
 #include "sievingSIMPQS.h"
-#include "factorizerQuick.h"
+#include "factorization/factorizerQuick.h"
 #include <math.h>
 #include <pthread.h>
 #include <string.h>
+#include <factorization/factorizerQuick.h>
+#include <stdbool.h>
+
 struct polynomial_actual* ActualPolynomial;
 
 void sieveSubArrayForPrime(SIEVE_ARRAY_BLOCK subArray, u_int64_t subArrayLen, u_int64_t prime,
@@ -13,6 +16,8 @@ void sieveSubArrayForPrime(SIEVE_ARRAY_BLOCK subArray, u_int64_t subArrayLen, u_
 
 
 
+int mergeLargePrimeRefs(struct ArrayEntry **foundedPartialRelation, u_int64_t foundedPartialRelNum,
+                        struct ArrayEntry **allPartialRelations, int *dinamicAllPartialRelSize,int cumulPartialRelNum) ;
 mpz_t tmp;
 #define OVERFLOW_CHECK_POLYNOMIAL   //perform overflow check
 #define PROBABLY_BSMOOTH_ARRAY_BLOCK 256
@@ -56,7 +61,6 @@ void polynomialValue(u_int64_t j,mpz_t outputVal,struct polynomial_actual polyno
 //// array block
 SIEVE_ARRAY_BLOCK SieveArrayBlock;
 
-int exit_failure=EXIT_FAILURE;
 
 int sieveArrayBlockAllocate(struct Configuration* config, SIEVE_ARRAY_BLOCK* sieveArrayBlockPntr){
     //allocate array block of blockSized returning error to caller
@@ -74,6 +78,7 @@ typedef struct sieverThreadArg{
     SIEVE_ARRAY_BLOCK arrayBlockPntr;
     struct Precomputes* precomputes;
     struct Configuration* configuration;
+    FACTORIZE_JOB_QUEUE* factorizeJobQueue;
     //TODO OTHER USEFUL POINTER DECOUPLINGIZERS
 
 } SIEVER_THREAD_ARG;
@@ -105,7 +110,7 @@ void* siever_thread_logic(void* arg){
     if(!(ProbablyBsmoothArrayEntries=malloc(PROBABLY_BSMOOTH_ARRAY_BLOCK * sizeof(struct ArrayEntry*)))
             || !(LargePrimeArrayEntries= malloc(PROBABLY_BSMOOTH_ARRAY_BLOCK * sizeof(struct ArrayEntry*)))){
         fprintf(stderr,"out of mem in probblyBsmoothlocations array of indexes \n");
-        return (void*) &exit_failure;
+        return (void*) EXIT_FAILURE;
     }
 
 
@@ -140,12 +145,8 @@ void* siever_thread_logic(void* arg){
     int dynamicSizeLikellyBsmooth = PROBABLY_BSMOOTH_ARRAY_BLOCK;
     for(i = 0; i < sieverArg.arrayShareSize; i++){
         if(subArray[i].logSieveCumulative>sieverArg.configuration->LOG_SIEVING_THREASHOLD){
-            if(k>dynamicSizeLikellyBsmooth){        //likelly Bsmooth indexes needed a new block reallocation
-                dynamicSizeLikellyBsmooth+=PROBABLY_BSMOOTH_ARRAY_BLOCK;
-                if(!realloc(ProbablyBsmoothArrayEntries, dynamicSizeLikellyBsmooth * (sizeof(struct ArrayEntry**)))){
-                    fprintf(stderr,"out of mem in probblyBsmoothlocations array of indexes realloc \n");
-                    free(ProbablyBsmoothArrayEntries);
-                    return (void*) &exit_failure;
+            REALLOC_WRAP(k,dynamicSizeLikellyBsmooth,ProbablyBsmoothArrayEntries,PROBABLY_BSMOOTH_ARRAY_BLOCK)
+                    return (void*) EXIT_FAILURE;
                 }
             }
             ProbablyBsmoothArrayEntries[k++]=&(subArray[i]);         //NOTE LIKELLY B SMOOTH ARRAY ELEMENT INDEX
@@ -154,24 +155,51 @@ void* siever_thread_logic(void* arg){
     ProbablyBsmoothArrayEntries[k++]=NULL;              //set end dynamically allocated array end
 
     /// try factorizing (probably) BSmooth array  elements
+    struct ArrayEntryList *newFactorizeJob;
     printf("\n--- trial division for Bsmoothness check ---\n");
-    //TODO *** ARRAY ELEMENT COMPUTATION ULTRA LAZY HERE ONLY ON LIKELLY BSMOOTH ELEMENTS!!!
+    int errCode=0;
     for(u_int64_t w=0; ProbablyBsmoothArrayEntries[w] != NULL; w++) {
+        //TODO *** ARRAY ELEMENT COMPUTATION ULTRA LAZY HERE ONLY ON LIKELLY BSMOOTH ELEMENTS!!!
         bsmoothToFactPntr = ProbablyBsmoothArrayEntries[w];
-        factorizeTrialDivide(*bsmoothToFactPntr->element);
+        //// sync append job to job queue
+        //todo block append to ammortize queue lock overhead
+        if(!(newFactorizeJob = malloc(sizeof(*newFactorizeJob)))) {
+            fprintf(stderr, "newJob malloc errd\n");
+            return (void *) EXIT_FAILURE;                    // TODO CHECK FREE NEEDED WITHOUT GOTO FOR BETTER GCC OPTIMIZATION
+        }
+        newFactorizeJob->arrayEntry=bsmoothToFactPntr;          //set job data
+        if((errCode= pthread_mutex_lock(&(sieverArg.factorizeJobQueue->mutex)))) {
+            fprintf(stderr, "mutex lock err\n err :%s\n", strerror(errCode));
+            return (void *) EXIT_FAILURE;                    // TODO CHECK FREE NEEDED WITHOUT GOTO FOR BETTER GCC OPTIMIZATION
+        }
+        appendJob(sieverArg.factorizeJobQueue,newFactorizeJob); //// safely pop a job from job queue
+        if((errCode= pthread_mutex_unlock(&(sieverArg.factorizeJobQueue->mutex)))) {
+            fprintf(stderr, "mutex lock err\n err :%s\n", strerror(errCode));
+            return (void *) EXIT_FAILURE;                    // TODO CHECK FREE NEEDED WITHOUT GOTO FOR BETTER GCC OPTIMIZATION
+        }
     }   //here all job has been correctly enqueued
+
+    //// set end of queue for managers termination
+    if((errCode= pthread_mutex_lock(&(sieverArg.factorizeJobQueue->mutex)))) {
+        fprintf(stderr, "mutex lock err\n err :%s\n", strerror(errCode));
+        return (void *) EXIT_FAILURE;                    // TODO CHECK FREE NEEDED WITHOUT GOTO FOR BETTER GCC OPTIMIZATION
+    }
+    sieverArg.factorizeJobQueue->closedQueue=true;
+    if((errCode= pthread_mutex_unlock(&(sieverArg.factorizeJobQueue->mutex)))) {
+        fprintf(stderr, "mutex lock err\n err :%s\n", strerror(errCode));
+        return (void *) EXIT_FAILURE;                    // TODO CHECK FREE NEEDED WITHOUT GOTO FOR BETTER GCC OPTIMIZATION
+    }
+
     //todo lock until job queue empty => all factorized
     for(u_int64_t w=0; ProbablyBsmoothArrayEntries[w] != NULL; w++) {
-        bsmoothToFactPntr = ProbablyBsmoothArrayEntries[w];
         //TODO CHECK IF FACTORIZE RESULT WRITTEN IN PLACE IS EITHER:
         // 1)useless entry => skip
         // 2) BSmooth entry => matrix row compute &store -> localMatrixRow list append -> later aggregated
         // 3) "partial" BSmooth relation=> localLargePrimes list append -> later aggregated
     }
 
-    }
     ///return to main thread BSmooth largePrime locations easily discriminable
-    SIEVER_THREAD_RETURN* sieveOutput=malloc(sizeof(SIEVER_THREAD_RETURN));
+    SIEVER_THREAD_RETURN* sieveOutput=(SIEVER_THREAD_RETURN*) malloc(sizeof(SIEVER_THREAD_RETURN));
     sieveOutput->largePrimesEntries=LargePrimeArrayEntries;
     //TODO sieveOutput->matrixRows=rows
     return (void*) sieveOutput;
@@ -247,11 +275,11 @@ int Sieve(struct Configuration *config, struct Precomputes *precomputes, SIEVE_A
                 result= EXIT_FAILURE;
                 goto exit;
             }
-            if(mergeLargePrimeRefs((*retvalGenThread).largePrimesEntries, retvalGenThread->largePrimesNum, largePrimesAll,
-                                &largePrimesAllCumulNum)==EXIT_FAILURE){
-                result= EXIT_FAILURE;
-                goto exit;
-            }
+//            if(mergeLargePrimeRefs((*retvalGenThread).largePrimesEntries, retvalGenThread->largePrimesNum, largePrimesAll,
+//                                &largePrimesAllCumulNum)==EXIT_FAILURE){
+//                result= EXIT_FAILURE;
+//                goto exit;
+//            }
 
                                 ;     //unificate founded partial relation for later aggreagation
         }
@@ -265,16 +293,10 @@ int Sieve(struct Configuration *config, struct Precomputes *precomputes, SIEVE_A
     return result;
 }
 
-int mergeLargePrimeRefs(struct ArrayEntry **foundedPartialRelation, u_int64_t foundedPartialRelNum,
-                        struct ArrayEntry **allPartialRelations, int *dinamicAllPartialRelSize,int cumulPartialRelNum) ;
     int mergeLargePrimeRefs(struct ArrayEntry **foundedPartialRelation, u_int64_t foundedPartialRelNum,
                          struct ArrayEntry **allPartialRelations, int *dinamicAllPartialRelSize,int cumulPartialRelNum) {
     //TODO CHECK PERF WITH HASHMAP
-    if(cumulPartialRelNum+foundedPartialRelNum>*dinamicAllPartialRelSize){
-        ///large primes all resize up needed
-        *dinamicAllPartialRelSize+=PARTIAL_RELATIONS_BLOCK;
-        if(!realloc(allPartialRelations,*dinamicAllPartialRelSize * sizeof(*allPartialRelations))){
-            fprintf(stderr,"reallocation of partial relation cumulative fail \n");
+    REALLOC_WRAP(cumulPartialRelNum+foundedPartialRelNum,(*dinamicAllPartialRelSize),allPartialRelations,PARTIAL_RELATIONS_BLOCK)
             return EXIT_FAILURE;
         }
     }

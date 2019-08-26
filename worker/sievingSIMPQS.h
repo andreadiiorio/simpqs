@@ -3,6 +3,12 @@
 
 #include "SIMPQS.h"
 #include <mpfr.h>
+#include <string.h>
+
+typedef struct factor{
+    u_int64_t factor;
+    int         exp;
+}FACTOR;
 struct ArrayEntry{
     int64_t j;
     mpz_t element;                  //f(j)
@@ -11,9 +17,10 @@ struct ArrayEntry{
     double logSieveCumulative;      //space saver, faster comparison,
 //    u_int64_t logSieveCumulative;   //rounding  double version
 
-    u_int64_t* factors;              //non NULL element has logSieveCumulative above threashold
+    FACTOR* factors;              //non NULL element has logSieveCumulative above threashold
+    u_int factorsNum;
     ///large prime
-    mpz_t* largePrime;              //not NULL if element has 1! Large prime in his factorization
+    mpz_t largePrime;              //not NULL if element has 1! Large prime in his factorization
     //TODO DISCRIMINATE ARRAYENTRIES:
     //  factors && largePrime == NULL ==> useless entry ==> skippable
     //  largePrime !=NULL (=> factors not NULL) ==> largePrime to accopiate

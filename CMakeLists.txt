@@ -6,15 +6,27 @@ set(CMAKE_C_STANDARD 11)
 #include_directories(pari)
 #add_executable(PariTrys ecm_basic.gp.c ../master/masterMain.c ../worker/workerMain.c ../utils.c ../utils.h)
 include_directories(.)
-set(SOURCES
+set(SOURCES_COMMON
         utils/utils.h
         utils/utils.c
         utils/gmp_patch.c
-        utils/gmp_patch.h SIMPQS.h)
-add_executable(SIMQS_Worker ${SOURCES} worker/workerMain.c worker/sievingSIMPQS.c worker/sievingSIMPQS.h factorizerQuick.c factorizerQuick.h)
-add_executable(SIMQS_Master ${SOURCES} master/masterMain.c CONFIGURATION.h)
+        utils/gmp_patch.h
+        SIMPQS.h
+        CONFIGURATION.h)
+set(SOURCES_WORKER
+        factorization/factorizerQuick.c
+        factorization/factorizerQuick.h
+        worker/sievingSIMPQS.c
+        worker/sievingSIMPQS.h
+        )
+set(SOURCES_MASTER
+        master/masterMain.c
+        )
 
-set(CMAKE_C_FLAGS "-Wall -lgmp")
+add_executable(SIMQS_Worker ${SOURCES_COMMON} ${SOURCES_WORKER})
+add_executable(SIMQS_Master ${SOURCES_COMMON} ${SOURCES_MASTER})
+
+set(CMAKE_C_FLAGS "-Wall -lgmp -pthread -lm -ggdb")
 #target_link_libraries(PariTrys /pari)
 #include(pari/bin/include/pari/pari.h)
 

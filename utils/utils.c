@@ -2,13 +2,13 @@
 // Created by andysnake on 19/08/19.
 //
 
-#include "SIMPQS.h"
 #include "utils.h"
-#include <stdio.h>
 
 
 #define DIGITNUM_PRINT 5
-void printPrecomputations(struct Precomputes* precomputes,int blockPrint){
+#define PRIMES_LIST_WORD_SIZE sizeof(int)
+
+void printPrecomputations(struct Precomputes* precomputes, int blockPrint){
     printf("\n precomputations \n");
     __uint64_t sizeFB=precomputes->factorbaseSize;
     printf("---factor Base p_i of %lu primes for witch legandre (n/p)=1---\n",sizeFB);
@@ -48,4 +48,98 @@ void printPrecomputations(struct Precomputes* precomputes,int blockPrint){
     //TODO
 //    precomputes->polPrecomputedData.B_ainv_2Bj_p
 //    precomputes->polPrecomputedData.B_l
+}
+#define FACTOR_BASE_BLOCK_REALLOC_N 1024
+
+DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
+    DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0};
+    //read primes list in file
+    u_int64_t *result;
+    FILE* primesListPrecomputed=fopen(primesListPath,"r");
+    if(!primesListPrecomputed){
+        perror("fopen failed");
+        return outVect;
+    }
+    u_int64_t factorBaseDynamicN=FACTOR_BASE_BLOCK_REALLOC_N;
+    u_int64_t* primes=malloc(factorBaseDynamicN * sizeof(*primes)); //factor base of primes up to bound that make N quadratic residue
+    if(!primes){
+        fprintf(stderr,"factor base malloc error\n");
+        return outVect;
+    }
+    u_int64_t prime=2;
+    u_int64_t primeIndx=0;
+    primes[primeIndx++] = prime;              //TODO PATCH PRIME LIST MISSING 2
+    size_t rd;
+    while (prime<smoothnessBound) {
+        while ((rd = fread(&prime, PRIMES_LIST_WORD_SIZE, 1, primesListPrecomputed)) == 1) {
+            /// evaluate reallocation
+            REALLOC_WRAP(primeIndx,factorBaseDynamicN,primes,FACTOR_BASE_BLOCK_REALLOC_N)
+                    result = NULL;
+                    goto exit;
+                }
+            }
+            primes[primeIndx++] = prime;              //save prime
+        }
+        if (ferror(primesListPrecomputed)) {
+            fprintf(stderr, "fread error occured factorbase gen\t rd:%lu \n", rd);
+            free(primes);
+            result = NULL;
+            goto exit;
+        }
+    }
+#ifdef FINAL_RESIZE
+    ////final realloc of primes list for actual space needed
+    if(!(primes=realloc(primes,primeIndx* sizeof(*primes)))){
+        fprintf(stderr,"final realloc failed on factorbase\n");
+        free(primes);
+        return outVect;
+    }
+#endif
+    result=primes;
+
+    exit:
+    fclose(primesListPrecomputed);
+    outVect.vectorSize=primeIndx;
+    outVect.pntr=result;
+    return outVect;
+}
+
+DYNAMIC_VECTOR ReadFactorBase(char *primesListPath, u_int64_t smoothnessBound, mpz_t N){
+    DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0};
+    size_t dynamicFactorBaseSize = FACTOR_BASE_BLOCK_REALLOC_N;
+    u_int64_t* factorBase=malloc(sizeof(*factorBase) * dynamicFactorBaseSize);
+    u_int64_t  factorBaseIndx=0;
+    DYNAMIC_VECTOR primes=ReadPrimes(primesListPath,smoothnessBound);
+    if(!(primes.pntr))
+        return outVect;
+    mpz_t primeMpz;
+    u_int64_t prime;
+    mpz_init(primeMpz);
+    u_int64_t* primesList=(u_int64_t *)primes.pntr;
+    for(u_int64_t i=0;i<primes.vectorSize;i++){
+        prime=primesList[i];
+        mpz_set_ui(primeMpz,prime);
+        if(mpz_legendre(N,primeMpz)==1) {            //prime ok for FactorBase
+            REALLOC_WRAP(factorBaseIndx,dynamicFactorBaseSize,factorBase,FACTOR_BASE_BLOCK_REALLOC_N)
+                    free(primes.pntr);
+                    return outVect;
+                }
+            }
+        ///set prime in factor base
+        factorBase[factorBaseIndx++]=prime;
+        }
+    }
+#ifdef FINAL_RESIZE
+    ///final resize for actual space needed
+    if(!(factorBase=realloc(factorBase,factorBaseIndx* sizeof(*factorBase)))){
+        fprintf(stderr,"final realloc failed on factorbase\n");
+        free(factorBase);
+        free(primes.pntr);
+        return outVect;
+    }
+#endif
+    free(primes.pntr);
+    outVect.pntr=(void*)factorBase;
+    outVect.vectorSize=factorBaseIndx;
+    return outVect;
 }

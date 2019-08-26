@@ -13,22 +13,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a71802d-1265-412d-81ca-3bc46e34e922" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/factorizerQuick.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/factorizerQuick.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONFIGURATION.h" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIGURATION.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SIMPQS.h" beforeDir="false" afterPath="$PROJECT_DIR$/SIMPQS.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/build.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/flags.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/SIMPQS.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/SIMPQS.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/factorizerQuick.c" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/factorizerQuick.h" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.c" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worker/sievingSIMPQS.c" beforeDir="false" afterPath="$PROJECT_DIR$/worker/sievingSIMPQS.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worker/sievingSIMPQS.h" beforeDir="false" afterPath="$PROJECT_DIR$/worker/sievingSIMPQS.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worker/workerMain.c" beforeDir="false" afterPath="$PROJECT_DIR$/worker/workerMain.c" afterDir="false" />
@@ -76,9 +83,6 @@
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="OCResolveContextSettings">
-    <option name="configuration" value="0-SIMQS_Worker" />
-  </component>
   <component name="ProjectId" id="1Pdd2uEWZHuz89ocbhSE6QCT17M" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
@@ -87,17 +91,19 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="terminal" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/factorization" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/parigpScriptAny" />
       <recent name="$PROJECT_DIR$/utils" />
       <recent name="$PROJECT_DIR$/logs" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -112,7 +118,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.SIMQS_Master">
+  <component name="RunManager" selected="CMake Application.SIMQS_Worker">
     <configuration name="SIMQS_Master" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="SIMQS_Master" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="SIMQS_Master">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -146,8 +152,26 @@
       <workItem from="1566294671375" duration="3797000" />
       <workItem from="1566307741242" duration="9344000" />
       <workItem from="1566379197238" duration="7330000" />
-      <workItem from="1566387671395" duration="25818000" />
+      <workItem from="1566387671395" duration="26064000" />
+      <workItem from="1566548938531" duration="21316000" />
+      <workItem from="1566580985421" duration="1892000" />
+      <workItem from="1566675176335" duration="3996000" />
+      <workItem from="1566745156068" duration="318000" />
+      <workItem from="1566746480750" duration="11529000" />
+      <workItem from="1566761681466" duration="11000" />
+      <workItem from="1566762260982" duration="4067000" />
+      <workItem from="1566766346003" duration="7011000" />
+      <workItem from="1566773376763" duration="825000" />
+      <workItem from="1566807054805" duration="17699000" />
     </task>
+    <task id="LOCAL-00001" summary="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)">
+      <created>1566507153975</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1566507153975</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,14 +192,39 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/old/pari" />
+    </ignored-roots>
+    <MESSAGE value="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)" />
+    <option name="LAST_COMMIT_MESSAGE" value="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/worker/workerMain.c</url>
-          <line>70</line>
+          <line>69</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/factorization/factorizerQuick.c</url>
+          <line>210</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/worker/sievingSIMPQS.c</url>
+          <line>298</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/factorization/factorizerQuick.c</url>
+          <line>188</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/factorization/factorizerQuick.c</url>
+          <line>272</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

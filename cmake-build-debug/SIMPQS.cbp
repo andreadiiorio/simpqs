@@ -135,16 +135,17 @@
 			</Target>
 		</Build>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/CONFIGURATION.h">
+			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/SIMPQS.h">
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
-		<Unit filename="/home/andysnake/Desktop/tenPrj/factorizerQuick.c">
+		<Unit filename="/home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c">
 			<Option target="SIMQS_Worker"/>
 		</Unit>
-		<Unit filename="/home/andysnake/Desktop/tenPrj/factorizerQuick.h">
+		<Unit filename="/home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.h">
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/master/masterMain.c">
@@ -170,9 +171,6 @@
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.h">
-			<Option target="SIMQS_Worker"/>
-		</Unit>
-		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/workerMain.c">
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/CMakeLists.txt">

@@ -1,1 +1,1 @@
-/usr/bin/cc -Wall -lgmp -g   CMakeFiles/SIMQS_Master.dir/utils/utils.c.o CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o  -o SIMQS_Master 
+/usr/bin/cc -Wall -lgmp -pthread -lm -ggdb -g   CMakeFiles/SIMQS_Master.dir/utils/utils.c.o CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o  -o SIMQS_Master 
