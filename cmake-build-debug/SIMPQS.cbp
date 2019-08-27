@@ -17,6 +17,16 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="rebuild_cache">
 				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
 				<Option type="4"/>
@@ -27,11 +37,49 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="edit_cache">
+			<Target title="TRIAL_DIVISION_MAIN_TEST">
+				<Option output="/home/andysnake/Desktop/tenPrj/cmake-build-debug/TRIAL_DIVISION_MAIN_TEST" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
-				<Option type="4"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/Desktop/tenPrj/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL_DIVISION_MAIN_TEST"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="TRIAL_DIVISION_MAIN_TEST/fast">
+				<Option output="/home/andysnake/Desktop/tenPrj/cmake-build-debug/TRIAL_DIVISION_MAIN_TEST" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/Desktop/tenPrj/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/Desktop/tenPrj/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL_DIVISION_MAIN_TEST/fast"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/Desktop/tenPrj/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -135,35 +183,43 @@
 			</Target>
 		</Build>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/CONFIGURATION.h">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/SIMPQS.h">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.h">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/master/masterMain.c">
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/gmp_patch.c">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/gmp_patch.h">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/utils.c">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/utils.h">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>

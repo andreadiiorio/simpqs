@@ -65,6 +65,43 @@ CMAKE_SOURCE_DIR = /home/andysnake/Desktop/tenPrj
 CMAKE_BINARY_DIR = /home/andysnake/Desktop/tenPrj/cmake-build-debug
 
 #=============================================================================
+# Target rules for target CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir
+
+# All Build rule for target.
+CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/all:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/depend
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=10,11,12,13 "Built target TRIAL_DIVISION_MAIN_TEST"
+.PHONY : CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/all
+
+# Include target in all.
+all: CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/rule
+
+# Convenience name for target.
+TRIAL_DIVISION_MAIN_TEST: CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/rule
+
+.PHONY : TRIAL_DIVISION_MAIN_TEST
+
+# clean rule for target.
+CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/clean:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/clean
+.PHONY : CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/SIMQS_Worker.dir
 
 # All Build rule for target.

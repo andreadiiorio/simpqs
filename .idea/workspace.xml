@@ -3,6 +3,7 @@
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="SIMPQS" targetName="SIMQS_Master" />
+      <config projectName="SIMPQS" targetName="TRIAL_DIVISION_MAIN_TEST" />
       <config projectName="SIMPQS" targetName="SIMQS_Worker" />
     </generated>
   </component>
@@ -12,33 +13,25 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a71802d-1265-412d-81ca-3bc46e34e922" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="7a71802d-1265-412d-81ca-3bc46e34e922" name="Default Changelist" comment="factorization trial divide concurrent test case up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CONFIGURATION.h" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIGURATION.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SIMPQS.h" beforeDir="false" afterPath="$PROJECT_DIR$/SIMPQS.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/flags.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/build.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/cmake_clean.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/depend.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/flags.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/SIMPQS.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/SIMPQS.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/factorizerQuick.c" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/factorizerQuick.h" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.c" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/factorization/factorizerQuick.c" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/factorization/factorizerQuick.h" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worker/sievingSIMPQS.c" beforeDir="false" afterPath="$PROJECT_DIR$/worker/sievingSIMPQS.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worker/sievingSIMPQS.h" beforeDir="false" afterPath="$PROJECT_DIR$/worker/sievingSIMPQS.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worker/workerMain.c" beforeDir="false" afterPath="$PROJECT_DIR$/worker/workerMain.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -73,6 +66,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="andysnake96 &lt;andrea.diiorio.sniper@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IgnoredFileRootStore">
@@ -118,7 +116,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.SIMQS_Worker">
+  <component name="RunManager" selected="CMake Application.TRIAL_DIVISION_MAIN_TEST">
     <configuration name="SIMQS_Master" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="SIMQS_Master" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="SIMQS_Master">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -129,9 +127,21 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TRIAL_DIVISION_MAIN_TEST" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="TRIAL_DIVISION_MAIN_TEST" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="TRIAL_DIVISION_MAIN_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="trialFactorizeTestMain" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-D JOBS_ON_STACK" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="TRIAL_DIVISION_MAIN_TEST" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="TRIAL_DIVISION_MAIN_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="CMake Application.SIMQS_Master" />
       <item itemvalue="CMake Application.SIMQS_Worker" />
+      <item itemvalue="CMake Application.TRIAL_DIVISION_MAIN_TEST" />
+      <item itemvalue="CMake Application.trialFactorizeTestMain" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -162,7 +172,8 @@
       <workItem from="1566762260982" duration="4067000" />
       <workItem from="1566766346003" duration="7011000" />
       <workItem from="1566773376763" duration="825000" />
-      <workItem from="1566807054805" duration="17699000" />
+      <workItem from="1566807054805" duration="22125000" />
+      <workItem from="1566898800956" duration="3683000" />
     </task>
     <task id="LOCAL-00001" summary="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)">
       <created>1566507153975</created>
@@ -171,7 +182,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566507153975</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="trial divide thread group pool extra concurrent seems to work&#10;-&amp;.$-&#10;:)">
+      <created>1566829021926</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1566829021926</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,7 +214,8 @@
       <path value="$PROJECT_DIR$/old/pari" />
     </ignored-roots>
     <MESSAGE value="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)" />
-    <option name="LAST_COMMIT_MESSAGE" value="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)" />
+    <MESSAGE value="trial divide thread group pool extra concurrent seems to work&#10;-&amp;.$-&#10;:)" />
+    <option name="LAST_COMMIT_MESSAGE" value="trial divide thread group pool extra concurrent seems to work&#10;-&amp;.$-&#10;:)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -208,7 +227,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/factorization/factorizerQuick.c</url>
-          <line>210</line>
+          <line>225</line>
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -218,13 +237,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/factorization/factorizerQuick.c</url>
-          <line>188</line>
+          <line>203</line>
           <option name="timeStamp" value="75" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/factorization/factorizerQuick.c</url>
-          <line>272</line>
-          <option name="timeStamp" value="78" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

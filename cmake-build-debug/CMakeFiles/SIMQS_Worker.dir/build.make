@@ -83,22 +83,9 @@ CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/utils/gmp_patch.c -o CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.s
 
-CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: CMakeFiles/SIMQS_Worker.dir/flags.make
-CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: ../factorization/factorizerQuick.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o   -c /home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c
-
-CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c > CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i
-
-CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c -o CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s
-
 CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o: CMakeFiles/SIMQS_Worker.dir/flags.make
 CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o: ../worker/sievingSIMPQS.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o   -c /home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.c
 
 CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.i: cmake_force
@@ -109,20 +96,33 @@ CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.c -o CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.s
 
+CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: CMakeFiles/SIMQS_Worker.dir/flags.make
+CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: ../factorization/factorizerQuick.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o   -c /home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c
+
+CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c > CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i
+
+CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c -o CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s
+
 # Object files for target SIMQS_Worker
 SIMQS_Worker_OBJECTS = \
 "CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o" \
 "CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o" \
-"CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o" \
-"CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
+"CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o" \
+"CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
 
 # External object files for target SIMQS_Worker
 SIMQS_Worker_EXTERNAL_OBJECTS =
 
 SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o
 SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o
-SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o
 SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o
+SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o
 SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/build.make
 SIMQS_Worker: CMakeFiles/SIMQS_Worker.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable SIMQS_Worker"

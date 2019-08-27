@@ -29,7 +29,7 @@ typedef struct FactorizeJobQueue{
 } FACTORIZE_JOB_QUEUE;
 void appendJob(FACTORIZE_JOB_QUEUE *jobQueue,struct ArrayEntryList* newJob);
 struct ArrayEntry* popFirstJob(FACTORIZE_JOB_QUEUE *jobQueue);
-void appendBlockJobs(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList* firstJobsinBlock,struct ArrayEntryList* lastJobInBlockPntr) ;
+void appendBlockJobs(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList* firstJobsinBlock, int block_size) ;
 FACTORIZE_JOB_QUEUE* initFactorizeJobQueue(u_int64_t B,DYNAMIC_VECTOR primes);
 
 struct factorizerArgs{

@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o"
   "CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o"
-  "CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
   "CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
+  "CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
   "SIMQS_Worker.pdb"
   "SIMQS_Worker"
 )

@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/andysnake/Desktop/tenPrj/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named TRIAL_DIVISION_MAIN_TEST
+
+# Build rule for target.
+TRIAL_DIVISION_MAIN_TEST: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 TRIAL_DIVISION_MAIN_TEST
+.PHONY : TRIAL_DIVISION_MAIN_TEST
+
+# fast build rule for target.
+TRIAL_DIVISION_MAIN_TEST/fast:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build
+.PHONY : TRIAL_DIVISION_MAIN_TEST/fast
+
+#=============================================================================
 # Target rules for targets named SIMQS_Worker
 
 # Build rule for target.
@@ -142,6 +155,7 @@ factorization/factorizerQuick.o: factorization/factorizerQuick.c.o
 
 # target to build an object file
 factorization/factorizerQuick.c.o:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o
 .PHONY : factorization/factorizerQuick.c.o
 
@@ -151,6 +165,7 @@ factorization/factorizerQuick.i: factorization/factorizerQuick.c.i
 
 # target to preprocess a source file
 factorization/factorizerQuick.c.i:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i
 .PHONY : factorization/factorizerQuick.c.i
 
@@ -160,6 +175,7 @@ factorization/factorizerQuick.s: factorization/factorizerQuick.c.s
 
 # target to generate assembly for a file
 factorization/factorizerQuick.c.s:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s
 .PHONY : factorization/factorizerQuick.c.s
 
@@ -196,6 +212,7 @@ utils/gmp_patch.o: utils/gmp_patch.c.o
 
 # target to build an object file
 utils/gmp_patch.c.o:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o
 .PHONY : utils/gmp_patch.c.o
@@ -206,6 +223,7 @@ utils/gmp_patch.i: utils/gmp_patch.c.i
 
 # target to preprocess a source file
 utils/gmp_patch.c.i:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.i
 .PHONY : utils/gmp_patch.c.i
@@ -216,6 +234,7 @@ utils/gmp_patch.s: utils/gmp_patch.c.s
 
 # target to generate assembly for a file
 utils/gmp_patch.c.s:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s
 .PHONY : utils/gmp_patch.c.s
@@ -226,6 +245,7 @@ utils/utils.o: utils/utils.c.o
 
 # target to build an object file
 utils/utils.c.o:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.o
 .PHONY : utils/utils.c.o
@@ -236,6 +256,7 @@ utils/utils.i: utils/utils.c.i
 
 # target to preprocess a source file
 utils/utils.c.i:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.i
 .PHONY : utils/utils.c.i
@@ -246,6 +267,7 @@ utils/utils.s: utils/utils.c.s
 
 # target to generate assembly for a file
 utils/utils.c.s:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.s
 .PHONY : utils/utils.c.s
@@ -283,8 +305,9 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... rebuild_cache"
+	@echo "... TRIAL_DIVISION_MAIN_TEST"
 	@echo "... SIMQS_Worker"
 	@echo "... SIMQS_Master"
 	@echo "... factorization/factorizerQuick.o"

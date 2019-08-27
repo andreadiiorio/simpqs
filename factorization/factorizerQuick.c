@@ -1,12 +1,11 @@
 #include <unistd.h>
 #include "factorizerQuick.h"
 
-#define QUEUE_FILLING_POLLING_USLEEP 100
-#define DEBUG
-#define DEBUG_MANAGER
-#define LARGE_PRIME_THREASHOLD_FACTOR 20
+//TODO DEBUG MACRO
 #define JOBS_ON_STACK                       //quick factorization module debug putting jobs on stack --> no free
-
+#define TEST_CUNCURRENT_FACTORIZATION
+#define MAX_PRIMES_TRY_PER_ITERATION 100000
+#define TIMEBOXED_FACTORIZATION_ITERATION_POLLING
 mpz_t LARGE_PRIME_THREASHOLD;
 
 void appendJob(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList* newJob) {
@@ -19,16 +18,16 @@ void appendJob(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList* newJob) {
     jobQueue->queueTail->nextArrayEntry=newJob;           //append new job
     jobQueue->queueTail=newJob;
 }
-void appendBlockJobs(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList* firstJobsinBlock,struct ArrayEntryList* lastJobInBlockPntr) {
-
-    lastJobInBlockPntr->nextArrayEntry=NULL;
+void appendBlockJobs(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList* firstJobsinBlock, int block_size) {
+    struct ArrayEntryList* lastBlockEntry=firstJobsinBlock+block_size-1;
+    lastBlockEntry->nextArrayEntry=NULL;
     if(!jobQueue->queueHead) {          ////empty list
         jobQueue->queueHead=firstJobsinBlock;
-        jobQueue->queueTail=lastJobInBlockPntr;
+        jobQueue->queueTail=lastBlockEntry;
         return;
     }
     jobQueue->queueTail->nextArrayEntry=firstJobsinBlock;           //append new job
-    jobQueue->queueTail=firstJobsinBlock;
+    jobQueue->queueTail=lastBlockEntry;
 }
 struct ArrayEntry* popFirstJob(FACTORIZE_JOB_QUEUE *jobQueue) {
     ///pop first job
@@ -118,25 +117,42 @@ void* FactorizeTrialDivide(void* args) {
 #endif
         /////////// factorize group end condition <-- setted by manager on queue end and closed
         if (*(factorizerArgs->exitCondition)) {   //exit cond from manager
+#ifdef DEBUG
             printf("exiting from concurrent factorization \t thread:%lu\n", pthread_self());
-            return (void *) EXIT_SUCCESS;
+#endif
+            break;
         }
 
         ////primes for trial divide worker share will fetched from precomputed list distribuiting fairly primes share by primeIndx
         u_int64_t primeIndx, prime,primeTmp;                    //index of prime for trial divide and actual prime
-        u_int64_t j = 0;                                       //counter of primes already tried to divide N
+        u_int64_t j;                                       //counter of primes already tried to divide N
         int factorsFoundedIteration = 0;                       //num of founded factors during this factorization iteration
+
+        /*
+         * factorize tries may continue for a fiexed time or until an ammount of prime has been tried to divide N
+         */
+#ifdef TIMEBOXED_FACTORIZATION_ITERATION_POLLING
         STARTSTOPWACHT(STOPWATCH_START_VAR)                    //start timer for timed factorization
+#endif
         ////search for N factors in thread primes subset until K factors founded or timeout
-        for (primeIndx = factorizerID; primeIndx < factorizerArgs->primesNum && factorsFoundedIteration < FACTORS_ASYNC_PER_ITERATION; //FOR EXIT CONDs
+        for (primeIndx = factorizerID,j=0;  //for initializations
+                    ////for loop conditions selected with a macro
+                    (primeIndx < factorizerArgs->primesNum && factorsFoundedIteration < FACTORS_ASYNC_PER_ITERATION)
+#ifndef TIMEBOXED_FACTORIZATION_ITERATION_POLLING
+                                            && (++j)<MAX_PRIMES_TRY_PER_ITERATION;
+#else
+                                                                                 ;
+#endif
                                                                             primeIndx += FACTORIZER_THREAD_GROUP_SIZE) {
             prime = factorizerArgs->primes[primeIndx];
+#ifdef TIMEBOXED_FACTORIZATION_ITERATION_POLLING
             if (++j % TIMEOUT_CHECK_INTERVAL_FACTORIZE_WORKER == 0) {      //timed factorization iterations
                 STOPWACHT_STOP(STOPWATCH_START_VAR, STOPWATCH_STOP_VAR, STOPWATCH_DELTA_VAR)
                 if (timercmp(&STOPWATCH_DELTA_VAR, &FACTORIZE_BARRIER_SYNC_TIMEOUT, >)) {
                     break;                                       //factorize job has timeout
                 }
             }
+#endif
             ///actual trial divide for fetched prime in worker primes subset
             exp = 0; primeTmp = prime; int u = 0;
             while ((u = mpz_divisible_ui_p(*(factorizerArgs->N),primeTmp))) {
@@ -332,10 +348,26 @@ void* FactorizeTrialDivideThreadGroupManager(void*factorizeJobQueueArg) {
 }
 
 
-//TODO TEST MAIN --> WRAPPER FOR TEST CASE
+/*
+ * TODO test job queue append / pop sequentially
+ *      test factorization of 10 random jobs +2
+ *      tune experiment show:
+ *              -with  little timeout of factorizer worker --> very fast founding little factors
+ *              -large num of max iteration useful only with medium/large timeout
+ *                  -NB LARGE TIMEOUT => SLOW DOWN LITTLE JOBS!!!
+ *               -maybe good max iteration num ~ 5 (enhanced timeout polling interval)
+ *                  -supposition: too mutch threading=> ???
+ */
+
+
+#ifdef TEST_CUNCURRENT_FACTORIZATION
 int main() {
-    u_int64_t B=40000;
+#else
+int _main() {
+#endif
+    u_int64_t B=400000;
     DYNAMIC_VECTOR primes=ReadPrimes(PRIMES_32B_PATH,B);
+    printf("----\t\treaded %lu primes\t\t----\n",primes.vectorSize);
     if(!primes.pntr){
         fprintf(stderr, "primes init fail\n");
         exit(EXIT_FAILURE);
@@ -345,33 +377,42 @@ int main() {
         fprintf(stderr, "job queue init fail\n");
         exit(EXIT_FAILURE);
     }
-    /// append  entries
-    const int JOBS_NUM=5;
-    struct ArrayEntryList jobs[JOBS_NUM];
-    struct ArrayEntry jobsEntries[JOBS_NUM];
-    //dflt entries
-    jobs[0].arrayEntry=jobsEntries+ 0;
-    mpz_init_set_str(jobs[0].arrayEntry->element,"1206727674889036177328",10);
-    jobs[0].nextArrayEntry=jobs+1;
-    jobs[1].arrayEntry=jobsEntries+ 1;
-    mpz_init_set_str(jobs[1].arrayEntry->element,"1226921644616027124128",10);
-    jobs[1].nextArrayEntry=jobs+2;
-    //gmp random initialization
+    /////   random gen of job entries
     gmp_randstate_t RANDSTATE;
     gmp_randinit_default(RANDSTATE);
     mp_bitcnt_t RANDOM_SIZE = 69;
-    for (int i = 2; i < JOBS_NUM; ++i) {
+    /////   first dflt entries from mongomery polynomial
+    struct ArrayEntry arrayEntry1,arrayEntry2;
+    mpz_init_set_str(arrayEntry1.element,"1206727674889036177328",10);
+    mpz_init_set_str(arrayEntry2.element,"504260813376616547",10);
+    struct ArrayEntryList entryJob1=(struct ArrayEntryList){.arrayEntry=&arrayEntry1};
+    struct ArrayEntryList entryJob2=(struct ArrayEntryList){.arrayEntry=&arrayEntry2};
+    /// define block of entries
+    const int JOBS_NUM_BLOCK=10;
+    struct ArrayEntryList jobs[JOBS_NUM_BLOCK];
+    struct ArrayEntry jobsEntries[JOBS_NUM_BLOCK];
+    //gmp random initialization
+    for (int i = 0; i < JOBS_NUM_BLOCK; ++i) {
         //set link in list
         jobs[i].nextArrayEntry=jobs+i+1;
         jobs[i].arrayEntry=jobsEntries+i;
         mpz_init(jobs[i].arrayEntry->element);
-        mpz_urandomb(jobs[i].arrayEntry->element,RANDSTATE,RANDOM_SIZE);
+        mpz_urandomb(jobs[i].arrayEntry->element,RANDSTATE,RANDOM_SIZE);        //fill element with a random number
 //        gmp_printf("appended job %Zd %lu \n",jobs[i].arrayEntry->element,RANDOM_SIZE);fflush(0);
     }
-    jobs[JOBS_NUM-1].nextArrayEntry=NULL;                   //set tail of the linked list
-    factorizeJobQueue->queueHead=jobs;
+    jobs[JOBS_NUM_BLOCK-1].nextArrayEntry=NULL;                   //set tail of the linked list
+    /// mixed append the entries block
+    appendJob(factorizeJobQueue,&entryJob1);
+    appendBlockJobs(factorizeJobQueue,jobs,JOBS_NUM_BLOCK);
+    appendJob(factorizeJobQueue,&entryJob2);
+
     factorizeJobQueue->closedQueue=true;
     pthread_t manager;
+
+    STOPWATCH_INIT;
+//    memset(&STOPWATCH_DELTA_VAR,0,sizeof(STOPWATCH_DELTA_VAR));
+    STARTSTOPWACHT(STOPWATCH_START_VAR)
+
     if (pthread_create(&manager, NULL, FactorizeTrialDivideThreadGroupManager,(void *)factorizeJobQueue)!=0){
         fprintf(stderr, " siever creataing error");
         exit(EXIT_FAILURE);
@@ -382,5 +423,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
     printf("ret manger %d \n",retvalGenThread);
+    STOPWACHT_STOP_DFLT
     return EXIT_SUCCESS;
 }

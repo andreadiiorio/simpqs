@@ -13,20 +13,19 @@ set(SOURCES_COMMON
         utils/gmp_patch.h
         SIMPQS.h
         CONFIGURATION.h)
+set(SOURCES_FACTORIZE factorization/factorizerQuick.h factorization/factorizerQuick.c)
 set(SOURCES_WORKER
-        factorization/factorizerQuick.c
-        factorization/factorizerQuick.h
         worker/sievingSIMPQS.c
         worker/sievingSIMPQS.h
-        )
+        ${SOURCES_FACTORIZE})
 set(SOURCES_MASTER
         master/masterMain.c
         )
 
 add_executable(SIMQS_Worker ${SOURCES_COMMON} ${SOURCES_WORKER})
 add_executable(SIMQS_Master ${SOURCES_COMMON} ${SOURCES_MASTER})
-
-set(CMAKE_C_FLAGS "-Wall -lgmp -pthread -lm -ggdb")
+add_executable(TRIAL_DIVISION_MAIN_TEST ${SOURCES_FACTORIZE} ${SOURCES_COMMON} )
+set(CMAKE_C_FLAGS "-Wall -lgmp -pthread -lm -ggdb -Os")
 #target_link_libraries(PariTrys /pari)
 #include(pari/bin/include/pari/pari.h)
 

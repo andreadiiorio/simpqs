@@ -59,7 +59,11 @@ DYNAMIC_VECTOR ReadFactorBase(char *primesListPath, u_int64_t smoothnessBound, m
 #define STOPWACHT_STOP(startime,stoptime,delta)\
     gettimeofday(&(stoptime),NULL);\
     timersub(&(stoptime),&(startime),&(delta));
-//    fprintf(stderr,"\n\n Elapsed secs and micros: %ld , %ld \n\n",(delta).tv_sec,(delta).tv_usec);fflush(0);
+
+#define STOPWACHT_STOP_DFLT\
+    gettimeofday(&(STOPWATCH_STOP_VAR ),NULL);\
+    timersub(&(STOPWATCH_STOP_VAR),&(STOPWATCH_START_VAR),&(STOPWATCH_DELTA_VAR));  \
+    fprintf(stderr,"\n\n Elapsed secs and micros: %ld , %ld \n\n",(delta).tv_sec,(delta).tv_usec);fflush(0);
 
 
 #endif //QUADRATIC_SIEVE_UTILS_H
