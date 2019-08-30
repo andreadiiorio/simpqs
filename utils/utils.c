@@ -41,11 +41,11 @@ void printPrecomputations(struct Precomputes* precomputes, int blockPrint){
     for(__uint64_t i=0;i<sizeFB-blockPrint;i+=blockPrint){
         printf("%lu:\t\t",i);
         for(int j=0;j<blockPrint;j++){
-            printf(" <%*lu,%*lu> ",DIGITNUM_PRINT,precomputes->polPrecomputedData.sol1p[i+j],DIGITNUM_PRINT,precomputes->polPrecomputedData.sol2p[i+j]);
+            printf(" <%*ld,%*ld> ",DIGITNUM_PRINT,precomputes->polPrecomputedData.sol1p[i+j],DIGITNUM_PRINT,precomputes->polPrecomputedData.sol2p[i+j]);
         }
         printf("\n");
     }
-    //TODO
+    //TODO -> change polynomial
 //    precomputes->polPrecomputedData.B_ainv_2Bj_p
 //    precomputes->polPrecomputedData.B_l
 }
@@ -71,17 +71,17 @@ DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
     primes[primeIndx++] = prime;              //TODO PATCH PRIME LIST MISSING 2
     size_t rd;
     while (prime<smoothnessBound) {
-        while ((rd = fread(&prime, PRIMES_LIST_WORD_SIZE, 1, primesListPrecomputed)) == 1) {
+        if((rd = fread(&prime, PRIMES_LIST_WORD_SIZE, 1, primesListPrecomputed)) != 1) {
+            printf("no more primes to read at %lu...\n", primeIndx);
+        }
             /// evaluate reallocation
             REALLOC_WRAP(primeIndx,factorBaseDynamicN,primes,FACTOR_BASE_BLOCK_REALLOC_N)
                     result = NULL;
                     goto exit;
-                }
-            }
+                }}
             primes[primeIndx++] = prime;              //save prime
-        }
         if (ferror(primesListPrecomputed)) {
-            fprintf(stderr, "fread error occured factorbase gen\t rd:%lu \n", rd);
+            fprintf(stderr, "fread error occured in primes reading\t rd:%lu \n", rd);
             free(primes);
             result = NULL;
             goto exit;
@@ -89,29 +89,29 @@ DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
     }
 #ifdef FINAL_RESIZE
     ////final realloc of primes list for actual space needed
-    if(!(primes=realloc(primes,primeIndx* sizeof(*primes)))){
+    if(!(primes=realloc(primes,(--primeIndx)* sizeof(*primes)))){
         fprintf(stderr,"final realloc failed on factorbase\n");
         free(primes);
         return outVect;
     }
 #endif
     result=primes;
-
+#ifdef DEBUG
+    fprintf(stderr,"primes addr %p\n",primes);
+#endif
     exit:
     fclose(primesListPrecomputed);
+    printf("correctly loaded %lu primes up to %lu \n",primeIndx,smoothnessBound);
     outVect.vectorSize=primeIndx;
     outVect.pntr=result;
     return outVect;
 }
 
-DYNAMIC_VECTOR ReadFactorBase(char *primesListPath, u_int64_t smoothnessBound, mpz_t N){
+DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N){
     DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0};
     size_t dynamicFactorBaseSize = FACTOR_BASE_BLOCK_REALLOC_N;
     u_int64_t* factorBase=malloc(sizeof(*factorBase) * dynamicFactorBaseSize);
     u_int64_t  factorBaseIndx=0;
-    DYNAMIC_VECTOR primes=ReadPrimes(primesListPath,smoothnessBound);
-    if(!(primes.pntr))
-        return outVect;
     mpz_t primeMpz;
     u_int64_t prime;
     mpz_init(primeMpz);
@@ -138,8 +138,9 @@ DYNAMIC_VECTOR ReadFactorBase(char *primesListPath, u_int64_t smoothnessBound, m
         return outVect;
     }
 #endif
-    free(primes.pntr);
     outVect.pntr=(void*)factorBase;
     outVect.vectorSize=factorBaseIndx;
+    printf("factor base of %lu primes \n",factorBaseIndx);
     return outVect;
 }
+

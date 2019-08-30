@@ -16,9 +16,10 @@ L(n)={
 
 \\gen semiprime
 PRIME_KERNEL_SIZE_10=16
-n=genSemiPrime(PRIME_KERNEL_SIZE_10)
+\\n=genSemiPrime(PRIME_KERNEL_SIZE_10)
+n=100000030925519250968982645360649
 \\default tuning Crandal book
-B=ceil(L(n)^(0.5))+10000
+B=ceil(L(n)^(0.5))
 M=ceil(L(n)^(0.5))
 print("L(n) tuning...> B: ",B,"M: ",M)
 \\B=11000
@@ -180,8 +181,8 @@ SieveConcurrentBSmoothnessPolLargePrimeList(a,b,c,M,N,{start=0})={
 			,						\\END PARALLEL EXPR
 		polValueFactors						\\PARRALLEL EXEC VAR
 			,
-		\\a_fx=((a*j+b)^2-N);
-		a_fx=(a*j^2 +2*b*j + c);
+		a_fx=((a*j+b)^2-N);
+		\\a_fx=(a*j^2 +2*b*j + c);
 		polValueFactorsNum=length(polValueFactors);
 		maxFactor=polValueFactors[1,polValueFactorsNum];
 		\\print(maxFactor);
@@ -335,7 +336,7 @@ print("\n\n\n\ngenerated Pol Coeff a: ",a," b: ",b," c: ",c)
 print(" N: ",n," B: ",B," M: ",M)
 
 
-
+ff(j)=(a*j+b)^2-n
 \\any pol. values in array [-M,M] with concurrent sieve --> as gp factorize
 SieveConcurrentBSmoothnessPolLargePrimeList(a,b,c,ceil(M),n);
 \\subFACTORBASE=listRange(FACTORBASE,200,300);

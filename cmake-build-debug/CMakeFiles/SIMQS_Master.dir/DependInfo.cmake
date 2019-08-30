@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_C
   "/home/andysnake/Desktop/tenPrj/master/masterMain.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o"
   "/home/andysnake/Desktop/tenPrj/utils/gmp_patch.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o"
+  "/home/andysnake/Desktop/tenPrj/utils/precomputations.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o"
   "/home/andysnake/Desktop/tenPrj/utils/utils.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/utils.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")

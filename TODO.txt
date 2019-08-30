@@ -1,0 +1,5 @@
+TODO LIST
+
+SIEVING BUG:
+    valori polinomi sbagliati o LOG_THREAHSOLD sbagliati??
+        risulta che il log cumulative è nettamente al di sotto della soglia prefissato

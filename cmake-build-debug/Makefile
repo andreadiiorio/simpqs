@@ -239,6 +239,39 @@ utils/gmp_patch.c.s:
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s
 .PHONY : utils/gmp_patch.c.s
 
+utils/precomputations.o: utils/precomputations.c.o
+
+.PHONY : utils/precomputations.o
+
+# target to build an object file
+utils/precomputations.c.o:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.o
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o
+	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o
+.PHONY : utils/precomputations.c.o
+
+utils/precomputations.i: utils/precomputations.c.i
+
+.PHONY : utils/precomputations.i
+
+# target to preprocess a source file
+utils/precomputations.c.i:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.i
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.i
+	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.i
+.PHONY : utils/precomputations.c.i
+
+utils/precomputations.s: utils/precomputations.c.s
+
+.PHONY : utils/precomputations.s
+
+# target to generate assembly for a file
+utils/precomputations.c.s:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.s
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.s
+	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.s
+.PHONY : utils/precomputations.c.s
+
 utils/utils.o: utils/utils.c.o
 
 .PHONY : utils/utils.o
@@ -299,6 +332,33 @@ worker/sievingSIMPQS.c.s:
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.s
 .PHONY : worker/sievingSIMPQS.c.s
 
+worker/workerMain.o: worker/workerMain.c.o
+
+.PHONY : worker/workerMain.o
+
+# target to build an object file
+worker/workerMain.c.o:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o
+.PHONY : worker/workerMain.c.o
+
+worker/workerMain.i: worker/workerMain.c.i
+
+.PHONY : worker/workerMain.i
+
+# target to preprocess a source file
+worker/workerMain.c.i:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.i
+.PHONY : worker/workerMain.c.i
+
+worker/workerMain.s: worker/workerMain.c.s
+
+.PHONY : worker/workerMain.s
+
+# target to generate assembly for a file
+worker/workerMain.c.s:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.s
+.PHONY : worker/workerMain.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -319,12 +379,18 @@ help:
 	@echo "... utils/gmp_patch.o"
 	@echo "... utils/gmp_patch.i"
 	@echo "... utils/gmp_patch.s"
+	@echo "... utils/precomputations.o"
+	@echo "... utils/precomputations.i"
+	@echo "... utils/precomputations.s"
 	@echo "... utils/utils.o"
 	@echo "... utils/utils.i"
 	@echo "... utils/utils.s"
 	@echo "... worker/sievingSIMPQS.o"
 	@echo "... worker/sievingSIMPQS.i"
 	@echo "... worker/sievingSIMPQS.s"
+	@echo "... worker/workerMain.o"
+	@echo "... worker/workerMain.i"
+	@echo "... worker/workerMain.s"
 .PHONY : help
 
 

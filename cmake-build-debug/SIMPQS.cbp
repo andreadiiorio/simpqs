@@ -213,6 +213,16 @@
 			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
 		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/precomputations.c">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/precomputations.h">
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="SIMQS_Master"/>
+		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/utils/utils.c">
 			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
@@ -227,6 +237,9 @@
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.h">
+			<Option target="SIMQS_Worker"/>
+		</Unit>
+		<Unit filename="/home/andysnake/Desktop/tenPrj/worker/workerMain.c">
 			<Option target="SIMQS_Worker"/>
 		</Unit>
 		<Unit filename="/home/andysnake/Desktop/tenPrj/CMakeLists.txt">

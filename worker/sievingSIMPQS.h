@@ -14,7 +14,7 @@ struct ArrayEntry{
     mpz_t element;                  //f(j)
     ///log sieving
     ////////TODO FIND FASTER ALTERNATIVE
-    double logSieveCumulative;      //space saver, faster comparison,
+    long double logSieveCumulative;      //space saver, faster comparison,
 //    u_int64_t logSieveCumulative;   //rounding  double version
 
     FACTOR* factors;              //non NULL element has logSieveCumulative above threashold
@@ -29,6 +29,10 @@ struct ArrayEntry{
 typedef struct ArrayEntry* SIEVE_ARRAY_BLOCK;
 
 
+/////////global
+extern mpz_t   N;
+extern SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
+extern struct Configuration Config;
 int Sieve(struct Configuration* config, struct Precomputes* precomputes,SIEVE_ARRAY_BLOCK sieveArrayBlock);
 void* siever_thread_logic(void* arg);       //siever pthread func
 #endif //SIMPQS_SIEVINGSIMPQS_H
