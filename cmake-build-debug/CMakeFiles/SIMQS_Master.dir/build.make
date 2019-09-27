@@ -34,19 +34,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/andysnake/Desktop/tenPrj
+CMAKE_SOURCE_DIR = /home/andysnake/CLionProjects/simpqs
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/andysnake/Desktop/tenPrj/cmake-build-debug
+CMAKE_BINARY_DIR = /home/andysnake/CLionProjects/simpqs/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/SIMQS_Master.dir/depend.make
@@ -59,55 +59,55 @@ include CMakeFiles/SIMQS_Master.dir/flags.make
 
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.o: CMakeFiles/SIMQS_Master.dir/flags.make
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.o: ../utils/utils.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/SIMQS_Master.dir/utils/utils.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/utils/utils.c.o   -c /home/andysnake/Desktop/tenPrj/utils/utils.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/SIMQS_Master.dir/utils/utils.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/utils/utils.c.o   -c /home/andysnake/CLionProjects/simpqs/utils/utils.c
 
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SIMQS_Master.dir/utils/utils.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/Desktop/tenPrj/utils/utils.c > CMakeFiles/SIMQS_Master.dir/utils/utils.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/CLionProjects/simpqs/utils/utils.c > CMakeFiles/SIMQS_Master.dir/utils/utils.c.i
 
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Master.dir/utils/utils.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/utils/utils.c -o CMakeFiles/SIMQS_Master.dir/utils/utils.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/CLionProjects/simpqs/utils/utils.c -o CMakeFiles/SIMQS_Master.dir/utils/utils.c.s
 
 CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o: CMakeFiles/SIMQS_Master.dir/flags.make
 CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o: ../utils/gmp_patch.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o   -c /home/andysnake/Desktop/tenPrj/utils/gmp_patch.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o   -c /home/andysnake/CLionProjects/simpqs/utils/gmp_patch.c
 
 CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/Desktop/tenPrj/utils/gmp_patch.c > CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/CLionProjects/simpqs/utils/gmp_patch.c > CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.i
 
 CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/utils/gmp_patch.c -o CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/CLionProjects/simpqs/utils/gmp_patch.c -o CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s
 
 CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: CMakeFiles/SIMQS_Master.dir/flags.make
 CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: ../utils/precomputations.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o   -c /home/andysnake/Desktop/tenPrj/utils/precomputations.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o   -c /home/andysnake/CLionProjects/simpqs/utils/precomputations.c
 
 CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/Desktop/tenPrj/utils/precomputations.c > CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/CLionProjects/simpqs/utils/precomputations.c > CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.i
 
 CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/utils/precomputations.c -o CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/CLionProjects/simpqs/utils/precomputations.c -o CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.s
 
 CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o: CMakeFiles/SIMQS_Master.dir/flags.make
 CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o: ../master/masterMain.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o   -c /home/andysnake/Desktop/tenPrj/master/masterMain.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o   -c /home/andysnake/CLionProjects/simpqs/master/masterMain.c
 
 CMakeFiles/SIMQS_Master.dir/master/masterMain.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SIMQS_Master.dir/master/masterMain.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/Desktop/tenPrj/master/masterMain.c > CMakeFiles/SIMQS_Master.dir/master/masterMain.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/andysnake/CLionProjects/simpqs/master/masterMain.c > CMakeFiles/SIMQS_Master.dir/master/masterMain.c.i
 
 CMakeFiles/SIMQS_Master.dir/master/masterMain.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SIMQS_Master.dir/master/masterMain.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/Desktop/tenPrj/master/masterMain.c -o CMakeFiles/SIMQS_Master.dir/master/masterMain.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/andysnake/CLionProjects/simpqs/master/masterMain.c -o CMakeFiles/SIMQS_Master.dir/master/masterMain.c.s
 
 # Object files for target SIMQS_Master
 SIMQS_Master_OBJECTS = \
@@ -125,7 +125,7 @@ SIMQS_Master: CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o
 SIMQS_Master: CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o
 SIMQS_Master: CMakeFiles/SIMQS_Master.dir/build.make
 SIMQS_Master: CMakeFiles/SIMQS_Master.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable SIMQS_Master"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable SIMQS_Master"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SIMQS_Master.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -138,6 +138,6 @@ CMakeFiles/SIMQS_Master.dir/clean:
 .PHONY : CMakeFiles/SIMQS_Master.dir/clean
 
 CMakeFiles/SIMQS_Master.dir/depend:
-	cd /home/andysnake/Desktop/tenPrj/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/andysnake/Desktop/tenPrj /home/andysnake/Desktop/tenPrj /home/andysnake/Desktop/tenPrj/cmake-build-debug /home/andysnake/Desktop/tenPrj/cmake-build-debug /home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/andysnake/CLionProjects/simpqs/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/andysnake/CLionProjects/simpqs /home/andysnake/CLionProjects/simpqs /home/andysnake/CLionProjects/simpqs/cmake-build-debug /home/andysnake/CLionProjects/simpqs/cmake-build-debug /home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/SIMQS_Master.dir/depend
 

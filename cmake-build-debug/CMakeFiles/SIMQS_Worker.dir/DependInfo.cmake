@@ -4,12 +4,14 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/andysnake/Desktop/tenPrj/factorization/factorizerQuick.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
-  "/home/andysnake/Desktop/tenPrj/utils/gmp_patch.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o"
-  "/home/andysnake/Desktop/tenPrj/utils/precomputations.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o"
-  "/home/andysnake/Desktop/tenPrj/utils/utils.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o"
-  "/home/andysnake/Desktop/tenPrj/worker/sievingSIMPQS.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
-  "/home/andysnake/Desktop/tenPrj/worker/workerMain.c" "/home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o"
+  "/home/andysnake/CLionProjects/simpqs/factorization/factorizerQuick.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
+  "/home/andysnake/CLionProjects/simpqs/matrix/matrix.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o"
+  "/home/andysnake/CLionProjects/simpqs/utils/gmp_patch.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o"
+  "/home/andysnake/CLionProjects/simpqs/utils/precomputations.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o"
+  "/home/andysnake/CLionProjects/simpqs/utils/utils.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o"
+  "/home/andysnake/CLionProjects/simpqs/worker/reports.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o"
+  "/home/andysnake/CLionProjects/simpqs/worker/sievingSIMPQS.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
+  "/home/andysnake/CLionProjects/simpqs/worker/workerMain.c" "/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

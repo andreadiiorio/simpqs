@@ -57,7 +57,7 @@ DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
     u_int64_t *result;
     FILE* primesListPrecomputed=fopen(primesListPath,"r");
     if(!primesListPrecomputed){
-        perror("fopen failed");
+        perror(primesListPath);
         return outVect;
     }
     u_int64_t factorBaseDynamicN=FACTOR_BASE_BLOCK_REALLOC_N;
@@ -74,12 +74,12 @@ DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
         if((rd = fread(&prime, PRIMES_LIST_WORD_SIZE, 1, primesListPrecomputed)) != 1) {
             printf("no more primes to read at %lu...\n", primeIndx);
         }
-            /// evaluate reallocation
-            REALLOC_WRAP(primeIndx,factorBaseDynamicN,primes,FACTOR_BASE_BLOCK_REALLOC_N)
-                    result = NULL;
-                    goto exit;
-                }}
-            primes[primeIndx++] = prime;              //save prime
+        /// evaluate reallocation
+        REALLOC_WRAP(primeIndx,factorBaseDynamicN,primes,FACTOR_BASE_BLOCK_REALLOC_N)
+                result = NULL;
+                goto exit;
+        }}
+        primes[primeIndx++] = prime;              //save prime
         if (ferror(primesListPrecomputed)) {
             fprintf(stderr, "fread error occured in primes reading\t rd:%lu \n", rd);
             free(primes);
@@ -111,6 +111,8 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N){
     DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0};
     size_t dynamicFactorBaseSize = FACTOR_BASE_BLOCK_REALLOC_N;
     u_int64_t* factorBase=malloc(sizeof(*factorBase) * dynamicFactorBaseSize);
+    if (!factorBase)
+        return outVect;
     u_int64_t  factorBaseIndx=0;
     mpz_t primeMpz;
     u_int64_t prime;
@@ -123,8 +125,7 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N){
             REALLOC_WRAP(factorBaseIndx,dynamicFactorBaseSize,factorBase,FACTOR_BASE_BLOCK_REALLOC_N)
                     free(primes.pntr);
                     return outVect;
-                }
-            }
+                }}
         ///set prime in factor base
         factorBase[factorBaseIndx++]=prime;
         }

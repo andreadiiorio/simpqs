@@ -2,12 +2,15 @@
 #define SIMPQS_CONFIGURATION_H
 
 //// configuration of SIMPQS
+//dflt config of main algo parameters
 #define _ARRAY_IN_MEMORY_MAX_SIZE 5000      //max num of array elements holded in memory
+#define _M 7096
+#define _B 10000
 #define _SIEVING_THREAD_NUM  3              //siever threads
 #define FINAL_RESIZE 1                       //EVERY DINAMIC ARRAY WILL BE RESIZED TO ACTUAL SIZE NEEDED
 
 //// dynamically resized array configurations
-#define PROBABLY_BSMOOTH_ARRAY_BLOCK 256
+#define PROBABLY_BSMOOTH_ARRAY_BLOCK 1024
 #define PARTIAL_RELATIONS_BLOCK 1024
 #define FACTORIZE_JOB_BLOCK_APPEND 32       //block of factorize job to atomically append on mutex protected job queue
 
@@ -32,8 +35,9 @@
 #define FACTORIZE_BARRIER_SYNC_TIMEOUT_USEC 6000
 #define QUEUE_FILLING_POLLING_USLEEP 1000                            //u sleep to wait job is filled by a producer of job in the queue
 
-#define PRIMES_32B_PATH "/home/andysnake/Desktop/tenPrj/primes.32b"
+#define PRIMES_32B_PATH "../primes.32b"
 /// debug flag
-#define DEBUG                                                       //debug print of
-#define DEBUG_MANAGER                                               //factorization thread manager debug print
+//#define DEBUG                                                       //debug print of
+//#define DEBUG_MANAGER                                               //factorization thread manager debug print
 #endif //SIMPQS_CONFIGURATION_H
+#define VERBOSE_0

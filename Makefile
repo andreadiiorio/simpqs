@@ -1,6 +1,6 @@
 CC=gcc
 #libs
-CFLAGS=-lgmp -mpfr -pthread -lm -Wall     #TODO OLD
+CFLAGS=-lgmp -lmpfr -pthread -lm -Wall     #TODO OLD
 #add header in path of compilation
 CFLAGS+= -I .
 

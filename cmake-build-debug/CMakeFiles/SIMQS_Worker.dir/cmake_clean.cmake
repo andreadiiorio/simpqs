@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o"
   "CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o"
   "CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o"
+  "CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o"
+  "CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o"
   "SIMQS_Worker.pdb"
   "SIMQS_Worker"
 )

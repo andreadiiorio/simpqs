@@ -85,13 +85,53 @@ int gen_a_inv_modp(const mpz_t* a, struct Precomputes *precomputations) {
     mpz_clear(primeTmp);
     return EXIT_SUCCESS;
 }
+
 int genB(struct Configuration *config, struct Precomputes *precomputations) {
-    //TODO GEN
-    //  B_l
+    /// GEN B_l
+
     //  2*B*ainv_p
+
     return EXIT_SUCCESS;
 }
-struct Precomputes* preComputations(const mpz_t* a){
+
+
+///polinomial family coeff
+struct polynomial* initializationVars(char** argv){
+    /*
+     generated Pol Coeff a: 16079919820099 b: 19000050618295 c: -6218915954954063976
+ N: 100000030925519250968982645360649 B: 17330 M: 7330
+
+     */
+    struct polynomial* polynomial;
+    if(!(polynomial=malloc(sizeof(struct polynomial)))){
+        fprintf(stderr,"malloc failed for actual polynomial instantiation");
+        exit(EXIT_FAILURE);
+    }
+    //TODO MOCKED ARGV
+    //char* _N=argv[1];
+    //char* _M=argv[2];
+    //char* _B=argv[3];
+    //char* _a=argv[4];
+    Config.M=_M;
+    Config.B=_B;
+    Config.SIEVING_THREAD_NUM=_SIEVING_THREAD_NUM;
+    Config.ARRAY_IN_MEMORY_MAX_SIZE=_ARRAY_IN_MEMORY_MAX_SIZE;
+    char* _N="100000030925519250968982645360649";
+    char* _a="16079919820099";
+    char* _b="19000050618295";
+    char* _c="-6218915954954063976";
+    mpz_init(N);
+    strToMpz(N,_N)
+    mpz_init((*polynomial).a);
+    strToMpz((*polynomial).a, _a)
+    mpz_init((*polynomial).b);
+    strToMpz((*polynomial).b, _b)
+    mpz_init((*polynomial).c);
+    strToMpz((*polynomial).c, _c)
+    return polynomial;
+}
+
+struct Precomputes* preComputations(struct polynomial* polynomial){
     //smart precomputations stored to reduce computational cost for each sieve iteration on each polynomial
     struct Precomputes* precomputations;
     if(!(precomputations=malloc(sizeof(*precomputations)))){
@@ -119,7 +159,7 @@ struct Precomputes* preComputations(const mpz_t* a){
     }
     printf("sqrt of N mod p in primes generated\n");
     //a^-1
-    if(gen_a_inv_modp(a,precomputations)==EXIT_FAILURE){
+    if(gen_a_inv_modp(&(polynomial->a),precomputations)==EXIT_FAILURE){
         fprintf(stderr,"a^-1 PRECOMPUTATION ERROR");
         free(primes.pntr);free(factorBase.pntr);
         return NULL;
@@ -134,7 +174,7 @@ struct Precomputes* preComputations(const mpz_t* a){
     }
 
     //soln1,2_p GENERATION ---> SIEVING JUMPS
-    if(genSievingJumps(precomputations,&(ActualPolynomial->b))==EXIT_FAILURE){
+    if(genSievingJumps(precomputations,&(polynomial->b))==EXIT_FAILURE){
         fprintf(stderr,"error in Sieving jumps precomputations \n");
         free(primes.pntr);free(factorBase.pntr);
         return NULL;

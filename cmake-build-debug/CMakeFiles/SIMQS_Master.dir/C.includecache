@@ -6,33 +6,65 @@
 
 #IncludeRegexTransform: 
 
+.././CONFIGURATION.h
+
 .././SIMPQS.h
+stdlib.h
+-
 sys/types.h
 -
 gmp.h
 -
 
-/home/andysnake/Desktop/tenPrj/master/masterMain.c
+/home/andysnake/CLionProjects/simpqs/master/masterMain.c
 stdlib.h
 -
 stdio.h
 -
 
-/home/andysnake/Desktop/tenPrj/utils/gmp_patch.c
+/home/andysnake/CLionProjects/simpqs/try.c
+gmp.h
+-
+stdlib.h
+-
+string.h
+-
+
+/home/andysnake/CLionProjects/simpqs/utils/gmp_patch.c
 stdlib.h
 -
 stdbool.h
 -
 gmp.h
-/home/andysnake/Desktop/tenPrj/utils/gmp.h
+/home/andysnake/CLionProjects/simpqs/utils/gmp.h
 
-/home/andysnake/Desktop/tenPrj/utils/utils.c
-SIMPQS.h
-/home/andysnake/Desktop/tenPrj/utils/SIMPQS.h
-utils.h
-/home/andysnake/Desktop/tenPrj/utils/utils.h
-stdio.h
+/home/andysnake/CLionProjects/simpqs/utils/gmp_patch.h
+gmp.h
 -
 
-/home/andysnake/Desktop/tenPrj/utils/utils.h
+/home/andysnake/CLionProjects/simpqs/utils/precomputations.c
+utils.h
+/home/andysnake/CLionProjects/simpqs/utils/utils.h
+gmp_patch.h
+/home/andysnake/CLionProjects/simpqs/utils/gmp_patch.h
+
+/home/andysnake/CLionProjects/simpqs/utils/utils.c
+utils.h
+/home/andysnake/CLionProjects/simpqs/utils/utils.h
+
+/home/andysnake/CLionProjects/simpqs/utils/utils.h
+SIMPQS.h
+/home/andysnake/CLionProjects/simpqs/utils/SIMPQS.h
+stdio.h
+-
+fcntl.h
+-
+stdlib.h
+-
+sys/time.h
+-
+gmp.h
+-
+CONFIGURATION.h
+/home/andysnake/CLionProjects/simpqs/utils/CONFIGURATION.h
 

@@ -6,6 +6,9 @@
 #define QUADRATIC_SIEVE_UTILS_H
 
 
+#define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
+#define MIN( a, b ) ( ((a) < (b)) ? (a) : (b) )
+#define ABS( a ) ( ((a) < 0) ? (-a) : (a) )
 #include "SIMPQS.h"
 #include <stdio.h>
 #include <fcntl.h>
@@ -47,7 +50,7 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
 
 //// wrap resizing evalutation and realloc for a dynamic list
 #define REALLOC_WRAP(cumulativeCount,dynamicVectSize,dynamicVectPntr,DYNAMIC_VECT_BLOCK_SIZE)\
-    if ( (cumulativeCount)> (dynamicVectSize)) {   \
+    if ( (cumulativeCount) >= (dynamicVectSize)) {   \
         (dynamicVectSize)+= (DYNAMIC_VECT_BLOCK_SIZE); \
         if (!(dynamicVectPntr=realloc(dynamicVectPntr, dynamicVectSize * sizeof(*dynamicVectPntr)))) {  \
             fprintf(stderr, "realloc error\n"); \
@@ -78,5 +81,6 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
     fprintf(stderr,"\n\n Elapsed secs and micros: %ld , %ld \n\n",(delta).tv_sec,(delta).tv_usec);fflush(0);
 
 
-struct Precomputes* preComputations(const mpz_t* a);
+struct polynomial* initializationVars(char** argv);
+struct Precomputes* preComputations(struct polynomial* polynomial);
 #endif //QUADRATIC_SIEVE_UTILS_H

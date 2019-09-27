@@ -3,8 +3,17 @@
 
 CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o: ../master/masterMain.c
 
+CMakeFiles/SIMQS_Master.dir/try.c.o: ../try.c
+
 CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o: ../utils/gmp_patch.c
 
+CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: .././CONFIGURATION.h
+CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: .././SIMPQS.h
+CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: ../utils/gmp_patch.h
+CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: ../utils/precomputations.c
+CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o: ../utils/utils.h
+
+CMakeFiles/SIMQS_Master.dir/utils/utils.c.o: .././CONFIGURATION.h
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.o: .././SIMPQS.h
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.o: ../utils/utils.c
 CMakeFiles/SIMQS_Master.dir/utils/utils.c.o: ../utils/utils.h

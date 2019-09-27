@@ -27,13 +27,18 @@ typedef struct FactorizeJobQueue{
     /// queue termianation vars
     int producersNum;                     //number of producer thread on the queue
     int producersEnded;                   //number of producer thread  that has finished the queue
+    int consumersNum;
+    int consumersEnded;                   //number of factorize thread manager that has ended
     pthread_cond_t emptyAndClosedQueue;   //closed and flushed job queue --> setted from consumers at queue end
     bool endedQueue;                      //true if condvar broadcast already called
 } FACTORIZE_JOB_QUEUE;
 void appendJob(FACTORIZE_JOB_QUEUE *jobQueue,struct ArrayEntryList* newJob);
 struct ArrayEntry* popFirstJob(FACTORIZE_JOB_QUEUE *jobQueue);
 void appendBlockJobs(FACTORIZE_JOB_QUEUE *jobQueue, struct ArrayEntryList *firstJobsinBlock,struct ArrayEntryList *lastBlockEntry);
-FACTORIZE_JOB_QUEUE* initFactorizeJobQueue(u_int64_t B,struct Precomputes* precomputes,int producersNum);
+FACTORIZE_JOB_QUEUE *
+initFactorizeJobQueue(u_int64_t B, struct Precomputes *precomputes, int producersNum, int consumersNum);
+void resetFactorizeJobQueue(FACTORIZE_JOB_QUEUE* factorizeJobQueue,int producersNum, int consumersNum);
+
 
 struct factorizerArgs{
     mpz_t* N;                        //num to factorize pntr
@@ -53,4 +58,9 @@ struct factorizerArgs{
 
 void* FactorizeTrialDivide(void* args);
 pthread_t* StartFactorizerThreadGroups(FACTORIZE_JOB_QUEUE* factorizeJobQueues,int numGroupsFactorizers);
+int JoinFactorizerThreadGroups(pthread_t* threadManager,int numManager);
+
+void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry);
+int mergeReports(REPORTS *dstReports, const REPORTS *new_reports);
+int mergeReportsFast(REPORTS *dstReports, const REPORTS *new_reports); //TODO DEBUG MEMMOVE CORRUPT EVERYTHING
 #endif //SIMPQS_FACTORIZERQUICK_H

@@ -8,6 +8,13 @@ CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: .././worker/sievi
 CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: ../factorization/factorizerQuick.c
 CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o: ../factorization/factorizerQuick.h
 
+CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o: .././CONFIGURATION.h
+CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o: .././SIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o: .././worker/sievingSIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o: ../matrix/matrix.c
+CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o: ../matrix/matrix.h
+CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o: ../utils/utils.h
+
 CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o: ../utils/gmp_patch.c
 
 CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: .././CONFIGURATION.h
@@ -21,6 +28,10 @@ CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o: .././SIMPQS.h
 CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o: ../utils/utils.c
 CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o: ../utils/utils.h
 
+CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: .././SIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: ../worker/reports.c
+CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: ../worker/sievingSIMPQS.h
+
 CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o: .././CONFIGURATION.h
 CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o: .././SIMPQS.h
 CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o: .././factorization/factorizerQuick.h
@@ -31,8 +42,11 @@ CMakeFiles/SIMQS_Worker.dir/worker/sievingSIMPQS.c.o: ../worker/sievingSIMPQS.h
 
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././CONFIGURATION.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././SIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././factorization/factorizerQuick.h
+CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././matrix/matrix.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././utils/gmp_patch.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././utils/utils.h
+CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././worker/sievingSIMPQS.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: ../worker/sievingSIMPQS.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: ../worker/workerMain.c
 

@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/andysnake/Desktop/tenPrj
+CMAKE_SOURCE_DIR = /home/andysnake/CLionProjects/simpqs
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/andysnake/Desktop/tenPrj/cmake-build-debug
+CMAKE_BINARY_DIR = /home/andysnake/CLionProjects/simpqs/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/andysnake/Desktop/tenPrj/cmake-build-debug
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -70,7 +70,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/andysnake/Documenti/IDE/clion-2019.2/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles /home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles /home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/andysnake/Desktop/tenPrj/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -109,6 +109,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named TRIAL
+
+# Build rule for target.
+TRIAL: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 TRIAL
+.PHONY : TRIAL
+
+# fast build rule for target.
+TRIAL/fast:
+	$(MAKE) -f CMakeFiles/TRIAL.dir/build.make CMakeFiles/TRIAL.dir/build
+.PHONY : TRIAL/fast
 
 #=============================================================================
 # Target rules for targets named TRIAL_DIVISION_MAIN_TEST
@@ -205,6 +218,60 @@ master/masterMain.s: master/masterMain.c.s
 master/masterMain.c.s:
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/master/masterMain.c.s
 .PHONY : master/masterMain.c.s
+
+matrix/matrix.o: matrix/matrix.c.o
+
+.PHONY : matrix/matrix.o
+
+# target to build an object file
+matrix/matrix.c.o:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.o
+.PHONY : matrix/matrix.c.o
+
+matrix/matrix.i: matrix/matrix.c.i
+
+.PHONY : matrix/matrix.i
+
+# target to preprocess a source file
+matrix/matrix.c.i:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.i
+.PHONY : matrix/matrix.c.i
+
+matrix/matrix.s: matrix/matrix.c.s
+
+.PHONY : matrix/matrix.s
+
+# target to generate assembly for a file
+matrix/matrix.c.s:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/matrix/matrix.c.s
+.PHONY : matrix/matrix.c.s
+
+try.o: try.c.o
+
+.PHONY : try.o
+
+# target to build an object file
+try.c.o:
+	$(MAKE) -f CMakeFiles/TRIAL.dir/build.make CMakeFiles/TRIAL.dir/try.c.o
+.PHONY : try.c.o
+
+try.i: try.c.i
+
+.PHONY : try.i
+
+# target to preprocess a source file
+try.c.i:
+	$(MAKE) -f CMakeFiles/TRIAL.dir/build.make CMakeFiles/TRIAL.dir/try.c.i
+.PHONY : try.c.i
+
+try.s: try.c.s
+
+.PHONY : try.s
+
+# target to generate assembly for a file
+try.c.s:
+	$(MAKE) -f CMakeFiles/TRIAL.dir/build.make CMakeFiles/TRIAL.dir/try.c.s
+.PHONY : try.c.s
 
 utils/gmp_patch.o: utils/gmp_patch.c.o
 
@@ -305,6 +372,33 @@ utils/utils.c.s:
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.s
 .PHONY : utils/utils.c.s
 
+worker/reports.o: worker/reports.c.o
+
+.PHONY : worker/reports.o
+
+# target to build an object file
+worker/reports.c.o:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o
+.PHONY : worker/reports.c.o
+
+worker/reports.i: worker/reports.c.i
+
+.PHONY : worker/reports.i
+
+# target to preprocess a source file
+worker/reports.c.i:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/reports.c.i
+.PHONY : worker/reports.c.i
+
+worker/reports.s: worker/reports.c.s
+
+.PHONY : worker/reports.s
+
+# target to generate assembly for a file
+worker/reports.c.s:
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/worker/reports.c.s
+.PHONY : worker/reports.c.s
+
 worker/sievingSIMPQS.o: worker/sievingSIMPQS.c.o
 
 .PHONY : worker/sievingSIMPQS.o
@@ -366,6 +460,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... TRIAL"
 	@echo "... rebuild_cache"
 	@echo "... TRIAL_DIVISION_MAIN_TEST"
 	@echo "... SIMQS_Worker"
@@ -376,6 +471,12 @@ help:
 	@echo "... master/masterMain.o"
 	@echo "... master/masterMain.i"
 	@echo "... master/masterMain.s"
+	@echo "... matrix/matrix.o"
+	@echo "... matrix/matrix.i"
+	@echo "... matrix/matrix.s"
+	@echo "... try.o"
+	@echo "... try.i"
+	@echo "... try.s"
 	@echo "... utils/gmp_patch.o"
 	@echo "... utils/gmp_patch.i"
 	@echo "... utils/gmp_patch.s"
@@ -385,6 +486,9 @@ help:
 	@echo "... utils/utils.o"
 	@echo "... utils/utils.i"
 	@echo "... utils/utils.s"
+	@echo "... worker/reports.o"
+	@echo "... worker/reports.i"
+	@echo "... worker/reports.s"
 	@echo "... worker/sievingSIMPQS.o"
 	@echo "... worker/sievingSIMPQS.i"
 	@echo "... worker/sievingSIMPQS.s"
