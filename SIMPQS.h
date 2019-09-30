@@ -14,10 +14,21 @@ struct precomputatios_polynomial{   //precomputations polynomial dependent -> wi
     //same indexing of FactorBase
     int64_t* sol1p;                //   sieving constant jumps
     int64_t* sol2p ;               //   sieving constant jumps
-    mpz_t** B_ainv_2Bj_p;           //   2*Bj*(a^-1) mod p  indexed by (1) j in 1..s (2) in p1,..,pn
+    mpz_t* B_ainv_2Bj_p;           //   2*Bj*(a^-1) mod p  indexed by (cols) j in 1..s (rows) in p1,..,pn (2B_j1_p1,2Bj2_p1....) in 1 D
     mpz_t* B_l;                    //   generators of b by GreyCode; indexing 1<l<s where a=p1*..*ps
+    int s;                          //number of B_l --> num of factors of a
 };
+#define POLYNOMIAL_VAL_COMPUTE(j, outputVal, polynomial)\
+    mpz_mul_si(outputVal, polynomial.a, j );    \
+    mpz_add(outputVal,outputVal,polynomial.b); \
+    mpz_pow_ui(outputVal, outputVal, 2); \
+    mpz_sub(outputVal,outputVal,*polynomial.N);
 
+typedef struct a_mongomeryPol_coeff{
+    mpz_t* a;       //point to stored a coeff
+    u_int* a_factors_indexes_FB;    //indexes of factors of a in precomputes->factorbase (also passed from master)
+    u_int a_factors_num;                 //number of factors of a
+} A_COEFF;
 typedef struct Precomputes{ //precomputation for the SELF INIT of SIMPQS
     //factor base, prime up to B for witch N is a quadratic residue
     //because of limited size of B (for several reason) it's enough 64 bit integers
@@ -26,26 +37,22 @@ typedef struct Precomputes{ //precomputation for the SELF INIT of SIMPQS
     u_int64_t factorbaseSize;
     //sqrt(N) mod p for each p
     //list with same inxeing of factobase
-    mpz_t*   sqrtN_mod_p;       //tmem_p in contini phD //TODO * SHANKS TONELLI CODE WANT IN MPZ
-    mpz_t*   a_inv_mod_p;       //a^-1 mod p        //TODO *avoid varius mpz extraction<->recomposition if it's in mpz
+    mpz_t*   sqrtN_mod_p;       //tmem_p in contini phD
+    mpz_t*   a_inv_mod_p;       //a^-1 mod p  TODO NB 0 SETTED ON NOT EXISTENT INVERSE (only on p s.t. p  is in a factorization)
     struct precomputatios_polynomial polPrecomputedData;
-} PRECOMPUTES;
+} PRECOMPUTES;                              //TODO MOVE ALL MALLOC ON START --> GCC OPTIMIZATION & EASIER FREE ON MALLOC'ed
 
 /// worker constants params
-struct Configuration {
+typedef struct Configuration {
+    mpz_t N;
     u_int64_t B;        //FactorBase threshold
     int64_t M;        //sieve array of size 2*M
-    int s;          //num of coeff. a's factors TODO redundant
-    PRECOMPUTES* precomputes;
-    mpz_t* a;       //sieving polynomial families identified by a coeff. passed from master
-    //write a factorization as indexes in factor base
-    u_int64_t* a_factors_indexes_FB;    //indexes of factors of a in precomputes->factorbase
-    int a_factors_num;                 //number of factors of a
+    A_COEFF a_coefficient;
     /// memory configuration
     u_int64_t ARRAY_IN_MEMORY_MAX_SIZE;
     /// concurrency configuration
     int SIEVING_THREAD_NUM;
-};
+} CONFIGURATION;
 
 
 
@@ -53,5 +60,6 @@ struct polynomial{   //Mongomery polynomial to sieving
     mpz_t a;
     mpz_t b;
     mpz_t c;
+    mpz_t*N;
 };
 #endif //SIMPQS_SIMPQS_H

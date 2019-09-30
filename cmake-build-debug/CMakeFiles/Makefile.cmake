@@ -48,8 +48,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/TRIAL.dir/DependInfo.cmake"
-  "CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/DependInfo.cmake"
-  "CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake"
   "CMakeFiles/SIMQS_Master.dir/DependInfo.cmake"
+  "CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake"
+  "CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/DependInfo.cmake"
+  "CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/DependInfo.cmake"
+  "CMakeFiles/TRIAL.dir/DependInfo.cmake"
   )

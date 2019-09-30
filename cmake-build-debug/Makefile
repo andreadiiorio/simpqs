@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/andysnake/CLionProjects/simpqs/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/home/andysnake/Documenti/clion-2019.2.2/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,30 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named TRIAL
+# Target rules for targets named SIMQS_Master
 
 # Build rule for target.
-TRIAL: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 TRIAL
-.PHONY : TRIAL
+SIMQS_Master: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 SIMQS_Master
+.PHONY : SIMQS_Master
 
 # fast build rule for target.
-TRIAL/fast:
-	$(MAKE) -f CMakeFiles/TRIAL.dir/build.make CMakeFiles/TRIAL.dir/build
-.PHONY : TRIAL/fast
-
-#=============================================================================
-# Target rules for targets named TRIAL_DIVISION_MAIN_TEST
-
-# Build rule for target.
-TRIAL_DIVISION_MAIN_TEST: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 TRIAL_DIVISION_MAIN_TEST
-.PHONY : TRIAL_DIVISION_MAIN_TEST
-
-# fast build rule for target.
-TRIAL_DIVISION_MAIN_TEST/fast:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build
-.PHONY : TRIAL_DIVISION_MAIN_TEST/fast
+SIMQS_Master/fast:
+	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/build
+.PHONY : SIMQS_Master/fast
 
 #=============================================================================
 # Target rules for targets named SIMQS_Worker
@@ -150,17 +137,43 @@ SIMQS_Worker/fast:
 .PHONY : SIMQS_Worker/fast
 
 #=============================================================================
-# Target rules for targets named SIMQS_Master
+# Target rules for targets named TRIAL_DIVISION_MAIN_TEST
 
 # Build rule for target.
-SIMQS_Master: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 SIMQS_Master
-.PHONY : SIMQS_Master
+TRIAL_DIVISION_MAIN_TEST: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 TRIAL_DIVISION_MAIN_TEST
+.PHONY : TRIAL_DIVISION_MAIN_TEST
 
 # fast build rule for target.
-SIMQS_Master/fast:
-	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/build
-.PHONY : SIMQS_Master/fast
+TRIAL_DIVISION_MAIN_TEST/fast:
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build
+.PHONY : TRIAL_DIVISION_MAIN_TEST/fast
+
+#=============================================================================
+# Target rules for targets named TRIAL_MULTIPLE_POLYNOMIAL
+
+# Build rule for target.
+TRIAL_MULTIPLE_POLYNOMIAL: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 TRIAL_MULTIPLE_POLYNOMIAL
+.PHONY : TRIAL_MULTIPLE_POLYNOMIAL
+
+# fast build rule for target.
+TRIAL_MULTIPLE_POLYNOMIAL/fast:
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build
+.PHONY : TRIAL_MULTIPLE_POLYNOMIAL/fast
+
+#=============================================================================
+# Target rules for targets named TRIAL
+
+# Build rule for target.
+TRIAL: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 TRIAL
+.PHONY : TRIAL
+
+# fast build rule for target.
+TRIAL/fast:
+	$(MAKE) -f CMakeFiles/TRIAL.dir/build.make CMakeFiles/TRIAL.dir/build
+.PHONY : TRIAL/fast
 
 factorization/factorizerQuick.o: factorization/factorizerQuick.c.o
 
@@ -168,8 +181,8 @@ factorization/factorizerQuick.o: factorization/factorizerQuick.c.o
 
 # target to build an object file
 factorization/factorizerQuick.c.o:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.o
 .PHONY : factorization/factorizerQuick.c.o
 
 factorization/factorizerQuick.i: factorization/factorizerQuick.c.i
@@ -178,8 +191,8 @@ factorization/factorizerQuick.i: factorization/factorizerQuick.c.i
 
 # target to preprocess a source file
 factorization/factorizerQuick.c.i:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.i
 .PHONY : factorization/factorizerQuick.c.i
 
 factorization/factorizerQuick.s: factorization/factorizerQuick.c.s
@@ -188,8 +201,8 @@ factorization/factorizerQuick.s: factorization/factorizerQuick.c.s
 
 # target to generate assembly for a file
 factorization/factorizerQuick.c.s:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/factorization/factorizerQuick.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/factorization/factorizerQuick.c.s
 .PHONY : factorization/factorizerQuick.c.s
 
 master/masterMain.o: master/masterMain.c.o
@@ -279,9 +292,10 @@ utils/gmp_patch.o: utils/gmp_patch.c.o
 
 # target to build an object file
 utils/gmp_patch.c.o:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.o
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/gmp_patch.c.o
 .PHONY : utils/gmp_patch.c.o
 
 utils/gmp_patch.i: utils/gmp_patch.c.i
@@ -290,9 +304,10 @@ utils/gmp_patch.i: utils/gmp_patch.c.i
 
 # target to preprocess a source file
 utils/gmp_patch.c.i:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.i
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.i
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/gmp_patch.c.i
 .PHONY : utils/gmp_patch.c.i
 
 utils/gmp_patch.s: utils/gmp_patch.c.s
@@ -301,9 +316,10 @@ utils/gmp_patch.s: utils/gmp_patch.c.s
 
 # target to generate assembly for a file
 utils/gmp_patch.c.s:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.s
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.s
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/gmp_patch.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/gmp_patch.c.s
 .PHONY : utils/gmp_patch.c.s
 
 utils/precomputations.o: utils/precomputations.c.o
@@ -312,9 +328,10 @@ utils/precomputations.o: utils/precomputations.c.o
 
 # target to build an object file
 utils/precomputations.c.o:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.o
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.o
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/precomputations.c.o
 .PHONY : utils/precomputations.c.o
 
 utils/precomputations.i: utils/precomputations.c.i
@@ -323,9 +340,10 @@ utils/precomputations.i: utils/precomputations.c.i
 
 # target to preprocess a source file
 utils/precomputations.c.i:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.i
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.i
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/precomputations.c.i
 .PHONY : utils/precomputations.c.i
 
 utils/precomputations.s: utils/precomputations.c.s
@@ -334,9 +352,10 @@ utils/precomputations.s: utils/precomputations.c.s
 
 # target to generate assembly for a file
 utils/precomputations.c.s:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.s
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/precomputations.c.s
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/precomputations.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/precomputations.c.s
 .PHONY : utils/precomputations.c.s
 
 utils/utils.o: utils/utils.c.o
@@ -345,9 +364,10 @@ utils/utils.o: utils/utils.c.o
 
 # target to build an object file
 utils/utils.c.o:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.o
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.o
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.o
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/utils.c.o
 .PHONY : utils/utils.c.o
 
 utils/utils.i: utils/utils.c.i
@@ -356,9 +376,10 @@ utils/utils.i: utils/utils.c.i
 
 # target to preprocess a source file
 utils/utils.c.i:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.i
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.i
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.i
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.i
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/utils.c.i
 .PHONY : utils/utils.c.i
 
 utils/utils.s: utils/utils.c.s
@@ -367,9 +388,10 @@ utils/utils.s: utils/utils.c.s
 
 # target to generate assembly for a file
 utils/utils.c.s:
-	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.s
-	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.s
 	$(MAKE) -f CMakeFiles/SIMQS_Master.dir/build.make CMakeFiles/SIMQS_Master.dir/utils/utils.c.s
+	$(MAKE) -f CMakeFiles/SIMQS_Worker.dir/build.make CMakeFiles/SIMQS_Worker.dir/utils/utils.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/build.make CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir/utils/utils.c.s
+	$(MAKE) -f CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/build.make CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir/utils/utils.c.s
 .PHONY : utils/utils.c.s
 
 worker/reports.o: worker/reports.c.o
@@ -459,12 +481,13 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
-	@echo "... TRIAL"
+	@echo "... SIMQS_Master"
+	@echo "... SIMQS_Worker"
 	@echo "... rebuild_cache"
 	@echo "... TRIAL_DIVISION_MAIN_TEST"
-	@echo "... SIMQS_Worker"
-	@echo "... SIMQS_Master"
+	@echo "... TRIAL_MULTIPLE_POLYNOMIAL"
+	@echo "... edit_cache"
+	@echo "... TRIAL"
 	@echo "... factorization/factorizerQuick.o"
 	@echo "... factorization/factorizerQuick.i"
 	@echo "... factorization/factorizerQuick.s"

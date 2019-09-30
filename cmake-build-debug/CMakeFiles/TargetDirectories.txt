@@ -1,6 +1,7 @@
-/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/TRIAL.dir
+/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Master.dir
+/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir
 /home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/rebuild_cache.dir
 /home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/TRIAL_DIVISION_MAIN_TEST.dir
-/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir
-/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/SIMQS_Master.dir
+/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/TRIAL_MULTIPLE_POLYNOMIAL.dir
+/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/andysnake/CLionProjects/simpqs/cmake-build-debug/CMakeFiles/TRIAL.dir

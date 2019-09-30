@@ -7,7 +7,39 @@
 
 #define DIGITNUM_PRINT 5
 #define PRIMES_LIST_WORD_SIZE sizeof(int)
-
+#define DEBUG_CHECK
+void printSievingJumps(struct Precomputes* precomputes, int blockPrint) {
+    printf("\n sieve jumps <sol1_p,sol2_p> \n");
+    __uint64_t sizeFB=precomputes->factorbaseSize;
+    for(__uint64_t i=0;i<sizeFB-blockPrint;i+=blockPrint){
+        printf("%lu:\t\t",i);
+        for(int j=0;j<blockPrint;j++){
+            printf(" <%*ld,%*ld> ",DIGITNUM_PRINT,precomputes->polPrecomputedData.sol1p[i+j],DIGITNUM_PRINT,precomputes->polPrecomputedData.sol2p[i+j]);
+        }
+        printf("\n");
+    }
+}
+int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial polynomial) {
+    mpz_t polVal;mpz_init(polVal);
+    u_int64_t prime,sieveJump;
+    int result=EXIT_SUCCESS;
+    for (u_int i = 0; i < precomputes->factorbaseSize; ++i) {
+        prime = precomputes->factorbase[i];
+        sieveJump=precomputes->polPrecomputedData.sol1p[i];
+        POLYNOMIAL_VAL_COMPUTE(sieveJump,polVal,polynomial);
+        if(!mpz_divisible_ui_p(polVal,prime)) {
+            fprintf(stderr, "INVALID SIEVE JUMP AT INDEX %d\n", i);
+            result = EXIT_FAILURE;
+        }
+        sieveJump=precomputes->polPrecomputedData.sol2p[i];
+        POLYNOMIAL_VAL_COMPUTE(sieveJump,polVal,polynomial);
+        if(!mpz_divisible_ui_p(polVal,prime)) {
+            fprintf(stderr, "INVALID SIEVE JUMP AT INDEX %d\n", i);
+            result = EXIT_FAILURE;
+        }
+    }
+    return result;
+}
 void printPrecomputations(struct Precomputes* precomputes, int blockPrint){
     printf("\n precomputations \n");
     __uint64_t sizeFB=precomputes->factorbaseSize;
@@ -37,17 +69,19 @@ void printPrecomputations(struct Precomputes* precomputes, int blockPrint){
         }
         gmp_printf("\n");
     }
-    printf("\n sieve jumps <sol1_p,sol2_p> \n");
-    for(__uint64_t i=0;i<sizeFB-blockPrint;i+=blockPrint){
-        printf("%lu:\t\t",i);
-        for(int j=0;j<blockPrint;j++){
-            printf(" <%*ld,%*ld> ",DIGITNUM_PRINT,precomputes->polPrecomputedData.sol1p[i+j],DIGITNUM_PRINT,precomputes->polPrecomputedData.sol2p[i+j]);
-        }
-        printf("\n");
+    printSievingJumps(precomputes,blockPrint);
+    printf("\n---B_l vals ---\n");
+    for (int k = 0; k < precomputes->polPrecomputedData.s; ++k) {
+//        printf("B_%d\t",k);
+        gmp_printf("%Zd\t",precomputes->polPrecomputedData.B_l[k]);
     }
-    //TODO -> change polynomial
-//    precomputes->polPrecomputedData.B_ainv_2Bj_p
-//    precomputes->polPrecomputedData.B_l
+    printf("\n\n---2*B*jainv_mod_p vals---\n");
+    for (u_int k = 0; k < (precomputes->polPrecomputedData.s * precomputes->factorbaseSize)-blockPrint;k+=blockPrint) {
+        for (int i = 0; i < blockPrint; ++i) {
+            gmp_printf("%Zd\t",precomputes->polPrecomputedData.B_ainv_2Bj_p[k+i]);
+        }
+        gmp_printf("\n");
+    }
 }
 #define FACTOR_BASE_BLOCK_REALLOC_N 1024
 

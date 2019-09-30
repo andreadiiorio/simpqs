@@ -1,3 +1,4 @@
+#!/usr/bin/env gp
 genSemiPrime(kernelSize10)={
 	\\gen semiPrime grater then 10^kernelSize10
 	\\with randomness added
@@ -17,10 +18,11 @@ L(n)={
 \\gen semiprime
 PRIME_KERNEL_SIZE_10=16
 \\n=genSemiPrime(PRIME_KERNEL_SIZE_10)
+
 n=100000030925519250968982645360649
 \\default tuning Crandal book
 B=ceil(L(n)^(0.5))
-M=ceil(L(n)^(0.5))
+M=ceil(L(n)^(0.5))-2000
 print("L(n) tuning...> B: ",B,"M: ",M)
 \\B=11000
 \\M=15000
@@ -35,6 +37,29 @@ FactorBaseGen(start,lenght,n)={
 		if(kronecker(n,p)==1,listput(factorbase,p);l+=1);
 		if(l==lenght,break();));
 	return(factorbase);
+}
+
+genB(a)={
+	\\\\\\\\\\\\ GEN B --> contini
+	b=0;
+	a_factors=mattranspose(factor(a));
+	print("a:  ",a_factors);
+	for(l=1,l=length(a_factors),
+		ql=a_factors[1,l];
+		a_ql=a/ql;
+		t_ql=sqrt(Mod(n,ql));
+		w_ql=Mod(a/ql,ql)^-1;
+		v=w_ql*t_ql;
+		\\print("bgenDebug: \t gamma: ",v," ql: ",ql);
+		if(lift(v)>(ql/2),
+			v=ql-v;
+			\\print("newGamma: ",v);
+		);
+		\\Bl=v*(a/ql);
+		print("gamma: ",v," ql: ",ql," a/ql ",a_ql);
+		b+=lift(v)*(a/ql);
+	);
+	return(b);
 }
 genPolCoeff_a_sequentially_centered(n,M,s,{start=0})={
 	/*
@@ -51,7 +76,7 @@ genPolCoeff_a_sequentially_centered(n,M,s,{start=0})={
 	SIMPQS_a_THREASHOLD=truncate(((2*n)^(0.5))/M);	\\contini
 	print("generating a coefficient Bsmooth Square up to",SIMPQS_a_THREASHOLD," with coeff a=q1*..*qs with s: ",s);
 	if(start==0,start=truncate(SIMPQS_a_THREASHOLD^(1/s)));	
-	start=max(start,2000);						\\avoid small primes for a gen
+	start=max(start,2068);						\\avoid small primes for a gen
 	print("START -> ",start);
 	\\search for first prime
 	p=nextprime(start);
@@ -89,25 +114,7 @@ genPolCoeff_a_sequentially_centered(n,M,s,{start=0})={
 	);
 	print("a: ",a," factors#:",i, " vs threashold: ",SIMPQS_a_THREASHOLD," delta ",a-SIMPQS_a_THREASHOLD," ~digits#: ",log(a-SIMPQS_a_THREASHOLD)/log(10));
 
-	\\\\\\\\\\\\ GEN B --> contini 
-
-	b=0;
-	a_factors=mattranspose(factor(a));
-	print("a:  ",a_factors);
-	for(l=1,l=length(a_factors),
-		ql=a_factors[1,l];
-		a_ql=a/ql;
-		t_ql=sqrt(Mod(n,ql));
-		w_ql=Mod(a/ql,ql)^-1;
-		v=w_ql*t_ql;
-		print("bgenDebug: \t gamma: ",v," ql: ",ql);
-		if(lift(v)>(ql/2),
-			v=ql-v;
-			print("newGamma: ",v);
-		);
-		\\Bl=v*(a/ql);
-		b+=lift(v)*(a/ql);
-	);
+    b=genB(a);
 	print("b: ",b);
 	c=(b^2-n)/a;
 	print("c: ",c);
@@ -320,6 +327,7 @@ listRange(sourceList,rangeStart,rangeEnd)={
 	for(i=rangeStart,i=rangeEnd,listput(outList,sourceList[i]));
 	return(outList);
 }
+
 \\f()=CheckBSmoothnessPol(a,b,c,M)
 \\f()
 \\stackUp({newSize=8000000000})=default(parisize,newSize) \\deflt increase stack to 7629MB
@@ -327,17 +335,17 @@ stackUp({newSize=800000000})=default(parisize,newSize) \\deflt increase stack to
 stackUp()
 
 
-\\generate mongomery polinomio coefficients in an array
-polCoeff=genPolCoeff_a_sequentially_centered(n,M,4)
-a=polCoeff[1]
-b=polCoeff[2]
-c=polCoeff[3]
+\\generate mongomery polinomio coefficients in an array TODO (INVERT COMMENT OF NEXT 2 LINE FOR COEFF GEN/READ)
+\\polCoeff=genPolCoeff_a_sequentially_centered(n,M,4)
+polCoeff=readvec("polynomialCoeff")
+
+a=polCoeff[1]; b=polCoeff[2]; \\c=polCoeff[3];
+c=ceil((b^2-n)/a);
 print("\n\n\n\ngenerated Pol Coeff a: ",a," b: ",b," c: ",c)
 print(" N: ",n," B: ",B," M: ",M)
-
+printf("\n\n\n\n\n\n\n\n\n")
 
 ff(j)=(a*j+b)^2-n
 \\any pol. values in array [-M,M] with concurrent sieve --> as gp factorize
-SieveConcurrentBSmoothnessPolLargePrimeList(a,b,c,ceil(M),n);
-\\subFACTORBASE=listRange(FACTORBASE,200,300);
-\\\q
+\\SieveConcurrentBSmoothnessPolLargePrimeList(a,b,c,ceil(M),n);
+\\SieveTrivialBSmoothnessPolLargePrimeList(a,b,c,ceil(M),n);

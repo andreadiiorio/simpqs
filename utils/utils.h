@@ -19,8 +19,8 @@
 //initialize multiple precision int from sourceString in dest
 #define strToMpz(dest,sourceStr)\
     if (mpz_init_set_str(dest,sourceStr, 10) == -1) {\
-    printf("Cannot load N %s\n", argv[1]);\
-    exit(2);\
+    printf("Cannot load N %s\n", sourceStr);\
+    exit(EXIT_FAILURE);\
 }
 ////// pthread macros
 
@@ -35,12 +35,15 @@
             return (void*)EXIT_FAILURE;}
 
 
+#define MOD(a,b) (((a < 0) ? ((a % b) + b) : a) % b)
 
 
 #define LONG_MUL_OVERFLOW_P(a, b) \
    __builtin_mul_overflow_p (a, b, (__typeof__ ((a) * (b))) 0)
 
 void printPrecomputations(struct Precomputes* precomputes,int blockPrint);
+void printSievingJumps(struct Precomputes* precomputes, int blockPrint) ;
+int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial polynomial);
 
 
 //read primes from precomputed primes list file until reached smoothnessBound
@@ -81,6 +84,10 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
     fprintf(stderr,"\n\n Elapsed secs and micros: %ld , %ld \n\n",(delta).tv_sec,(delta).tv_usec);fflush(0);
 
 
-struct polynomial* initializationVars(char** argv);
-struct Precomputes* preComputations(struct polynomial* polynomial);
+struct polynomial* initializationVars(char** argv);         //TODO DEPRECATED HARDCODED CONFIG
+CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M, u_int64_t B, int sieverThreadsNum);
+struct Precomputes* preComputations(CONFIGURATION *configuration,struct polynomial* dstPolynomial);
+
+void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes);
+A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, int s,struct Configuration *configuration);
 #endif //QUADRATIC_SIEVE_UTILS_H

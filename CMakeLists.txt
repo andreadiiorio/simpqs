@@ -31,6 +31,7 @@ set(GCC_FLAGS
 add_executable(SIMQS_Worker ${SOURCES_COMMON} ${SOURCES_WORKER})
 add_executable(SIMQS_Master ${SOURCES_COMMON} ${SOURCES_MASTER})
 add_executable(TRIAL_DIVISION_MAIN_TEST ${SOURCES_FACTORIZE} ${SOURCES_COMMON} )
+add_executable(TRIAL_MULTIPLE_POLYNOMIAL ${SOURCES_COMMON} )
 add_executable(TRIAL try.c)
 set(CMAKE_C_FLAGS ${GCC_FLAGS})
 #target_link_libraries(PariTrys /pari)

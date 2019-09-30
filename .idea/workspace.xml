@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="SIMPQS" targetName="TRIAL_MULTIPLE_POLYNOMIAL" />
       <config projectName="SIMPQS" targetName="TRIAL_DIVISION_MAIN_TEST" />
       <config projectName="SIMPQS" targetName="SIMQS_Master" />
       <config projectName="SIMPQS" targetName="TRIAL" />
@@ -14,48 +15,21 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a71802d-1265-412d-81ca-3bc46e34e922" name="Default Changelist" comment="concurrent sieving//factorization checked&#10; now unique factorize job queue written by siever threads and emptied by factorizer manager thread using factorizer worker thread (manager and workers instantiated as detached thread and resetted for each new ARRAY BLOCK) &#10; better test case for sieving concurrently&#10; &#10; matrix stage &amp; large prime accopiation :))) !&#10; Hopefully&#10; andysnake">
-      <change afterPath="$PROJECT_DIR$/worker/reports.c" afterDir="false" />
+    <list default="true" id="7a71802d-1265-412d-81ca-3bc46e34e922" name="Default Changelist" comment="polynomial change exploiting precomputation added with test&#10;...also tested with old pari-gp script -&gt; enhanced with manual set of coeff via file (&quot;polynomialCoeff&quot;)&#10;&#10;-old-&#10;TODO FREE NEEDED TO ADD after sieving (removed for debug )">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CONFIGURATION.h" beforeDir="false" afterPath="$PROJECT_DIR$/CONFIGURATION.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SIMPQS.h" beforeDir="false" afterPath="$PROJECT_DIR$/SIMPQS.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/C.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/master/masterMain.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/gmp_patch.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/utils.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Master.dir/utils/utils.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/cmake_clean.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SIMQS_Worker.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/SIMPQS.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/SIMPQS.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/SIMQS_Master" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/factorization/factorizerQuick.c" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/factorization/factorizerQuick.h" beforeDir="false" afterPath="$PROJECT_DIR$/factorization/factorizerQuick.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parigpScriptAny/BsmoothAny.gp" beforeDir="false" afterPath="$PROJECT_DIR$/parigpScriptAny/BsmoothAny.gp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/precomputations.c" beforeDir="false" afterPath="$PROJECT_DIR$/utils/precomputations.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/utils.c" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worker/sievingSIMPQS.c" beforeDir="false" afterPath="$PROJECT_DIR$/worker/sievingSIMPQS.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worker/sievingSIMPQS.h" beforeDir="false" afterPath="$PROJECT_DIR$/worker/sievingSIMPQS.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worker/workerMain.c" beforeDir="false" afterPath="$PROJECT_DIR$/worker/workerMain.c" afterDir="false" />
     </list>
@@ -94,6 +68,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="andysnake &lt;andrea.diiorio.sniper@gmail.com&gt;" />
         <option value="andysnake96 &lt;andrea.diiorio.sniper@gmail.com&gt;" />
       </list>
     </option>
@@ -143,7 +118,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.SIMQS_Worker">
+  <component name="RunManager" selected="CMake Application.TRIAL_MULTIPLE_POLYNOMIAL">
     <configuration name="SIMQS_Master" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="SIMQS_Master" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="SIMQS_Master">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -164,6 +139,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TRIAL_MULTIPLE_POLYNOMIAL" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="TRIAL_MULTIPLE_POLYNOMIAL" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="TRIAL_MULTIPLE_POLYNOMIAL">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="trialFactorizeTestMain" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-D JOBS_ON_STACK" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SIMPQS" TARGET_NAME="TRIAL_DIVISION_MAIN_TEST" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="SIMPQS" RUN_TARGET_NAME="TRIAL_DIVISION_MAIN_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -174,6 +154,7 @@
       <item itemvalue="CMake Application.SIMQS_Worker" />
       <item itemvalue="CMake Application.TRIAL" />
       <item itemvalue="CMake Application.TRIAL_DIVISION_MAIN_TEST" />
+      <item itemvalue="CMake Application.TRIAL_MULTIPLE_POLYNOMIAL" />
       <item itemvalue="CMake Application.trialFactorizeTestMain" />
     </list>
   </component>
@@ -233,7 +214,16 @@
       <workItem from="1569489048654" duration="3615000" />
       <workItem from="1569496023769" duration="368000" />
       <workItem from="1569516324285" duration="4127000" />
-      <workItem from="1569593399983" duration="1628000" />
+      <workItem from="1569593399983" duration="8117000" />
+      <workItem from="1569661218140" duration="7600000" />
+      <workItem from="1569681361034" duration="7479000" />
+      <workItem from="1569767207661" duration="811000" />
+      <workItem from="1569768051316" duration="6190000" />
+      <workItem from="1569773405215" duration="355000" />
+      <workItem from="1569780793454" duration="5531000" />
+      <workItem from="1569851558412" duration="1646000" />
+      <workItem from="1569855228628" duration="7283000" />
+      <workItem from="1569870253923" duration="3175000" />
     </task>
     <task id="LOCAL-00001" summary="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)">
       <created>1566507153975</created>
@@ -256,7 +246,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566916343150</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="sieving and (partial) reports ok on 1  polynomial -&gt; NB on NOT FRAGMENTED ARRAY SIZE IN THE ITERATIONS DIFFERENT NUM OF RELATION FOUNDED..?&#10;reports merged at process level by shallow copy and before with mpz re init&#10;TODO FREE NEEDED TO ADD after sieving (removed for debug )&#10;Matrix stage added with MartianiLib extended for SIMPQS&#10;Report Duplicate automated check added&#10;Hopefully">
+      <created>1569595311781</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1569595311781</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -283,24 +280,26 @@
     <MESSAGE value="work in progress&#10;sieve semi done&#10;  FACTORIZE TRIAL DIVIDE TODO WITH THREAD_GROUP_POOL&#10;  &#10;  CHECK&#10; FACTOR_BASE_PRECOMPUTED TO RUNTIME FILTER WITH LEJANDRE :)" />
     <MESSAGE value="trial divide thread group pool extra concurrent seems to work&#10;-&amp;.$-&#10;:)" />
     <MESSAGE value="factorization trial divide concurrent test case up" />
-    <option name="LAST_COMMIT_MESSAGE" value="factorization trial divide concurrent test case up" />
+    <MESSAGE value="sieving and (partial) reports ok on 1  polynomial -&gt; NB on NOT FRAGMENTED ARRAY SIZE IN THE ITERATIONS DIFFERENT NUM OF RELATION FOUNDED..?&#10;reports merged at process level by shallow copy and before with mpz re init&#10;TODO FREE NEEDED TO ADD after sieving (removed for debug )&#10;&#10;Hopefully" />
+    <MESSAGE value="sieving and (partial) reports ok on 1  polynomial -&gt; NB on NOT FRAGMENTED ARRAY SIZE IN THE ITERATIONS DIFFERENT NUM OF RELATION FOUNDED..?&#10;reports merged at process level by shallow copy and before with mpz re init&#10;TODO FREE NEEDED TO ADD after sieving (removed for debug )&#10;Matrix stage added with MartianiLib extended for SIMPQS&#10;Report Duplicate automated check added&#10;Hopefully" />
+    <option name="LAST_COMMIT_MESSAGE" value="sieving and (partial) reports ok on 1  polynomial -&gt; NB on NOT FRAGMENTED ARRAY SIZE IN THE ITERATIONS DIFFERENT NUM OF RELATION FOUNDED..?&#10;reports merged at process level by shallow copy and before with mpz re init&#10;TODO FREE NEEDED TO ADD after sieving (removed for debug )&#10;Matrix stage added with MartianiLib extended for SIMPQS&#10;Report Duplicate automated check added&#10;Hopefully" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/utils/utils.h</url>
-          <line>54</line>
+          <line>57</line>
           <option name="timeStamp" value="114" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/try.c</url>
-          <line>64</line>
+          <line>65</line>
           <option name="timeStamp" value="116" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/try.c</url>
-          <line>25</line>
+          <line>26</line>
           <option name="timeStamp" value="120" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -337,6 +336,11 @@
           <url>file://$PROJECT_DIR$/worker/reports.c</url>
           <line>16</line>
           <option name="timeStamp" value="136" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/utils/precomputations.c</url>
+          <line>255</line>
+          <option name="timeStamp" value="154" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

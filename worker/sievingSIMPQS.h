@@ -56,7 +56,6 @@ void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix);
 extern mpz_t   N;
 extern SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
 extern struct Configuration Config;
-REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SIEVE_ARRAY_BLOCK sieveArrayBlock,
-          struct polynomial* actualPol);
+REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SIEVE_ARRAY_BLOCK sieveArrayBlock,struct polynomial* actualPol);
 void* siever_thread_logic(void* arg);       //siever pthread func
 #endif //SIMPQS_SIEVINGSIMPQS_H

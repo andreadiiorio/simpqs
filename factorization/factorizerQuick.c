@@ -138,7 +138,6 @@ void* FactorizeTrialDivide(void* args) {
             fprintf(stderr, "barrier error code:%d\n", barrierWaitReturn);
             return (void *) EXIT_FAILURE;
         }//NOW ALL THREAD CONCORDE WITH N VALUE (SETTED BY THREAD GROUP MANAGER) and eventual setted exit condition flag
-
 #ifdef  DEBUG   //posix pthread barrier memory barrier check
         if(factorizerID==FACTORIZER_MANAGER_ID) {
             gmp_printf("factorizing %Zd, from thread:%lu iteration %d \n", *(factorizerArgs->N),pthread_self(),factorizeIteration );
@@ -254,6 +253,7 @@ void* FactorizeTrialDivide(void* args) {
 
             ////manager exit condition
             if (++factorizeIteration == FACTORIZATION_ITERATION_MAX) {
+                free(factors);
 #ifdef VERBOSE
               printf("MAX FACT ITERATIONS REACHED -->FACTORIZATION FAILED\n");
 #endif
@@ -452,7 +452,7 @@ int _main() {
 #endif
     u_int64_t B=400000;
     struct polynomial* polynomial=initializationVars(NULL);
-    struct Precomputes* precomputations=preComputations(polynomial);
+    struct Precomputes* precomputations= preComputations(polynomial, NULL);
     if(!precomputations)
         exit(EXIT_FAILURE);
     struct Configuration configuration={.SIEVING_THREAD_NUM=1};

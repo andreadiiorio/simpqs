@@ -12,7 +12,7 @@
 mpz_t   N;
 SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
 struct Configuration Config;
-
+const char* n_str="100000030925519250968982645360649";
 
 int main(int argc, char** argv){
     //FORKED WORKER PROCESS TO SIEVE BSMOOTH RELATION AND PARTIAL RELATION WITH POLINOMIO FAMILIES FROM a
@@ -20,16 +20,18 @@ int main(int argc, char** argv){
         printf("USAGE: N,M,B,a, ....\n"); //todo append config
         //exit(EXIT_FAILURE);
     }
-    struct polynomial* polynomial= initializationVars(argv);
-    struct Precomputes* precomputations=preComputations(polynomial);
-    if (!precomputations)
+    CONFIGURATION *configuration = initConfiguration(n_str, 0, 0, 0, 0);
+    //// get first polynomial:
+    struct polynomial pol;
+    PRECOMPUTES *precomputes = preComputations(configuration, &pol);
+    if (!precomputes )
         exit(EXIT_FAILURE);
-    gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", polynomial->a, polynomial->b, N);
+    gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", pol.a, pol.b, N);
 
     // init local worker matrix, used to aggregate relations founded in the various sieving iteration
     //TODO AT POLYNOMIAL FAMILY END MATRIX WILL BE SERIALIZED AND SENT TO MASTER
     MATRIX matrixWorker;
-    init_matrix(&matrixWorker,1,precomputations->primes.vectorSize);
+    init_matrix(&matrixWorker,1,precomputes->primes.vectorSize);
 
 #ifdef VERBOSE
     printPrecomputations(Precomputations,5);
@@ -45,7 +47,7 @@ int main(int argc, char** argv){
         fprintf(stderr,"sieve array block in mem malloc failed\n");
         exit(EXIT_FAILURE);
     }
-    REPORTS* polynomialReports=Sieve(&Config, precomputations, SieveArrayBlock, polynomial);
+    REPORTS* polynomialReports=Sieve(&Config, precomputes, SieveArrayBlock, &pol);
     if (!polynomialReports){
         fprintf(stderr,"sieve error occurred\n");
         exit(EXIT_FAILURE);

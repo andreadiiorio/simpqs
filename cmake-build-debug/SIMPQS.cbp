@@ -17,18 +17,8 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="TRIAL">
-				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/TRIAL" prefix_auto="0" extension_auto="0"/>
+			<Target title="SIMQS_Master">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Master" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -45,14 +35,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Master"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="TRIAL/fast">
-				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/TRIAL" prefix_auto="0" extension_auto="0"/>
+			<Target title="SIMQS_Master/fast">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Master" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -69,7 +59,55 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL/fast"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Master/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SIMQS_Worker">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Worker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/CLionProjects/simpqs/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Worker"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SIMQS_Worker/fast">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Worker" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/CLionProjects/simpqs/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Worker/fast"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -133,8 +171,8 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="SIMQS_Worker">
-				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Worker" prefix_auto="0" extension_auto="0"/>
+			<Target title="TRIAL_MULTIPLE_POLYNOMIAL">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/TRIAL_MULTIPLE_POLYNOMIAL" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -151,14 +189,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Worker"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL_MULTIPLE_POLYNOMIAL"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="SIMQS_Worker/fast">
-				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Worker" prefix_auto="0" extension_auto="0"/>
+			<Target title="TRIAL_MULTIPLE_POLYNOMIAL/fast">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/TRIAL_MULTIPLE_POLYNOMIAL" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -175,38 +213,24 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Worker/fast"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL_MULTIPLE_POLYNOMIAL/fast"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="SIMQS_Master">
-				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Master" prefix_auto="0" extension_auto="0"/>
+			<Target title="edit_cache">
 				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/andysnake/CLionProjects/simpqs/."/>
-					<Add directory="/usr/include/c++/8"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
-					<Add directory="/usr/include/c++/8/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
+				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Master"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="SIMQS_Master/fast">
-				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/SIMQS_Master" prefix_auto="0" extension_auto="0"/>
+			<Target title="TRIAL">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/TRIAL" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -223,7 +247,31 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 SIMQS_Master/fast"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="TRIAL/fast">
+				<Option output="/home/andysnake/CLionProjects/simpqs/cmake-build-debug/TRIAL" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/andysnake/CLionProjects/simpqs/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/andysnake/CLionProjects/simpqs/."/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRIAL/fast"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/andysnake/CLionProjects/simpqs/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -231,22 +279,24 @@
 			</Target>
 		</Build>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/CONFIGURATION.h">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/SIMPQS.h">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/factorization/factorizerQuick.c">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/factorization/factorizerQuick.h">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/master/masterMain.c">
 			<Option target="SIMQS_Master"/>
@@ -261,34 +311,40 @@
 			<Option target="TRIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/utils/gmp_patch.c">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/utils/gmp_patch.h">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/utils/precomputations.c">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/utils/precomputations.h">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/utils/utils.c">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/utils/utils.h">
-			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
-			<Option target="SIMQS_Worker"/>
 			<Option target="SIMQS_Master"/>
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/worker/reports.c">
 			<Option target="SIMQS_Worker"/>
