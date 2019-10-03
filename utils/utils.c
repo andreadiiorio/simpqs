@@ -19,8 +19,8 @@ void printSievingJumps(struct Precomputes* precomputes, int blockPrint) {
         printf("\n");
     }
 }
-int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial polynomial) {
-    mpz_t polVal;mpz_init(polVal);
+int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial* polynomial) {
+    mpz_t polVal,tmp;mpz_inits(polVal,tmp,NULL);
     u_int64_t prime,sieveJump;
     int result=EXIT_SUCCESS;
     for (u_int i = 0; i < precomputes->factorbaseSize; ++i) {

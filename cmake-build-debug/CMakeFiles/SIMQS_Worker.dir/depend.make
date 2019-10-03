@@ -28,7 +28,9 @@ CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o: .././SIMPQS.h
 CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o: ../utils/utils.c
 CMakeFiles/SIMQS_Worker.dir/utils/utils.c.o: ../utils/utils.h
 
+CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: .././CONFIGURATION.h
 CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: .././SIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: .././utils/utils.h
 CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: ../worker/reports.c
 CMakeFiles/SIMQS_Worker.dir/worker/reports.c.o: ../worker/sievingSIMPQS.h
 

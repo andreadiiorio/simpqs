@@ -12,7 +12,6 @@
 
 #define OVERFLOW_CHECK_POLYNOMIAL   //perform overflow check
 #define DELTA_LOG_SIEVE_TOLLERATION 10       //tolleration constant for log threashold comparison for factorize job mark
-mpz_t N,tmp;
 //SIEVE_ARRAY_BLOCK  SieveArrayBlock;
 
 struct polynomial* polRef;
@@ -32,23 +31,10 @@ void polynomialValueQuick(int64_t j, mpz_t outputVal, struct polynomial polynomi
     //(a*j+b)^2
     mpz_pow_ui(outputVal, outputVal, 2);
 
-    mpz_sub(outputVal,outputVal,N);
+    mpz_sub(outputVal,outputVal,*(polynomial.N));
 
 }
-void polynomialValue(u_int64_t j,mpz_t outputVal,struct polynomial polynomial){
-    //return a*j^2+2*b*j+c in outputVal
-    //outputVal assumed  to be already initiated at call time
-    //2*b*j
-    mpz_mul_ui(tmp,polynomial.b,j);
-    mpz_mul_ui(tmp,polynomial.b,2);
-    //a*j^2
-    mpz_mul_ui(outputVal,polynomial.a,j);
-    mpz_mul_ui(outputVal,outputVal,j);
-    //a*j^2+2*b*j
-    mpz_add(outputVal,outputVal,tmp);
-    //a*j^2+2*b*j+c
-    mpz_add(outputVal,outputVal,polynomial.c);
-}
+
 
 #define DEBUG_CHECK
 void sieveSubArrayForPrime(SIEVE_ARRAY_BLOCK subArray, u_int64_t subArrayLen, u_int64_t prime, int64_t sol_p) {
@@ -63,8 +49,8 @@ void sieveSubArrayForPrime(SIEVE_ARRAY_BLOCK subArray, u_int64_t subArrayLen, u_
     for(u_int64_t i=firstSieveDeltha;i<subArrayLen;i+=prime){
         subArray[i].logSieveCumulative+=log_p;              //add log p to log cumulative
 #ifdef DEBUG_CHECK
-        mpz_t tmpDebug;mpz_init(tmpDebug);
-        polynomialValueQuick(i + j_start, tmpDebug, *polRef);
+        mpz_t tmpDebug,tmp;mpz_inits(tmpDebug,tmp,NULL);
+        POLYNOMIAL_VAL_COMPUTE(i + j_start, tmpDebug,polRef);
         if(!mpz_divisible_ui_p(tmpDebug,prime)) {
             gmp_fprintf(stderr, "INVALID LOG SIEVING PRIME:%lu ARRAY ELEMENT:%Zd j:%ld", prime, tmpDebug,i+j_start);fflush(0);
             pause();
@@ -127,7 +113,8 @@ void* siever_thread_logic(void* arg){
         polynomialValueQuick(j,(subArray[i].element),sieverArg.actualPol);    //write polynomial value f(j) in correct array location*/ //TODO LAZY ARRAY VALUES COMPUTATION ONLY FOR PROBABLY BSMOTH ENTRIES IDENTIFIED BY SIEVING SEE BELLOW  ***
     }
 
-    /// sieve for primes in factor base exploiting sieving jumps in precomputation
+    /////// LOG SIEVE FOR PRIMES IN FACTOR BASE EXPLOITING SIEVING JUMPS IN PRECOMPUTATION
+    // added log(p) to each array elements divisible by p
     polRef=&(sieverArg.actualPol);
     struct Precomputes* precomputations=sieverArg.precomputes;
     u_int64_t p=0;
@@ -142,13 +129,13 @@ void* siever_thread_logic(void* arg){
         sieveSubArrayForPrime(subArray, sieverArg.arrayShareSize, p, sol2_p);
     }
 
-    ////// LOG THREASHOLD BASED SIEVING
-    /// find probably Bsmooth array locations in probablyBsmoothArrayLocations factorizing polinomials values
-    mpfr_t LOG_THREASHOLD,Ncpy; mpfr_inits(LOG_THREASHOLD,Ncpy,NULL); mpfr_set_z(Ncpy,N,MPFR_RNDN); //TODO OPTIMIZE LOG THRESHOLD
+    // find probably Bsmooth exploiting LOG SIEVING array locations in probablyBsmoothArrayLocations factorizing polinomials values
+    //probably BSmooth entries setted in an array of pointer ( next to minimun size ) dynamically reallocated  on need
+    mpfr_t LOG_THREASHOLD,Ncpy; mpfr_inits(LOG_THREASHOLD,Ncpy,NULL); mpfr_set_z(Ncpy,*(sieverArg.actualPol.N),MPFR_RNDN); //TODO OPTIMIZE LOG THRESHOLD
     mpfr_sqrt(Ncpy,Ncpy,MPFR_RNDN);
     mpfr_log(LOG_THREASHOLD,Ncpy,MPFR_RNDN);
     long double LogThreashold=mpfr_get_ld(LOG_THREASHOLD,MPFR_RNDN);
-    LogThreashold+=log(sieverArg.configuration->M);
+    LogThreashold+=log(sieverArg.configuration->M);                         //log(sqrt(N)*M)
     LogThreashold-=DELTA_LOG_SIEVE_TOLLERATION;
     fflush(0);
     long int logThresh=lrintl(LogThreashold);
@@ -161,23 +148,30 @@ void* siever_thread_logic(void* arg){
             }}
         }
     }
-#ifdef VERBOSE_0
     fprintf(stderr,"founded %lu likelly to be BSmooth array entries \tvs\t array share of size %lu \t starting from:%ld\n",probablyBsmoothsNum,sieverArg.arrayShareSize,sieverArg.j_start);fflush(0);
-#endif
     ProbablyBsmoothArrayEntries[probablyBsmoothsNum]=NULL;              //set end dynamically allocated array end
 
-    /// try factorizing (probably) BSmooth array  elements
+    /////// FACTORIZE LIKELLY BSMOOTH ENTRIES WITH MULTIPLE CONCURRENT PARALLEL FACTORIZATIONS
+    /*
+     * each likelly to be Bsmooth entry will be appended in thread safe queue in a block of entries
+     * each factorize thread manager will dequeue these entries 1 by 1 and try factorizing it with other factorize thread
+     * Factorization, exponent vector and eventual Large prime founded will be added in place in the entry by pointer container structure ArrayEntryList
+     */
     u_int64_t blockIndex=0;
     struct ArrayEntryList* factorizeJobsBlock[FACTORIZE_JOB_BLOCK_APPEND+1];    //+1 for fast next block assignement
     memset(factorizeJobsBlock,0, sizeof(*factorizeJobsBlock)*(FACTORIZE_JOB_BLOCK_APPEND+1));
     int errCode=0;
+    mpz_t tmp;mpz_init(tmp);
     for(u_int64_t w=0; w<probablyBsmoothsNum; w++) {
         bsmoothToFactPntr = ProbablyBsmoothArrayEntries[w];
-        //TODO *** compute polinomial value only for probably BSmooth array entries (the only one actually used)
-        mpz_init(bsmoothToFactPntr->element);
+        /*because only entry that are likelly to be BSmooth (see log sieving) will be factorized and eventually added to founded reports
+         * only that one will hold actual values allocated and initiated x(j) and a*f(j) and exp vector
+         */
+        mpz_inits(bsmoothToFactPntr->element,bsmoothToFactPntr->x,NULL);
         //init exp vector of element with space to hold all primes vector exp in factorbase
         mpz_init2(bsmoothToFactPntr->exp_vector,sieverArg.precomputes->primes.vectorSize);
-        polynomialValueQuick(bsmoothToFactPntr->j,(bsmoothToFactPntr->element),sieverArg.actualPol);    //write polynomial value f(j) in correct array location
+        POLYNOMIAL_VAL_COMPUTE(bsmoothToFactPntr->j,(bsmoothToFactPntr->element),polRef)    //write polynomial value f(j) in correct array location
+        POLYNOMIAL_VAL_COMPUTE_X(bsmoothToFactPntr->j,(bsmoothToFactPntr->x),polRef)    //write polynomial value f(j) in correct array location
         //// sync append (block of )job to job queue
 #ifdef FACTORIZE_JOB_BLOCK_APPEND
         blockIndex=w%FACTORIZE_JOB_BLOCK_APPEND;
@@ -187,7 +181,7 @@ void* siever_thread_logic(void* arg){
                 appendBlockJobs(sieverArg.factorizeJobQueue, factorizeJobsBlock[0], factorizeJobsBlock[FACTORIZE_JOB_BLOCK_APPEND-1]);
                 UNLOCK_MUTEX( &(sieverArg.factorizeJobQueue->mutex),errCode)
             }
-            ///malloc new blocks
+            ///malloc new blocks -> freed by Factorize Managers on dequeue
             for (int z = 0; z < FACTORIZE_JOB_BLOCK_APPEND; z++) {
                 factorizeJobsBlock[z] = malloc(sizeof(*factorizeJobsBlock[z]));
             }
@@ -210,7 +204,7 @@ void* siever_thread_logic(void* arg){
             return (void *) EXIT_FAILURE;                    // TODO CHECK FREE NEEDED WITHOUT GOTO FOR BETTER GCC OPTIMIZATION
         }
 #endif
-    }   //here all job has been correctly enqueued
+    }
 #ifdef FACTORIZE_JOB_BLOCK_APPEND
     if((blockIndex=(probablyBsmoothsNum-1)%FACTORIZE_JOB_BLOCK_APPEND!=0)) {
         LOCK_MUTEX( &(sieverArg.factorizeJobQueue->mutex),errCode)
@@ -218,7 +212,8 @@ void* siever_thread_logic(void* arg){
         UNLOCK_MUTEX( &(sieverArg.factorizeJobQueue->mutex),errCode)
     }
 #endif
-    ///set queue end for this siever thread and wait until factorizer thread finish to factorize jobs  using a cond var
+    //HERE ALL JOB HAS BEEN CORRECTLY ENQUEUED
+    //mark as terminated producer's queue end and wait until consumers thread will finish to factorize jobs (posix condvar wait)
     LOCK_MUTEX(&(sieverArg.factorizeJobQueue->mutex),errCode)
     sieverArg.factorizeJobQueue->producersEnded++;       //end of the job production for this thread
 //    fprintf(stderr ,"waiting queue job ended from siever %lu\t condvar at %p mutex at %p\n",pthread_self(),&(sieverArg.factorizeJobQueue->emptyAndClosedQueue),&(sieverArg.factorizeJobQueue->mutex));fflush(0);
@@ -228,7 +223,7 @@ void* siever_thread_logic(void* arg){
     }
     UNLOCK_MUTEX(&(sieverArg.factorizeJobQueue->mutex),errCode)
 
-    //////         check job results
+    //////   CHECK JOB RESULTS AND BUILD REPORTS
     int uselessEntry=0;
     struct ArrayEntry* entry;
     for(u_int64_t w=0; w<probablyBsmoothsNum; w++) {
@@ -272,13 +267,15 @@ void* siever_thread_logic(void* arg){
     reportsOut->relationsNum=foundedBsmoothEntries;
     reportsOut->largePrimesEntries=largePrimeEntries;
     reportsOut->partialRelationsNum=foundedLargePrimes;
+
+    //deallocate no more usefull suff
+    free(ProbablyBsmoothArrayEntries);
     return (void*) reportsOut;
 }
 
 
-REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SIEVE_ARRAY_BLOCK sieveArrayBlock,struct polynomial* actualPol) {
-    /*sieve concurrently an array of Mongomery polynomial values divided it in fixed sized blocks sieveArrayBlock
-      sieveArrayBlock expected to be already allocated
+REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, struct polynomial* actualPol) {
+    /*sieve concurrently an array of 1 Mongomery polynomial values divided it in fixed sized blocks sieveArrayBlock
       precomputations will be used to find quickly array location divisible per primes in factorbase
       log(p) will be added to shadow location of array A[j] for each p that divide A[j]
       array entries that will be more than a specific threashold will be factorized (hopefully quickly) concurrently with multiple thread group reading jobs from a locked Queue
@@ -294,7 +291,9 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SI
     //large primes pointers to pointers list for partial relation exploit
 
     REPORTS* polynomialReports=calloc(1,sizeof(*polynomialReports));
-    if(!sieversThreads || !sieverThreadArgs || !polynomialReports){
+    u_int64_t arrayInMemSize=MIN(2 * config->M, config->ARRAY_IN_MEMORY_MAX_SIZE);
+    SIEVE_ARRAY_BLOCK sieveArrayBlock=calloc(1, arrayInMemSize* sizeof(*sieveArrayBlock));
+    if(!sieversThreads || !sieverThreadArgs || !polynomialReports || !sieveArrayBlock){
         fprintf(stderr,"out of memory in siever thread initialization\n");
         result=EXIT_FAILURE;
         goto exit;
@@ -304,13 +303,13 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SI
         result=EXIT_FAILURE;
         goto exit;
     }
-
+    gmp_printf("START SUB SIEVING ARRAY BLOCK DISPATCHING ON N:%Zd POLYNOMIAL a=%Zd\tb=%Zd\n",*actualPol->N,actualPol->a,actualPol->b);fflush(0);
     /////iterate trough j in [-M,M] with a block per time so a fixed and configurable ammount of MEM will be used for the array
-    for(int64_t j= config->M * (-1);  j <= config->M; j+=config->ARRAY_IN_MEMORY_MAX_SIZE) { //move sieve array index j of block jumps to keep in mem only an array block of fixed size
+
+    for(int64_t j= config->M * (-1),upLimit=config->M;  j <= upLimit; j+=config->ARRAY_IN_MEMORY_MAX_SIZE) { //move sieve array index j of block jumps to keep in mem only an array block of fixed size
         printf("---\tnew array block loading of %lu elements starting from index j:%ld\n",config->ARRAY_IN_MEMORY_MAX_SIZE, j);
-        u_int64_t subBlockSize=MIN(2*config->M,config->ARRAY_IN_MEMORY_MAX_SIZE);
-        u_int64_t blockToAssignShare = (subBlockSize) / config->SIEVING_THREAD_NUM;//fair share of array block to assign to each siever thread
-        u_int64_t blockToAssignShareReminder = (subBlockSize) % config->SIEVING_THREAD_NUM;//last thread takes reminder too
+        u_int64_t blockToAssignShare = (arrayInMemSize) / config->SIEVING_THREAD_NUM;//fair share of array block to assign to each siever thread
+        u_int64_t blockToAssignShareReminder = (arrayInMemSize) % config->SIEVING_THREAD_NUM;//last thread takes reminder too
         //// division of array block in subset to assign to siever threads
         for (int t = 0; t < config->SIEVING_THREAD_NUM; t++) {
             sieverThreadArgs[t].arrayBlockPntr =sieveArrayBlock + (blockToAssignShare * t);  //point to siever's array block subset
@@ -345,8 +344,8 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SI
         }   //now siever will see updated array with exp vector of BSmooth entry and LargePrime one
 
         //// join sievers threads
+        REPORTS *reportsFounded=NULL;
         for (int t = 0; t < config->SIEVING_THREAD_NUM; t++) {
-            REPORTS *reportsFounded;
             int threadRetErrCode;
             printf("joining siever thread\t:%d \t %lu \n",t,sieversThreads[t]);fflush(0);
             if ((threadRetErrCode = pthread_join(sieversThreads[t], (void **) &reportsFounded))) {
@@ -355,7 +354,7 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SI
                 goto exit;
             }
 //            print_reports(reportsFounded, precomputes->primes.vectorSize);
-            if (mergeReports(polynomialReports, (REPORTS*) reportsFounded) == EXIT_FAILURE) {
+            if (mergeReports(polynomialReports, (REPORTS *) reportsFounded) == EXIT_FAILURE) {
                 fprintf(stderr, "MERGE POLYNOMIAL REPORTS ERR\n");
                 result = EXIT_FAILURE;
                 goto exit;
@@ -363,12 +362,12 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SI
         }
         fflush(0);
         resetFactorizeJobQueue(factorizeJobQueue, config->SIEVING_THREAD_NUM, NUM_FACTORIZER_GROUPS);
+        free(reportsFounded);
     }
 
     exit:
     printf("Done with polynomial\n");
-    free(sieversThreads);
-    free(sieverThreadArgs);
+    free(sieversThreads);free(sieverThreadArgs);free(sieveArrayBlock);
     pthread_cond_destroy(&factorizeJobQueue->emptyAndClosedQueue);
     pthread_mutex_destroy(&factorizeJobQueue->mutex);
     free(factorizeJobQueue);
@@ -376,7 +375,6 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SI
         fprintf(stderr,"error on polynomial\n");
         return NULL;
     }
-    print_reports(polynomialReports, precomputes->primes.vectorSize, true);
     return polynomialReports;
 }
 

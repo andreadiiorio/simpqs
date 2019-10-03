@@ -282,8 +282,9 @@ void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes){
         precomputes->polPrecomputedData.sol2p[p]=MOD(precomputes->polPrecomputedData.sol2p[p],prime);
     }
 }
-struct Precomputes* preComputations(CONFIGURATION *configuration,struct polynomial* dstPolynomial) {
+struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial, A_COEFF *aCoeff) {
     //smart precomputations stored to reduce computational cost for each sieve iteration on each polynomial
+    //if aCoeff is NULL a coeff will be computed otherwise that value will be used
     struct Precomputes* precomputations;
     if(!(precomputations=malloc(sizeof(*precomputations)))){
         fprintf(stderr,"malloc fail on precomputes\n");
@@ -305,8 +306,7 @@ struct Precomputes* preComputations(CONFIGURATION *configuration,struct polynomi
     precomputations->factorbase=factorBase.pntr; precomputations->factorbaseSize=factorBase.vectorSize;
 
 
-    A_COEFF* aCoeff=gen_a_centered(factorBase.pntr,factorBase.vectorSize,4,configuration);
-
+    if (!aCoeff) aCoeff =gen_a_centered(factorBase.pntr,factorBase.vectorSize,4,configuration);
     //SQRT(N) MOD P GEN
     if(genSqrtN_modp(precomputations)==EXIT_FAILURE){
         fprintf(stderr,"PRECOMPUTATIONS ERROR ON SQRT(N) FOR EACH p IN FACTOR BASE\n");
@@ -338,6 +338,7 @@ struct Precomputes* preComputations(CONFIGURATION *configuration,struct polynomi
 
     ///init first polynomial with computed a and b
     mpz_init_set(dstPolynomial->a,*(aCoeff->a));
+    configuration->a_coefficient=*aCoeff;               //extra shallow copy of a coefficient
     mpz_init_set(dstPolynomial->b,*b_first);
     dstPolynomial->N=&configuration->N;
     exit:
@@ -347,26 +348,25 @@ struct Precomputes* preComputations(CONFIGURATION *configuration,struct polynomi
         return result;
 }
 
-#define TEST_POLYNOMIALS
 #ifdef TEST_POLYNOMIALS
 int main(){
 #else
-void _main(){
+void main_(){
 #endif
     const char* n_str="100000030925519250968982645360649";
     CONFIGURATION *configuration = initConfiguration(n_str, 0, 0, 0, 0);
     //// get first polynomial:
     struct polynomial pol;
-    PRECOMPUTES *precomputes = preComputations(configuration, &pol);
+    PRECOMPUTES *precomputes = preComputations(configuration, &pol,NULL);
     printPrecomputations(precomputes, 10);
     gmp_printf("first polynomial:\ta:%Zd\tb:%Zd\n", pol.a, pol.b);
     printSievingJumps(precomputes, 10);
     //// polynomials family generation:
-    for (u_int j = 1; j + 1 < 1 << (configuration->a_coefficient.a_factors_num - 1); ++j) {
+    for (u_int j = 1; j + 1 < 1u << (configuration->a_coefficient.a_factors_num - 1); ++j) {
         nextPolynomial_b_i(&(pol.b), j, precomputes);
         gmp_printf("polynomial:%d\ta=%Zd;\tb=%Zd;\n", j, pol.a, pol.b);
         printSievingJumps(precomputes, 10);
-        if (checkSieveJumps(precomputes, pol) == EXIT_FAILURE) {
+        if (checkSieveJumps(precomputes, &pol) == EXIT_FAILURE) {
             exit(EXIT_FAILURE);
         }
     }

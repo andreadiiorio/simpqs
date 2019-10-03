@@ -173,12 +173,6 @@ SieveConcurrentBSmoothnessPolLargePrimeList(a,b,c,M,N,{start=0})={
 	BSMOOTHlOGTHREASHOLD=log(M*sqrt(n));					\\mpqs contini log threashold post sieving
 	NONB_SMOOTH_PRINT_RECURR=10000;
 	
-	/*
-	 hashmap to hold large primes identified when founding polinomio values with a non BSMOOTH factorization...
-	 that one will be inserted in map only if are the only 1 large prime inside the pol.value factorization and are upper bounded with defined LARGE_PRIME_UPPERBOUND
-	 map collision will be printed 
-		-->TODO script matching list?
-	*/
 	largePrimeList=List(); 						\\largePrime-->source pol value factors
 	mapFunctionVals=Map();
 	print("START val: ",a*j^2 +2*b*j + c);
@@ -336,8 +330,8 @@ stackUp()
 
 
 \\generate mongomery polinomio coefficients in an array TODO (INVERT COMMENT OF NEXT 2 LINE FOR COEFF GEN/READ)
-\\polCoeff=genPolCoeff_a_sequentially_centered(n,M,4)
-polCoeff=readvec("polynomialCoeff")
+polCoeff=genPolCoeff_a_sequentially_centered(n,M,4)
+\\polCoeff=readvec("polynomialCoeff")
 
 a=polCoeff[1]; b=polCoeff[2]; \\c=polCoeff[3];
 c=ceil((b^2-n)/a);
@@ -345,7 +339,25 @@ print("\n\n\n\ngenerated Pol Coeff a: ",a," b: ",b," c: ",c)
 print(" N: ",n," B: ",B," M: ",M)
 printf("\n\n\n\n\n\n\n\n\n")
 
-ff(j)=(a*j+b)^2-n
+
+x(j)=(a*j+b)
+X(j)=(a*j+b)^2
+ff(j)={(a*j+b)^2-n}
+y(j)={a*(a*j^2+2*b*j+c)}
+modn(v)=Mod(v,n)
+print("x(j)^2==a*f(j) ",(X(q))==(y(q)))
+print("x(j)^2 == a*f(x) mod n ",modn(X(q))==modn(y(q)))
+print("a*f(j)==(a*j+b)^2 -n) ",ff(q)==y(q))		\\alternative forms of pol
+\\REPORT COUPLING MOD N PROOF
+j1=9669;
+j2=96;
+print("aj+b\t",v1=(x(j1)^2))
+print("a*f(j)\t",v2=y(j1))
+modn(x(j1)^2)==modn(y(j1))
+print("ff mod n",modn(v1))
+modn((x(j1)*x(j2)))^2==modn((y(j1)*y(j2)))
+
+
 \\any pol. values in array [-M,M] with concurrent sieve --> as gp factorize
 \\SieveConcurrentBSmoothnessPolLargePrimeList(a,b,c,ceil(M),n);
 \\SieveTrivialBSmoothnessPolLargePrimeList(a,b,c,ceil(M),n);

@@ -1,0 +1,4 @@
+#ifndef SIMPQS_REPORT_H
+#define SIMPQS_REPORT_H
+
+#endif //SIMPQS_REPORT_H

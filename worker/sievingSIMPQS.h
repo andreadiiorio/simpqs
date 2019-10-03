@@ -16,7 +16,8 @@ typedef struct factor{
 }FACTOR;
 struct ArrayEntry{
     int64_t j;
-    mpz_t element;                  //f(j)
+    mpz_t element;                  //mongomery pol value a*f(j)=(a*j^2+2*b*j+c)==(a*j+b)^2-n
+    mpz_t x;                        //(a*j+b) --> it hold Mod(x^2,n)=Mod(a*f(j),n)
     ///log sieving
     ////////TODO FIND FASTER ALTERNATIVE
     long double logSieveCumulative;      //space saver, faster comparison,
@@ -50,12 +51,16 @@ typedef struct report{
     u_int64_t          partialRelationsNum;      //number of LargePrimes entries founded
 } REPORTS;
 
-void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix);
-
-/////////global
-extern mpz_t   N;
-extern SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
-extern struct Configuration Config;
-REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, SIEVE_ARRAY_BLOCK sieveArrayBlock,struct polynomial* actualPol);
+REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, struct polynomial* actualPol);
 void* siever_thread_logic(void* arg);       //siever pthread func
+///// REPORTS
+int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports, bool polynomialFamilyReports, struct polynomial* polynomial);
+REPORTS *loadReports(char *filePath);
+void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix);
+void sortPartialReports(REPORTS* reports);
+int pairPartialReports(REPORTS* reports);
+void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry);
+int mergeReports(REPORTS *dstReports, const REPORTS *new_reports);
+char** findReportsLocally(int numReports);
+REPORTS* aggregateSieversWorkers(const unsigned int polynomialN);
 #endif //SIMPQS_SIEVINGSIMPQS_H

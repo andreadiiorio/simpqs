@@ -3,10 +3,10 @@
 
 //// configuration of SIMPQS
 //dflt config of main algo parameters
-#define _ARRAY_IN_MEMORY_MAX_SIZE 5000      //max num of array elements holded in memory
-#define _M 7096
+#define _ARRAY_IN_MEMORY_MAX_SIZE 33000      //max num of array elements holded in memory
+#define _M 9096
 #define _B 10000
-#define _SIEVING_THREAD_NUM  3              //siever threads
+#define _SIEVING_THREAD_NUM  5              //siever threads
 #define FINAL_RESIZE 1                       //EVERY DINAMIC ARRAY WILL BE RESIZED TO ACTUAL SIZE NEEDED
 
 //// dynamically resized array configurations
@@ -19,7 +19,7 @@
 #define NUM_FACTORIZER_GROUPS 11            /// number of factorizer groups
     //// concurrent trial divide factorization MODES
 //iteration mode timeboxed trigger (if non defined fixed set of try mode enabled)
-#define TIMEBOXED_FACTORIZATION_ITERATION_POLLING   ///ITERATION MODE TRI
+//#define TIMEBOXED_FACTORIZATION_ITERATION_POLLING   ///ITERATION MODE TRI
 #define MAX_PRIMES_TRY_PER_ITERATION 100000
 
 #define TIMEOUT_CHECK_INTERVAL_FACTORIZE_WORKER 5969                 //number of trial division to do before check if sub job has timeout

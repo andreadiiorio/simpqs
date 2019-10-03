@@ -43,7 +43,7 @@
 
 void printPrecomputations(struct Precomputes* precomputes,int blockPrint);
 void printSievingJumps(struct Precomputes* precomputes, int blockPrint) ;
-int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial polynomial);
+int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial* polynomial);
 
 
 //read primes from precomputed primes list file until reached smoothnessBound
@@ -86,7 +86,7 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
 
 struct polynomial* initializationVars(char** argv);         //TODO DEPRECATED HARDCODED CONFIG
 CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M, u_int64_t B, int sieverThreadsNum);
-struct Precomputes* preComputations(CONFIGURATION *configuration,struct polynomial* dstPolynomial);
+struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial, A_COEFF *aCoeff);
 
 void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes);
 A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, int s,struct Configuration *configuration);

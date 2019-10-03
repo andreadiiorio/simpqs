@@ -18,11 +18,27 @@ struct precomputatios_polynomial{   //precomputations polynomial dependent -> wi
     mpz_t* B_l;                    //   generators of b by GreyCode; indexing 1<l<s where a=p1*..*ps
     int s;                          //number of B_l --> num of factors of a
 };
+/// compute f(x)=a*(a*j^2+2*b*j+c) //TODO j^2 OVERFOW POSSIBLE!!!
+#define POLYNOMIAL_VAL_COMPUTE_A_F(j, outputVal,tmp, polynomial)\
+    mpz_mul_si(outputVal, (polynomial->a), (j*j) );    \
+    mpz_mul_si(tmp, (polynomial->b), (2*j) );    \
+    mpz_add(outputVal,outputVal,tmp);\
+    mpz_add(outputVal,outputVal,(polynomial->c));\
+    mpz_mul(outputVal,outputVal,(polynomial->a));
+
+
+
+/// compute (aj+b)
+#define POLYNOMIAL_VAL_COMPUTE_X(j, outputVal, polynomial)\
+    mpz_mul_si(outputVal, (polynomial->a), j );    \
+    mpz_add(outputVal,outputVal,(polynomial->b));
+
+/// compute (aj+b)^2-n
 #define POLYNOMIAL_VAL_COMPUTE(j, outputVal, polynomial)\
-    mpz_mul_si(outputVal, polynomial.a, j );    \
-    mpz_add(outputVal,outputVal,polynomial.b); \
+    mpz_mul_si(outputVal, (polynomial->a), j );    \
+    mpz_add(outputVal,outputVal,(polynomial->b)); \
     mpz_pow_ui(outputVal, outputVal, 2); \
-    mpz_sub(outputVal,outputVal,*polynomial.N);
+    mpz_sub(outputVal,outputVal,(*(polynomial->N)));
 
 typedef struct a_mongomeryPol_coeff{
     mpz_t* a;       //point to stored a coeff
@@ -46,7 +62,7 @@ typedef struct Precomputes{ //precomputation for the SELF INIT of SIMPQS
 typedef struct Configuration {
     mpz_t N;
     u_int64_t B;        //FactorBase threshold
-    int64_t M;        //sieve array of size 2*M
+    u_int64_t M;        //sieve array of size 2*M
     A_COEFF a_coefficient;
     /// memory configuration
     u_int64_t ARRAY_IN_MEMORY_MAX_SIZE;

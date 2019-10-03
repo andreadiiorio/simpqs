@@ -60,7 +60,4 @@ void* FactorizeTrialDivide(void* args);
 pthread_t* StartFactorizerThreadGroups(FACTORIZE_JOB_QUEUE* factorizeJobQueues,int numGroupsFactorizers);
 int JoinFactorizerThreadGroups(pthread_t* threadManager,int numManager);
 
-void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry);
-int mergeReports(REPORTS *dstReports, const REPORTS *new_reports);
-int mergeReportsFast(REPORTS *dstReports, const REPORTS *new_reports); //TODO DEBUG MEMMOVE CORRUPT EVERYTHING
 #endif //SIMPQS_FACTORIZERQUICK_H

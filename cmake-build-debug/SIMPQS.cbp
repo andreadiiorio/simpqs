@@ -346,6 +346,10 @@
 			<Option target="TRIAL_DIVISION_MAIN_TEST"/>
 			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
 		</Unit>
+		<Unit filename="/home/andysnake/CLionProjects/simpqs/worker/report.h">
+			<Option target="SIMQS_Worker"/>
+			<Option target="TRIAL_MULTIPLE_POLYNOMIAL"/>
+		</Unit>
 		<Unit filename="/home/andysnake/CLionProjects/simpqs/worker/reports.c">
 			<Option target="SIMQS_Worker"/>
 		</Unit>
