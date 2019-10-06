@@ -10,19 +10,46 @@
 #include "utils/utils.h"
 #include "utils/gmp_patch.h"
 #include "sievingSIMPQS.h"
-
+#include "../matrix/matrix.h"
 SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
 const char* n_str="100000030925519250968982645360649";
+CONFIGURATION* configuration;
+DYNAMIC_VECTOR* primes_B;
+#define TEST_1_POL_FAMILY
+#ifdef TEST_1_POL_FAMILY
+int main(){
+#else
+int finalStepWrap(){
+#endif
 
-
+    configuration = initConfiguration(n_str, 0, 0, 0, 0);
+    struct polynomial pol;
+    PRECOMPUTES *precomputes = preComputations(configuration, &pol,NULL);
+    char** reportsPaths=findReportsLocally(1,REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX);
+    REPORTS* reports=loadReports(*reportsPaths);
+    if(reports->relationsNum<(precomputes->primes.vectorSize+1)) {
+        fprintf(stderr, "not founded enough reports for linear algebra phase\n");
+        exit(EXIT_FAILURE);
+    }
+    MATRIX matrix;
+    initMatrixFromRows(&matrix,reports->relationsNum,reports->bsmoothEntries,precomputes->primes.vectorSize+1);
+    gauss_elimination(&matrix);
+//    print_matrix_matrix(&matrix);
+//    print_matrix_identity(&matrix);
+    return quadraticRelationTry(reports,&matrix);
+}
+#ifdef TEST_1_POL_FAMILY
+int MAIN(){
+#else
 int main(int argc, char** argv){
     //FORKED WORKER PROCESS TO SIEVE BSMOOTH RELATION AND PARTIAL RELATION WITH POLINOMIO FAMILIES FROM a
     if(argc < 5){           //TODO MOCKED ARGv
         printf("USAGE: N,M,B,a, ....\n");
         //exit(EXIT_FAILURE);
     }
+#endif
     /// init configuration, with argv, on un setted configuration defalut setting will be used
-    CONFIGURATION *configuration = initConfiguration(n_str, 0, 0, 0, 0);
+    configuration = initConfiguration(n_str, 0, 0, 0, 0);
     struct polynomial pol;
     /// init precomputation for polynomial family   todo next version computation of a coeff ... <- MASTER COMUNICATION
     PRECOMPUTES *precomputes = preComputations(configuration, &pol,NULL);
@@ -91,17 +118,23 @@ int main(int argc, char** argv){
         exit(EXIT_FAILURE);
     }
     printf("\n\n\n\n\n\nSERIALIZING AGGREGATED REPORTS\n");fflush(0);
-    if (saveReports(polynomialsReportsAggregated,precomputes->primes.vectorSize,true,true,&pol)==EXIT_FAILURE){
+    if (saveReports(polynomialsReportsAggregated,precomputes->primes.vectorSize,false,true,&pol)==EXIT_FAILURE){
         fprintf(stderr, "REPORTS  AGGREGATED SERIALIZING ERROR\n");
         exit(EXIT_FAILURE);
     }
+
+
     //TODO MATRIX STAGE HERE --> NEXT MOVE TO MASTER
+#ifndef TEST_1_POL_FAMILY
+    return finalStepWrap();
+#else
     exit(EXIT_SUCCESS);
+#endif
 }
 
 REPORTS* aggregateSieversWorkers(const unsigned int polynomialN) {
     int result=EXIT_SUCCESS;
-    char** reportsLocalFilenames=findReportsLocally(polynomialN);
+    char** reportsLocalFilenames=findReportsLocally(polynomialN,REPORTS_FILENAME_SUFFIX);
     REPORTS** reportsAll=malloc(sizeof(*reportsAll)*polynomialN);       //will hold reports pointers
     REPORTS* reportsAllMerged=calloc(1,sizeof(*reportsAllMerged));       //will hold reports pointers
     if(!reportsLocalFilenames || !reportsAll || !reportsAllMerged){
@@ -156,6 +189,5 @@ REPORTS* aggregateSieversWorkers(const unsigned int polynomialN) {
             }
             free(reportsAllMerged);
         }
-
     return reportsAllMerged;
 }

@@ -69,9 +69,8 @@ typedef struct Configuration {
     /// concurrency configuration
     int SIEVING_THREAD_NUM;
 } CONFIGURATION;
-
-
-
+extern CONFIGURATION* configuration; //GLOBAL REF TO CONFIG
+extern DYNAMIC_VECTOR* primes_B;
 struct polynomial{   //Mongomery polynomial to sieving
     mpz_t a;
     mpz_t b;

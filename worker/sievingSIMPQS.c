@@ -169,7 +169,7 @@ void* siever_thread_logic(void* arg){
          */
         mpz_inits(bsmoothToFactPntr->element,bsmoothToFactPntr->x,NULL);
         //init exp vector of element with space to hold all primes vector exp in factorbase
-        mpz_init2(bsmoothToFactPntr->exp_vector,sieverArg.precomputes->primes.vectorSize);
+//        mpz_init2(bsmoothToFactPntr->exp_vector,sieverArg.precomputes->primes.vectorSize+1);
         POLYNOMIAL_VAL_COMPUTE(bsmoothToFactPntr->j,(bsmoothToFactPntr->element),polRef)    //write polynomial value f(j) in correct array location
         POLYNOMIAL_VAL_COMPUTE_X(bsmoothToFactPntr->j,(bsmoothToFactPntr->x),polRef)    //write polynomial value f(j) in correct array location
         //// sync append (block of )job to job queue

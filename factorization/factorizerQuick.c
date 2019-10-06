@@ -47,13 +47,16 @@ struct ArrayEntry* popFirstJob(FACTORIZE_JOB_QUEUE *jobQueue) {
 #endif
     return job;
 }
-void saveExponentVector(mpz_t *expVectorDst, FACTOR *factors,int numFactors,u_int64_t numPrimes) {
+void saveExponentVector(mpz_t *expVectorDst, FACTOR *factors, int numFactors, u_int64_t numPrimes, bool isNegative) {
     //save into an mpz_t the exponent vector of factors with coeff. in GF(2)
 
-    mpz_init2(*expVectorDst,numPrimes);
+    mpz_init2(*expVectorDst,numPrimes+1);       //allocate 1 extra bit for sign 1 for negative 0 for positive
+    mpz_clrbit(*expVectorDst,0);
+    if(isNegative)                                //if number is negative overwrite sign bit with 1
+        mpz_setbit(*expVectorDst,0);
     for (int i = 0; i < numFactors; i++) {
         if (factors[i].exp%2==1)                              //mark factor in exp vector with 1 if exponent is odd
-            mpz_setbit(*expVectorDst,factors[i].factor_indx);
+            mpz_setbit(*expVectorDst,(factors[i].factor_indx+1));   //because of bit sigh every factor index in prime list has to be shifted of 1 position
     }
 }
 
@@ -239,10 +242,14 @@ void* FactorizeTrialDivide(void* args) {
                 factorizerArgs->arrayEntryJob->factors = factors;
 #endif
                 //save in place exp vector for matrix stage if this array entry yield to (partial) relation
-                saveExponentVector(&(factorizerArgs->arrayEntryJob->exp_vector),factors,totalFoundedFactors,factorizerArgs->precomputes->primes.vectorSize);
+                bool isNegative = mpz_cmp_ui(*(factorizerArgs->N),0)<0;
+                saveExponentVector(&(factorizerArgs->arrayEntryJob->exp_vector), factors, totalFoundedFactors,
+                                   factorizerArgs->precomputes->primes.vectorSize, isNegative);
                 /// set large prime for partial relation
                 if (N_is_large_prime){
                     mpz_init_set(factorizerArgs->arrayEntryJob->largePrime,*(factorizerArgs->N));
+                    if(isNegative)
+                        mpz_mul_si(factorizerArgs->arrayEntryJob->largePrime,factorizerArgs->arrayEntryJob->largePrime,-1);
                 }
 #ifdef DEBUG
                 gmp_printf("N quotient residue %Zd\tfounded %s \n",*(factorizerArgs->N),N_has_been_fully_factorized?"RELATION founded":"PARTIAL RELATION founded");fflush(0);

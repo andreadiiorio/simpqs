@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define DEBUG_CHECK
 #define SAVE_FACTORS  //save factorization of entry other then exponent vector
 
 typedef struct factor{
@@ -49,6 +50,7 @@ typedef struct report{
     ///partial reports
     struct ArrayEntry* largePrimesEntries;       //array entries holding a BsmoothVal times a largePrime --> exploitable to generate more reports
     u_int64_t          partialRelationsNum;      //number of LargePrimes entries founded
+    mpz_t              n;                       //convenience ref to target N factor
 } REPORTS;
 
 REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, struct polynomial* actualPol);
@@ -61,6 +63,17 @@ void sortPartialReports(REPORTS* reports);
 int pairPartialReports(REPORTS* reports);
 void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry);
 int mergeReports(REPORTS *dstReports, const REPORTS *new_reports);
-char** findReportsLocally(int numReports);
+int checkReports(REPORTS *reports, bool aggregatedLargePrimeCheck);
+void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck);
 REPORTS* aggregateSieversWorkers(const unsigned int polynomialN);
+
+#ifndef REPORTS_PATHS
+#define REPORTS_PATHS
+#define FIND_REPORTS_POL_FAMILY_BASH_CMD_LINUX "find \"$(pwd -P)\" -iname \"reports_*\""
+#define REPORTS_FILENAME_PREFIX  "reports_"
+#define REPORTS_FILENAME_SUFFIX  ".reportslist"
+#define REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX  ".reportsfamilylist"
+#endif
+char** findReportsLocally(unsigned int numReports,const char* reportSuffix);
+
 #endif //SIMPQS_SIEVINGSIMPQS_H

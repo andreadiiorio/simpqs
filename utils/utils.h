@@ -47,7 +47,7 @@ int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial* polynomial);
 
 
 //read primes from precomputed primes list file until reached smoothnessBound
-DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound );
+DYNAMIC_VECTOR* ReadPrimes(char *primesListPath, u_int64_t smoothnessBound );
 //read primes until bound reached and filter them for them with legendre (N/p)==1
 DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
 

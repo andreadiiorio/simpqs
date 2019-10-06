@@ -49,6 +49,7 @@ CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././matrix/matrix.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././utils/gmp_patch.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././utils/utils.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: .././worker/sievingSIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: ../matrix/matrix.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: ../worker/sievingSIMPQS.h
 CMakeFiles/SIMQS_Worker.dir/worker/workerMain.c.o: ../worker/workerMain.c
 

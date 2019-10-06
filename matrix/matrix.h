@@ -5,6 +5,9 @@
 
 #include <gmp.h>
 #include <inttypes.h>
+#include "worker/sievingSIMPQS.h"
+#include "../utils/utils.h"
+
 
 #ifndef MATRIX_H_
 #define MATRIX_H_
@@ -22,6 +25,7 @@ typedef struct {
 
 /* allocates space for m rows * n columns matrix for MATRIX and IDENTITY */
 void init_matrix(MATRIX *matrix, uint64_t rows, uint64_t cols);
+int initMatrixFromRows(MATRIX *matrix, uint64_t rowsN,struct ArrayEntry* rowsRaw, uint64_t cols);
 
 void push_row(MATRIX *matrix, mpz_t row);
 
@@ -37,6 +41,6 @@ void get_matrix_row(mpz_t rop, MATRIX *matrix, uint64_t row_index);
 
 void get_identity_row(mpz_t rop, MATRIX *matrix, uint64_t row_index);
 
-int test();
+int quadraticRelationTry(REPORTS* reports,MATRIX* matrix);
 
 #endif /* MATRIX_H_ */

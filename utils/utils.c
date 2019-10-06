@@ -85,8 +85,14 @@ void printPrecomputations(struct Precomputes* precomputes, int blockPrint){
 }
 #define FACTOR_BASE_BLOCK_REALLOC_N 1024
 
-DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
-    DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0};
+DYNAMIC_VECTOR* ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
+
+    DYNAMIC_VECTOR* outVect=malloc(sizeof(*outVect));
+    if(!outVect) {
+        fprintf(stderr, "Out of mem at primes allocation\n");
+        return NULL;
+    }
+    outVect->pntr=NULL;outVect->vectorSize=0;
     //read primes list in file
     u_int64_t *result;
     FILE* primesListPrecomputed=fopen(primesListPath,"r");
@@ -136,8 +142,8 @@ DYNAMIC_VECTOR ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
     exit:
     fclose(primesListPrecomputed);
     printf("correctly loaded %lu primes up to %lu \n",primeIndx,smoothnessBound);
-    outVect.vectorSize=primeIndx;
-    outVect.pntr=result;
+    outVect->vectorSize=primeIndx;
+    outVect->pntr=result;
     return outVect;
 }
 

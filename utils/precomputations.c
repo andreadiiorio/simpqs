@@ -282,6 +282,8 @@ void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes){
         precomputes->polPrecomputedData.sol2p[p]=MOD(precomputes->polPrecomputedData.sol2p[p],prime);
     }
 }
+DYNAMIC_VECTOR* primes_B;
+
 struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial, A_COEFF *aCoeff) {
     //smart precomputations stored to reduce computational cost for each sieve iteration on each polynomial
     //if aCoeff is NULL a coeff will be computed otherwise that value will be used
@@ -292,17 +294,18 @@ struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynom
     }
 
     struct Precomputes* result=precomputations;
-    DYNAMIC_VECTOR primes=ReadPrimes(PRIMES_32B_PATH, configuration->B);
-    if(!primes.pntr){
+    DYNAMIC_VECTOR* primes=ReadPrimes(PRIMES_32B_PATH, configuration->B);
+    primes_B=primes;
+    if(!primes){
         fprintf(stderr,"primes read error\n");
         return NULL;
     }
-    DYNAMIC_VECTOR factorBase=ReadFactorBase(primes, configuration->N);
+    DYNAMIC_VECTOR factorBase=ReadFactorBase(*primes, configuration->N);
     if(!factorBase.pntr){
         fprintf(stderr,"factor base gen error\n");
         result=NULL; goto exit;
     }
-    precomputations->primes=primes;
+    precomputations->primes=*primes;
     precomputations->factorbase=factorBase.pntr; precomputations->factorbaseSize=factorBase.vectorSize;
 
 
@@ -343,7 +346,7 @@ struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynom
     dstPolynomial->N=&configuration->N;
     exit:
         if(result==NULL){       //null set equally to same failure happened
-            free(primes.pntr);free(factorBase.pntr);free(precomputations);
+            free(primes->pntr);free(factorBase.pntr);free(precomputations);
         }
         return result;
 }

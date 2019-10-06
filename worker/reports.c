@@ -2,11 +2,9 @@
 #include "sievingSIMPQS.h"
 #include <unistd.h>
 #include <utils/utils.h>
+#include <signal.h>
 
 #define ENTRY_MAX_LEN 4096;
-
-#define REPORTS_FILENAME_PREFIX "reports_"
-#define REPORTS_FILENAME_SUFFIX ".reportslist"
 
 #define WRITE_SEPARATOR(fd,sep) \
     fputc(sep,fd);
@@ -18,9 +16,72 @@ if(fwrite(&WORD_SEPARATOR, sizeof(WORD_SEPARATOR),1,fd)!=1){\
 
 const char WORD_SEPARATOR='\t';
 const char LINE_SEPARATOR='\n';
-
-
+unsigned int dbg_h,dbg_exp=0; u_int64_t tmpFactor;mpz_t tmpL;           //TODO DEBUG
+DYNAMIC_VECTOR* primes_B;
 //#define NULL_FILTER_RACE_COND //TODO ROBSTNESS DEBUG MACRO
+
+
+/*
+ * DEBUG CHECKS ON REPORT ELEMENTS:
+ *  - CHECKED IF X^2==a_fx MOD N
+ *  - CHECKED IF BIT_i=1 IN EXP VECTOR OF a_fx CORRESPOND TO A p_i THAT DIVDE a_fx AN ODD NUMBER OF TIMES (notting dbg_exp)
+ */
+void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck) {
+    dbg_h = EXIT_SUCCESS;
+    mpz_pow_ui(tmp, arrayEntry->x, 2);
+    mpz_mod(tmp, tmp, configuration->N);
+    mpz_mod(tmp2,arrayEntry->element, configuration->N);
+    if (mpz_cmp(tmp, tmp2)) {
+        gmp_fprintf(stderr, "Mismatch X(j)^2:\t%Zd !== af(j):\t %Zd\n ", tmp, tmp2);
+        dbg_h = EXIT_FAILURE;
+    }
+    if (mpz_tstbit(arrayEntry->exp_vector, 0) && mpz_cmp_ui(arrayEntry->element, 0) >= 0) {    //test sign bit
+        fprintf(stderr, "missed sign bit\n");
+    }
+    for (unsigned int i = 1,bit=0; i < primes_B->vectorSize; ++i) {              //test odd power bits
+        bit=mpz_tstbit(arrayEntry->exp_vector, i);
+        dbg_exp = 0;
+        mpz_set_ui(tmp,((u_int64_t *) primes_B->pntr)[i - 1]);
+        while (mpz_divisible_p(arrayEntry->element, tmp)) {
+            dbg_exp++;
+            mpz_mul_ui(tmp,tmp,((u_int64_t *) primes_B->pntr)[i - 1]);
+        }
+        if ((dbg_exp%2)!=bit) {
+            fprintf(stderr, "bit missetted at i:%d exp->%d \n", i,dbg_exp);
+            dbg_h = EXIT_FAILURE;
+        }
+    }
+    if(largePrimeAggregatedEntryCheck && arrayEntry->largePrime->_mp_size) {
+        mpz_set(tmp,arrayEntry->largePrime);
+        dbg_exp=0;
+        while(mpz_divisible_p(arrayEntry->element,tmp)) {
+            dbg_exp++;
+            mpz_mul(tmp,tmp,arrayEntry->largePrime);
+        }
+        if(dbg_exp%2!=0) {
+            gmp_fprintf(stderr, "not even exponent with aggregated large prime:\t%Zd\t^ %d\n",arrayEntry->largePrime, dbg_exp);
+//            dbg_h = EXIT_FAILURE;
+        }
+    }
+    if (dbg_h == EXIT_FAILURE) {
+        gmp_fprintf(stderr,"\nY=%Zd\n", arrayEntry->element);
+        kill(getpid(), SIGFPE);
+    }
+}
+int checkReports(REPORTS *reports, bool aggregatedLargePrimeCheck) {
+    int result=EXIT_SUCCESS;
+    mpz_t tmp,tmp2;mpz_inits(tmp,tmp2,NULL);
+    struct ArrayEntry* baseArrayToCheck=reports->bsmoothEntries;
+    int sizeArray=reports->relationsNum;
+    //// check BSMooth Entries
+    for (int j = 0; j < sizeArray; ++j) {
+        fflush(0);
+        CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(baseArrayToCheck+j, tmp, tmp2,aggregatedLargePrimeCheck);
+    }
+    mpz_clears(tmp,tmp2,NULL);
+    return result;
+}
+
 int mergeReports(REPORTS *dstReports, const REPORTS *new_reports) {
     //merge founded reports  into dstReports
     /// realloc array  entries of enough space to hold newly founded (partial) reports
@@ -59,6 +120,9 @@ int mergeReports(REPORTS *dstReports, const REPORTS *new_reports) {
     /// update (partial) reports sizes
     dstReports->partialRelationsNum = newPartialReportsN;
     dstReports->relationsNum = newReportsN;
+#ifdef DEBUG_CHECK
+    return checkReports(dstReports, false);
+#endif
     return EXIT_SUCCESS;
 }
 int mergeReportsFast(REPORTS *dstReports, const REPORTS *new_reports) { //TODO DEBUG MEMMOVE CORRUPT EVERYTHING
@@ -88,7 +152,6 @@ static int compareLargePrimeReports(const void* p1,const void* p2){
     return mpz_cmp(largePrimeEntry1->largePrime,largePrimeEntry2->largePrime);          //return int according to comparison of large primes
 }
 
-
 #define RESET_MPZ_ON_COPY           //0 RESET before overwrite re initializing mpz fields in the destination of the copy
 void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry) {
     //perform values copy of entry on destEntry with shallow copy of entire entry and mpz copy by mpz_init_set
@@ -106,7 +169,6 @@ void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry) {
     mpz_init_set(destEntry->element,entry->element);    //SEE TODO
     mpz_init_set(destEntry->x,entry->x);    //SEE TODO
 }
-
 void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix) {
     u_int64_t i, j;
     //////////// standard reports
@@ -134,10 +196,6 @@ void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix) {
         printf(" \n");
     }
 }
-
-
-
-
 
 
 
@@ -177,7 +235,7 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
         if ((writtenInBuf = gmp_snprintf(outBuf, formattedOutputBufLen, "%s%Zd_%Zd_%lu_%lu%s",
                                          REPORTS_FILENAME_PREFIX, *(polynomial->N), polynomial->a,
                                          reports->relationsNum, reports->partialRelationsNum,
-                                         REPORTS_FILENAME_SUFFIX)) >= formattedOutputBufLen) {
+                                         REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX)) >= formattedOutputBufLen) {
             fprintf(stderr, "snprintf hasn't founded enough space to output to buf\n");
             free(outBuf);
             return EXIT_FAILURE;
@@ -298,27 +356,35 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
     fclose(reportFp);
     return result;
 }
-char** findReportsLocally(int numReports) {
+char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
     // find all reports file saved locally by siever processes;
     // returned an array of strings containg paths of reports file or NULL if an error occurred
     // if less then numReports has been found NULL will be setted first empty entry of the array and error message printed
 
+    const char* FIND_REPORTS_BASH_CMD_LINUX="find \"$(pwd -P)\" -iname \"reports_*";
+    const size_t MAX_FIND_CMD_SIZE=(strlen(FIND_REPORTS_BASH_CMD_LINUX)+5+strlen(REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX));
+    char* findCmdBuf=malloc(sizeof(*findCmdBuf)*MAX_FIND_CMD_SIZE);
+    if(!findCmdBuf) {
+        fprintf(stderr, "Out of mem at find cmd buf allocate :(\n");
+        return NULL;
+    }
+    snprintf(findCmdBuf,MAX_FIND_CMD_SIZE,"%s\"%s",FIND_REPORTS_BASH_CMD_LINUX,reportSuffix);
+    printf("searching reports file with cmd str:\t%s\n",findCmdBuf);
     const int MAX_PATH_SIZE = 2048;
 //    const char* FIND_REPORTS_BASH_CMD_LINUX="find -iname 'reports_*'";
-    const char* FIND_REPORTS_BASH_CMD_LINUX="find \"$(pwd -P)\" -iname \"reports_*\"";
     char **paths = calloc(1, numReports * sizeof(*paths));
     if (!paths) {
         fprintf(stderr,"Out of Mem at path** calloc\n");
         return NULL;
     }
     /* Open the command  find for reading. */
-    FILE *fp = popen(FIND_REPORTS_BASH_CMD_LINUX, "r");
+    FILE *fp = popen(findCmdBuf, "r");
     if (fp == NULL) {
         printf("Failed to run command find\n");
         return NULL;
     }
     int commandOutTerminated=0;
-    for (int i = 0; i < numReports && !commandOutTerminated; ++i) {
+    for (unsigned int i = 0; i < numReports && !commandOutTerminated; ++i) {
         //for each expected output file get file path  by executed command find line by line
         char **destPathBuf = &(paths[i]);
         if(!(*destPathBuf = malloc(sizeof(*(*destPathBuf)) * MAX_PATH_SIZE))){
@@ -327,7 +393,7 @@ char** findReportsLocally(int numReports) {
         }
         commandOutTerminated = (fgets(*destPathBuf, MAX_PATH_SIZE - 1, fp))==NULL;
         //// remove trailing newline
-        for (int j = MAX_PATH_SIZE; j >=0 ; --j) {
+        for (int j = MAX_PATH_SIZE-1; j >=0 ; --j) {
             if ((*destPathBuf)[j] == '\n') {
                 (*destPathBuf)[j] = 0;
                 break;
@@ -345,11 +411,11 @@ char** findReportsLocally(int numReports) {
     return paths;
     exit_failure:
     if(paths){
-        for (int i = 0; i < numReports; ++i) {
+        for (unsigned int i = 0; i < numReports; ++i) {
             free(paths[i]);
         }
     }
-    free(paths);
+    free(paths);free(findCmdBuf);
     return NULL;
 }
 REPORTS *loadReports(char *filePath) {
@@ -371,6 +437,7 @@ REPORTS *loadReports(char *filePath) {
         fprintf(stderr,"invalid read of N in header \n");
         result=EXIT_FAILURE;goto exit;
     }
+    mpz_init_set(reports->n,N);                                         //set n in reports for convenience on later restart
     sep=fgetc(reportsFp);
     if(!(nread =mpz_inp_raw(polynomial.a,reportsFp))){                      //a
         fprintf(stderr,"invalid read of N in header \n");
@@ -434,6 +501,7 @@ REPORTS *loadReports(char *filePath) {
             result = EXIT_FAILURE;goto exit;
         }
         sep=fgetc(reportsFp);                    //newline
+        memset(reports->bsmoothEntries[i].largePrime,0, sizeof(*(reports->largePrimesEntries[i].largePrime) )); //mark as UNSETTED(0) large prime inside standard entry
 
     }
     ///// remove separator of reports
@@ -480,13 +548,22 @@ REPORTS *loadReports(char *filePath) {
             free(reports);
             return NULL;
         }
+#ifdef DEBUG_CHECK
+    checkReports(reports, false);
+#endif
         return reports;
 }
 
-
 void sortPartialReports(REPORTS* reports){
     qsort(reports->largePrimesEntries,reports->partialRelationsNum, sizeof(*(reports->largePrimesEntries)),compareLargePrimeReports);
+    for (u_int64_t i = 0; i < reports->partialRelationsNum; ++i) {
+        gmp_printf("%4lu\t-- %9Zd\t\t",i,reports->largePrimesEntries[i].largePrime);
+        if(i%3==0)
+            printf("\n");
+    }
+    fflush(0);
 }
+
 int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int matchFounded) {
     /*
      * Pair large prime partial reports from startAddr to startAddr+matchFounded
@@ -506,13 +583,30 @@ int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int
         //// couple partial report 0 with partial report k>0
         partialReportk=report->largePrimesEntries+startAddr+k;
         arrayEntryCopy(newReport,partialReport0);
-        //remove large prime from elements because  P^2 =0  in exp vector
-        mpz_divexact(partialReportk->element,partialReportk->element,partialReportk->largePrime);
-        mpz_divexact(newReport->element,newReport->element,newReport->largePrime);
+        //TODO !!!!!!!!!!!!!!!!!!!! remove large prime from elements because  P^2 =0  in exp vector
+//        mpz_divexact(partialReportk->element,partialReportk->element,partialReportk->largePrime);
+//        mpz_divexact(newReport->element,newReport->element,newReport->largePrime);
         // couple partial reports multipling x and element
-        mpz_mul(newReport->element,newReport->element,partialReportk->element);
-        mpz_ior(newReport->exp_vector,newReport->exp_vector,partialReportk->exp_vector);
         mpz_mul(newReport->x,newReport->x,partialReportk->x);
+        mpz_mul(newReport->element,newReport->element,partialReportk->element);
+        mpz_xor(newReport->exp_vector,newReport->exp_vector,partialReportk->exp_vector);
+#ifdef   DEBUG_CHECK
+        gmp_printf("coupled large prime entries in \t X=%Zd;\tY=%Zd\n",newReport->x,newReport->element);fflush(0);
+        if (mpz_cmp(partialReport0->largePrime,partialReportk->largePrime)) {
+            gmp_fprintf(stderr, "Not matching large primes %Zd\t%Zd\n", partialReport0->largePrime,partialReportk->largePrime);
+            exit(EXIT_FAILURE);
+        }
+        mpz_init_set(tmpL,partialReport0->largePrime);
+        dbg_exp=0;
+        while (mpz_divisible_p(newReport->element,tmpL)) {
+            mpz_mul(tmpL, tmpL,partialReport0->largePrime);
+            dbg_exp++;
+        }
+        if(dbg_exp%2 || dbg_exp!=2) {
+            fprintf(stderr, "Invalid Large prime exponent :%d\n", dbg_exp);
+            exit(EXIT_FAILURE);
+        }
+#endif
         newReport++;
     }
     return EXIT_SUCCESS;
@@ -527,16 +621,21 @@ int pairPartialReports(REPORTS* reports) {
     struct ArrayEntry *partialReport = (reports->largePrimesEntries + 1);
     for (unsigned int j = 1; j < reports->partialRelationsNum; partialReport = &(reports->largePrimesEntries[++j])) {
         if (!mpz_cmp(partialReport->largePrime, prevPartialReport->largePrime)) {  //founded a match
-            i++;
-        } else if (i > 0) {                                                         //end of match series
+            if((i++)==0)
+                matchStartAddr=j-1;
+        }
+        else if (i > 0) {                                                         //end of match series
             if(pairLargePrimeEntries(reports, matchStartAddr,  i)==EXIT_FAILURE)
                 return EXIT_FAILURE;
             i = 0;
-            matchStartAddr = j;
+            matchStartAddr = j+1;
             matchFoundedAll++;
         }
         prevPartialReport = partialReport;
     }
     printf("founded %d\tlarge prime matches series\n",matchFoundedAll);
+#ifdef DEBUG_CHECK
+    checkReports(reports,true);
+#endif
     return EXIT_SUCCESS;
 }
