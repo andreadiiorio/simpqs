@@ -15,31 +15,27 @@
 
 
 typedef struct {
-    mpz_t *MATRIX;              // bit rows TODO SAME INDEXING OF (partial) relations
-    uint64_t rowsN;             //number of callocced rows  in MATRIX field
-    mpz_t *IDENTITY;
+    mpz_t *MATRIX;              // exponent vector rows ( in all QS variant values in GF2, sum == xor -> huge HardWare accelaration)
+    uint64_t rowsN;             //number of exponent vector rows (same num of full reports)
+    mpz_t *IDENTITY;            //Identity square matrix rowsN x rowsN
+    /*
+     * it hold that: full report i among all reports is identified in Identity matrix with a 1 in col i
+     * before gauss step it hold also: full report i -> exp vector in MATRIX at i -> 1 at [i][i] of IDENTITY matrix
+     * after  gauss step it hold: IDENTITY row  r identify summed rows in start MATRIX ( same indexing of source reports )
+     * to produce final row r in MATRIX, simply summing related rows watching at 1s in IDENTITY[r]
+     * if M' is MATRIX after gauss elimination ->  M'[i]=I'[i]*M  TODO CHECK OR DELETE LINE**
+     */
 	uint64_t colsN;
 	uint64_t next_free_row;		/* used to insert rows in the matrix, point to the next free row to be inserted position */
 
 } MATRIX;
 
-/* allocates space for m rows * n columns matrix for MATRIX and IDENTITY */
 void init_matrix(MATRIX *matrix, uint64_t rows, uint64_t cols);
 int initMatrixFromRows(MATRIX *matrix, uint64_t rowsN,struct ArrayEntry* rowsRaw, uint64_t cols);
 
-void push_row(MATRIX *matrix, mpz_t row);
-
-void print_matrix_matrix(MATRIX *matrix);
-
-void print_matrix_identity(MATRIX *matrix);
-
-/* performs a Gauss elimination on matrix->MATRIX, result (linear dependence) will be in the matrix->IDENTITY */
-void gauss_elimination(MATRIX *matrix);
+void gauss_elimination_over_GF2(MATRIX *matrix);
 
 /* does not check for bounds, the caller must */
-void get_matrix_row(mpz_t rop, MATRIX *matrix, uint64_t row_index);
-
-void get_identity_row(mpz_t rop, MATRIX *matrix, uint64_t row_index);
 
 int quadraticRelationTry(REPORTS* reports,MATRIX* matrix);
 

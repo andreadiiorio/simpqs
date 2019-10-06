@@ -33,7 +33,7 @@ int finalStepWrap(){
     }
     MATRIX matrix;
     initMatrixFromRows(&matrix,reports->relationsNum,reports->bsmoothEntries,precomputes->primes.vectorSize+1);
-    gauss_elimination(&matrix);
+    gauss_elimination_over_GF2(&matrix);
 //    print_matrix_matrix(&matrix);
 //    print_matrix_identity(&matrix);
     return quadraticRelationTry(reports,&matrix);

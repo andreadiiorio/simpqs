@@ -1,6 +1,6 @@
 /*
  *  based on work of martani Jan 7, 2012
- *  enhanced to SIMPQS by andysnake96
+ *  enhanced for SIMPQS by andysnake96
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,15 +12,18 @@
 #include <signal.h>
 
 int setIdentityMatrix(MATRIX* matrix){
+    /*
+     * set the identity matrix associated to exponent vector matrix,
+     * each initial row r can be identified by 1 at r column and r row in the identity matrix
+     * because of that identity matrix is wider the exponent vector matrix matrix
+     */
     if (!(matrix->IDENTITY= (mpz_t *) calloc(matrix->rowsN, sizeof(*(matrix->IDENTITY))))){
         fprintf(stderr,"Out of mem at Identity matrix calloc\n");
         return EXIT_FAILURE;
     }
     for (u_int64_t j = 0; j <matrix->rowsN ; ++j) {
-        mpz_init2(matrix->IDENTITY[j],matrix->colsN);               //allocate rows for matrix identity
-    }
-    for (uint64_t i = 0; i < matrix->colsN; ++i) {
-        mpz_setbit(matrix->IDENTITY[i],i);              //set [i][i] in identity matrix
+        mpz_init2(matrix->IDENTITY[j],matrix->rowsN);               //allocate rows for matrix identity
+        mpz_setbit(matrix->IDENTITY[j],j);                      //set [j][j] in identity matrix
     }
     return EXIT_SUCCESS;
 }
@@ -31,6 +34,8 @@ int setIdentityMatrix(MATRIX* matrix){
         mpz_clear(arrayEntry->largePrime);
 
 int initMatrixFromRows(MATRIX *matrix, uint64_t rowsN,struct ArrayEntry* rowsRaw, uint64_t cols) {
+    //initialize exponent vector matrix from reports aggregated in rowsRaw
+    //identity matrix will be setted after the standard one
 
     matrix->MATRIX = calloc(1, sizeof(*(matrix->MATRIX))*rowsN);
     if(!(matrix->MATRIX)){
@@ -47,79 +52,7 @@ int initMatrixFromRows(MATRIX *matrix, uint64_t rowsN,struct ArrayEntry* rowsRaw
     printf("new matrix rows: %lu x cols:%lu\n",matrix->rowsN,cols);
     return setIdentityMatrix(matrix);
 }
-void init_matrix(MATRIX *matrix, uint64_t rows, uint64_t cols) {
-	matrix->MATRIX = (mpz_t *) calloc(rows, sizeof(mpz_t));
-	matrix->rowsN = rows;
-	matrix->colsN = cols;
-	matrix->next_free_row = 0;
-    setIdentityMatrix(matrix);
-}
 
-int extendMatrixByEntries(MATRIX* matrix,struct ArrayEntry* rowsEntries,uint64_t rowsNum){
-    //extend matrix with rowsNum rows
-    //realloc matrix rows array
-    uint64_t newMatrixRowsN= matrix->rowsN + rowsNum;
-    matrix->rowsN=newMatrixRowsN;
-    if (!(matrix->MATRIX=realloc(matrix->MATRIX,newMatrixRowsN* sizeof(*(matrix->MATRIX))))){
-        return EXIT_FAILURE;
-    }
-    //copy array values into matrix
-    for (uint64_t i=0; i < rowsNum; i++, matrix->next_free_row++) {
-        mpz_set(matrix->MATRIX[matrix->next_free_row],(rowsEntries[i]).exp_vector);                             //copy row to matrix
-//        mpz_clear((rowsEntries[i]).exp_vector);
-        // TODO SMART CHECKS
-        // -DICT CUSTOMIZED FOR REDUNDANT ROWs
-        // -0s ROW CHECK --> ALREADY FOUNDED QUADRATIC RELATION :==)))
-    }
-    return EXIT_SUCCESS;
-}
-int extendMatrixByRows(MATRIX* matrix,mpz_t* rows,uint64_t rowsNum){
-    //extend matrix with rowsNum rows
-    //realloc matrix rows array
-    uint64_t newMatrixRowsN= matrix->rowsN + rowsNum;
-    matrix->rowsN=newMatrixRowsN;
-    if (!(matrix->MATRIX=realloc(matrix->MATRIX,newMatrixRowsN* sizeof(*(matrix->MATRIX))))){
-        return EXIT_FAILURE;
-    }
-    //copy array values into matrix
-    for (uint64_t i=0; i < rowsNum; i++, matrix->next_free_row++) {
-        mpz_set(matrix->MATRIX[matrix->next_free_row],rows[i]);                             //copy row to matrix
-        mpz_clear(rows[i]);                                             //clear source row pointer
-
-        // TODO SMART CHECKS
-        // -DICT CUSTOMIZED FOR REDUNDANT ROWs
-        // -0s ROW CHECK --> ALREADY FOUNDED QUADRATIC RELATION :==)))
-    }
-    return EXIT_SUCCESS;
-}
-
-/*
-int concatMatrixes(MATRIX* matrixDst, MATRIX* matrix2){
-    //concat MatrixDst with rows of matrix2 coping mpz_t rows
-
-    uint64_t newMatrixRowsN= matrixDst->rowsN + matrix2->rowsN;
-    matrixDst->rowsN=newMatrixRowsN;
-    if (!(matrixDst->MATRIX=realloc(matrixDst->MATRIX, newMatrixRowsN * sizeof(*(matrixDst->MATRIX))))){
-        return EXIT_FAILURE;
-    }
-    //copy array values into matrix1
-    for (uint64_t i=0; i < matrix2->rowsN; i++, matrixDst->next_free_row++) {
-        mpz_set(matrixDst->MATRIX[matrixDst->next_free_row], matrix2->MATRIX[i]);                             //copy row to matrix1
-
-        // TODO SMART CHECKS
-        // -DICT CUSTOMIZED FOR REDUNDANT ROWs
-        // -0s ROW CHECK --> ALREADY FOUNDED QUADRATIC RELATION :==)))
-    }
-    return EXIT_SUCCESS;
-}
-*/
-void push_row(MATRIX *matrix, mpz_t row) {
-
-	mpz_set(matrix->MATRIX[matrix->next_free_row], row);
-	mpz_init2(matrix->IDENTITY[matrix->next_free_row], matrix->colsN); /* initializes a n bit vector all set to 0 */
-	mpz_setbit(matrix->IDENTITY[matrix->next_free_row], matrix->next_free_row); /* set the next_free_row bit to 1 */
-	matrix->next_free_row++;
-}
 void print_matrix_matrix(MATRIX *matrix) {
 	uint64_t i, j;
 
@@ -151,6 +84,7 @@ void free_matrix(MATRIX *matrix) {
 	free(matrix->IDENTITY);
 }
 
+
 void checkMatrixReducted(MATRIX* matrix){
 //    print_matrix_matrix(matrix);
     //scrols col checking if only element i,i is 1
@@ -178,14 +112,15 @@ void checkMatrixReducted(MATRIX* matrix){
     }
     if(result==EXIT_FAILURE)
         kill(getpid(),SIGFPE);
-}
+} //TODO DEBUG
+
 /* performs a Gauss elimination on matrix->MATRIX, M:I---->M':I'
  * result (linear dependence) will be in the matrix->IDENTITY
  *   TODO BECAUSE EACH OP TO MAKE MATRIX IN ROW ECHELON FORM it has been applied on Identity Matrix too
  *      so M'[i]=I'[i]*M  **
  *      target so it's to find linear dependencies (0 vectors in M') and re build in terms of source terms **
  * */
-void gauss_elimination(MATRIX *matrix) {
+void gauss_elimination_over_GF2(MATRIX *matrix) {
 	printf("\nPerforming Gauss elimination..\n");
 	mpz_t *m = matrix->MATRIX;
 	mpz_t *I = matrix->IDENTITY;
@@ -227,30 +162,24 @@ void gauss_elimination(MATRIX *matrix) {
 	}
 	checkMatrixReducted(matrix);
 }
-void get_matrix_row(mpz_t rop, MATRIX *matrix, uint64_t row_index) {
-	mpz_set(rop, matrix->MATRIX[row_index]);
-}
-
-
-void get_identity_row(mpz_t rop, MATRIX *matrix, uint64_t row_index) {
-	mpz_set(rop, matrix->IDENTITY[row_index]);
-}
 
 int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
     /* start backward from last row in the matrix  to find 0 vectors in final matrix --> linear depenecies --> square factor combination*/
     checkReports(reports,true);
-    uint64_t row_index = matrix->rowsN-1;
     int linearRelFoundedN= 0,result=EXIT_SUCCESS;
     mpz_t matrixRow, identityMatrixRow,X, Y_element,tmp,tmp2;
     mpz_inits(matrixRow, identityMatrixRow, X, Y_element, tmp, tmp2, NULL);
-    get_matrix_row(matrixRow, matrix, row_index--);
+
+    //// search for 0 vectors matrix backward from end
+    uint64_t row_index = matrix->rowsN-1;
+    mpz_set(matrixRow,matrix->MATRIX[row_index--]);
     while (mpz_cmp_ui(matrixRow, 0) == 0) {
         linearRelFoundedN++;
-        get_matrix_row(matrixRow, matrix, row_index--);
+        mpz_set(matrixRow,matrix->MATRIX[row_index--]);
     }
     printf("\tLinear dependent relations found : %d\nTring GCDs\n", linearRelFoundedN);sleep(1);
     ////// Factor trys
-    int missedSquares = 0;struct ArrayEntry arrayEntry;mpz_inits(arrayEntry.x,arrayEntry.largePrime,arrayEntry.element,arrayEntry.exp_vector,NULL);  //TODO DEBUG
+    struct ArrayEntry arrayEntry;mpz_inits(arrayEntry.x,arrayEntry.largePrime,arrayEntry.element,arrayEntry.exp_vector,NULL);  //TODO DEBUG
     fflush(0);
     for (row_index+=2;row_index<matrix->rowsN;row_index++){
         mpz_set_ui(X, 1);
@@ -259,9 +188,9 @@ int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
         /*I'[i]*M=M'[i] <-- M'[i] is 0 vector <- founded linear dependency <-> BSmooth factors quadratic combination
          * build quadratic relation using founded linear dependency combining previusly founded X::f(x)=BSmoothVal::Y indexed on M
          */
-        get_identity_row(identityMatrixRow, matrix, row_index );
+        mpz_set(identityMatrixRow,matrix->IDENTITY[row_index]);
         mpz_init2(matrixRow,matrix->colsN);             //TODO DEBUG MEM CURRPUTION WITH GAUSS
-        for (u_int64_t i = 0; i < matrix->colsN; i++) {
+        for (u_int64_t i = 0; i < matrix->rowsN; i++) {
             if (mpz_tstbit(identityMatrixRow, i)) {
                 mpz_mul(X, X, reports->bsmoothEntries[i].x);
                 mpz_mod(X, X, reports->n);
@@ -277,11 +206,11 @@ int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
         fflush(0);
         mpz_sqrtrem(tmp2, tmp, Y_element);
         if(!mpz_cmp_ui(tmp,0)){
-            gmp_printf("%d)\tX=\t%Zd;\tY=%Zd;m()\n",row_index ,X,Y_element);fflush(0);
+            gmp_printf("%lu)\tX=\t%Zd;\tY=%Zd;m()\n",row_index ,X,Y_element);fflush(0);
         }
 
         else{
-            gmp_fprintf(stderr,"%d)\tX=\t%Zd;\tY=%Zd;m()\n\n",row_index ,X,Y_element);
+            gmp_fprintf(stderr,"%lu)\tX=\t%Zd;\tY=%Zd;m()\n\n",row_index ,X,Y_element);
             for (int j = 0; j < matrix->colsN; j++) {
                 fprintf(stderr,"%2d", mpz_tstbit(matrix->MATRIX[row_index], j));
             }
@@ -296,7 +225,6 @@ int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
             }
             fprintf(stderr," \n\n");
 
-            missedSquares++;
             exit(EXIT_FAILURE);
         }
     
@@ -313,54 +241,8 @@ int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
             goto exit;
         }
     }
-    fprintf(stderr,"missed squares:%d / %d \nmatrix: %lu x %lu\n",missedSquares,linearRelFoundedN,matrix->rowsN,matrix->colsN);
     result=EXIT_FAILURE;
     exit:
     mpz_clears(X, Y_element, matrixRow, identityMatrixRow, NULL);
     return result;
-}
-int test() {
-	MATRIX matrix;
-
-	init_matrix(&matrix, 6, 6);
-	mpz_t r1, r2, r3;
-	mpz_init(r1);
-	mpz_init(r2);
-	mpz_init(r3);
-
-	mpz_set_ui(r1, 12);
-	mpz_set_ui(r2, 11);
-	mpz_set_ui(r3, 23);
-
-	push_row(&matrix, r1);
-	push_row(&matrix, r2);
-	push_row(&matrix, r3);
-
-	mpz_set_ui(r3, 1);
-	push_row(&matrix, r3);
-
-	mpz_set_ui(r3, 1);
-	push_row(&matrix, r3);
-
-	mpz_set_ui(r3, 23);
-	push_row(&matrix, r3);
-
-	print_matrix_matrix(&matrix);
-	print_matrix_identity(&matrix);
-
-	gauss_elimination(&matrix);
-
-	print_matrix_matrix(&matrix);
-	print_matrix_identity(&matrix);
-
-	return 0;
-}
-
-//#define TEST_MATRIX
-#ifdef  TEST_MATRIX
-int main(){
-#else
-void __main(){
-#endif
-    test();
 }
