@@ -1,13 +1,19 @@
 #!/usr/bin/env gp
+
+
+
 genSemiPrime(kernelSize10)={
 	\\gen semiPrime grater then 10^kernelSize10
 	\\with randomness added
 	base=10^kernelSize10;
+	print(type(base));
 	rnd=random()%base;
 	rnd2=random()%base;
-	return(nextprime(base+rnd)*nextprime(base+rnd));
+	Q=nextprime(base+rnd);
+	P=nextprime(base+rnd2);
+	print("generated primes\t",P,"\t",Q);
+	return(P*Q);
 }
-
 L(n)={
 	exponent_rat=bestappr((log(n)*log(log(n)))^(0.5));
 	L_n=exp(exponent_rat);

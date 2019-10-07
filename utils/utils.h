@@ -88,6 +88,6 @@ struct polynomial* initializationVars(char** argv);         //TODO DEPRECATED HA
 CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M, u_int64_t B, int sieverThreadsNum);
 struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial, A_COEFF *aCoeff);
 
-void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes);
+void nextPolynomial_b_i(mpz_t *b,mpz_t*a, unsigned int i, PRECOMPUTES *precomputes );
 A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, int s,struct Configuration *configuration);
 #endif //QUADRATIC_SIEVE_UTILS_H

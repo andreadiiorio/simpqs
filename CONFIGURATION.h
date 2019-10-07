@@ -3,10 +3,10 @@
 
 //// configuration of SIMPQS
 //dflt config of main algo parameters
-#define _ARRAY_IN_MEMORY_MAX_SIZE 33000      //max num of array elements holded in memory
-#define _M 9096
-#define _B 10000
-#define _SIEVING_THREAD_NUM  5              //siever threads
+#define _ARRAY_IN_MEMORY_MAX_SIZE 200000      //max num of array elements holded in memory
+#define _M 100000
+#define _B 32000
+#define _SIEVING_THREAD_NUM  7            //siever threads
 #define FINAL_RESIZE 1                       //EVERY DINAMIC ARRAY WILL BE RESIZED TO ACTUAL SIZE NEEDED
 
 //// dynamically resized array configurations

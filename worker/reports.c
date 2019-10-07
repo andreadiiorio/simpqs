@@ -356,6 +356,16 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
     fclose(reportFp);
     return result;
 }
+void _deleteLocalReports() {
+    char *cmd = "find -iname \"reports_*\" | xargs -d \"\\n\" rm";
+    FILE *fp = popen(cmd, "r");
+    if (fp == NULL) {
+        printf("Failed to run command find\n");
+        exit(EXIT_FAILURE);
+    }
+    pclose(fp);
+}
+
 char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
     // find all reports file saved locally by siever processes;
     // returned an array of strings containg paths of reports file or NULL if an error occurred
@@ -556,12 +566,12 @@ REPORTS *loadReports(char *filePath) {
 
 void sortPartialReports(REPORTS* reports){
     qsort(reports->largePrimesEntries,reports->partialRelationsNum, sizeof(*(reports->largePrimesEntries)),compareLargePrimeReports);
-    for (u_int64_t i = 0; i < reports->partialRelationsNum; ++i) {
-        gmp_printf("%4lu\t-- %9Zd\t\t",i,reports->largePrimesEntries[i].largePrime);
-        if(i%3==0)
-            printf("\n");
-    }
-    fflush(0);
+//    for (u_int64_t i = 0; i < reports->partialRelationsNum; ++i) {
+//        gmp_printf("%4lu\t-- %9Zd\t\t",i,reports->largePrimesEntries[i].largePrime);
+//        if(i%3==0)
+//            printf("\n");
+//    }
+//    fflush(0);
 }
 
 int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int matchFounded) {

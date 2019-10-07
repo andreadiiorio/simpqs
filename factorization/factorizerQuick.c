@@ -360,6 +360,9 @@ void* FactorizeTrialDivideThreadGroupManager(void*factorizeJobQueueArg) {
         }    // otherwhise comunicate setted exit condition to workers with exitCond Setted
         /////// sync comunication of newly fetched job to worker --> by mem barrier of barrier wait -> wakeup because manager entered
         //2 settings above will be visible to worker on barrier wait wake up because of memory barrier
+
+        //TODO job is predivisible by a because X(j)^2=f(x)*a
+
         factorizerArgTemplate.factorizerID=FACTORIZER_MANAGER_ID;
         int factorizeJobRes=(int) FactorizeTrialDivide((void*)&factorizerArgTemplate);               //manager will participate to concurrent factorization with his special ID
 /*#ifdef DEBUG_MANAGER

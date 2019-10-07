@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "utils.h"
 #include "gmp_patch.h"
 
@@ -183,12 +184,13 @@ CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M
     Config=*config;
     return config;
 }
+#define DEBUG_CHECK
 A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, int s,struct Configuration *configuration){
     //generate a coefficient s.t. a=p1* ... * ps=~(Sqrt(2*N)/M)
     //simply aggregate factors until ideall value reached, aggregation factors ceneterd at ideal^(1/s)
     //a coeff setted in configuration
     A_COEFF* aCoeff=calloc(1, sizeof(*aCoeff));
-    mpz_t*a=calloc(1, sizeof(*a));
+    mpz_t*a=malloc(sizeof(*a));
     u_int* aFactorsIndexes=calloc(s, sizeof(*aFactorsIndexes));
     if(!a || ! aCoeff || !aFactorsIndexes){
         fprintf(stderr,"OUT OF MEM AT a Malloc\n");
@@ -196,7 +198,6 @@ A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, i
         return NULL;
     }
     u_int a_factors_num=0;
-    mpz_init_set_ui(*a,1);
     /// get a ideally value ~ SQRT(2N)/M
     mpz_t ideal_a_value;
     mpz_init_set(ideal_a_value,configuration->N);
@@ -208,7 +209,7 @@ A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, i
     /// get a factors center
     mpz_t a_factors_center; mpz_init_set(a_factors_center,ideal_a_value);
     mpz_root(a_factors_center,a_factors_center,s);
-    if (mpz_cmp_ui(a_factors_center,MIN_FACTOR_A_COEFF)<0) {
+    if (mpz_cmp_ui(a_factors_center,MIN_FACTOR_A_COEFF)<0 || 1) {
         gmp_printf("too little a factor center achived by (sqrt(2N)/M)^(1/s) : %Zd... rounding up to :%d\n",a_factors_center,MIN_FACTOR_A_COEFF);
         mpz_set_ui(a_factors_center, MIN_FACTOR_A_COEFF);
     }
@@ -220,13 +221,18 @@ A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, i
             break;
     }
     //aggregate factor until reached threashold
-    mpz_t a_tmp;mpz_init_set(a_tmp,*a);
+    mpz_t a_tmp;mpz_init_set_ui(a_tmp,1);
 
     // aggregate a factors swinging around a_factor_center_indx until the ideal threshold has been reached
     u_int64_t prime,primeIndx, swing,i;
-    for(primeIndx = a_factor_center_indx,swing=0,i=1; mpz_cmp(a_tmp, ideal_a_value) < 0 ;swing++) { //centered aggregation of factors
+    for(primeIndx = a_factor_center_indx,swing=0,i=1; mpz_cmp(a_tmp, ideal_a_value) < 0 && primeIndx<factorBaseSize ;swing++) { //centered aggregation of factors
+        if(primeIndx+1>=factorBaseSize)
+            swing=0;
         prime=factorbase[primeIndx];
         mpz_mul_ui(a_tmp, a_tmp, prime);
+#ifdef   DEBUG_CHECK
+        gmp_printf("%Zd\n",a_tmp);
+#endif
         aFactorsIndexes[a_factors_num++]=primeIndx;
         primeIndx=((swing)%2 ? (a_factor_center_indx+ (i++)):(a_factor_center_indx-i));
     }
@@ -234,8 +240,8 @@ A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, i
     mpz_div_ui(a_tmp,a_tmp,prime);              //remove last prime for a gen under threshold ( last prime caused for condition become false)
     aFactorsIndexes[a_factors_num--]=0;
 #endif
-    mpz_set(*a,a_tmp);                          //finally set computed a coeff
-    gmp_printf("generated a coeff with s:%d factors\t a:%Zd\n",s,*a);
+    mpz_init_set(*a,a_tmp);                          //finally set computed a coeff
+    gmp_printf("generated a coeff with s:%d factors\t a:%Zd\n",s,*a);fflush(0);
 
     aCoeff->a=a;
     aCoeff->a_factors_num=a_factors_num;
@@ -245,7 +251,7 @@ A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, i
     mpz_clears(a_tmp,ideal_a_value,a_factors_center,NULL);
     return aCoeff;
 }
-void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes){
+void nextPolynomial_b_i(mpz_t *b,mpz_t* a, unsigned int i, PRECOMPUTES *precomputes) {
     //gen b i+1
     ///get v s.t. 2^v|| 2i --> maximal power of 2 dividing 2i
     unsigned int v,i_2v;
@@ -262,6 +268,9 @@ void nextPolynomial_b_i(mpz_t* b, unsigned int i, PRECOMPUTES *precomputes){
     mpz_t tmp; mpz_init_set_si(tmp,2*signExp);
     mpz_mul(tmp,tmp,*B_v);                                  //tmp = B_v*2*(-1)^(ceil(i/2<<v))
     mpz_add(*b,*b,tmp);
+    //check if b is even
+//    if(mpz_divisible_ui_p(*b,2))
+//        mpz_add(*b,*b,*a);
 #ifdef VERBOSE
     gmp_printf("\ngenerated next b i:%d with v:%d\t b:%Zd\n",i,v,*b);Z
 #endif
@@ -366,7 +375,7 @@ void main_(){
     printSievingJumps(precomputes, 10);
     //// polynomials family generation:
     for (u_int j = 1; j + 1 < 1u << (configuration->a_coefficient.a_factors_num - 1); ++j) {
-        nextPolynomial_b_i(&(pol.b), j, precomputes);
+        nextPolynomial_b_i(&(pol.b), j, precomputes, 0);
         gmp_printf("polynomial:%d\ta=%Zd;\tb=%Zd;\n", j, pol.a, pol.b);
         printSievingJumps(precomputes, 10);
         if (checkSieveJumps(precomputes, &pol) == EXIT_FAILURE) {

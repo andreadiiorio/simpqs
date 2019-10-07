@@ -31,6 +31,7 @@ typedef struct FactorizeJobQueue{
     int consumersEnded;                   //number of factorize thread manager that has ended
     pthread_cond_t emptyAndClosedQueue;   //closed and flushed job queue --> setted from consumers at queue end
     bool endedQueue;                      //true if condvar broadcast already called
+    A_COEFF* aCoeff;
 } FACTORIZE_JOB_QUEUE;
 void appendJob(FACTORIZE_JOB_QUEUE *jobQueue,struct ArrayEntryList* newJob);
 struct ArrayEntry* popFirstJob(FACTORIZE_JOB_QUEUE *jobQueue);

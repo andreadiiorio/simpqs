@@ -11,11 +11,15 @@
 #include "utils/gmp_patch.h"
 #include "sievingSIMPQS.h"
 #include "../matrix/matrix.h"
+
+///TODO CLEAN REPORTS FILES:  find -iname "reports_*" | xargs -d "\n" rm
 SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
-const char* n_str="100000030925519250968982645360649";
+//const char* n_str="100000030925519250968982645360649"; //OLD
+const char* n_str="100000030925519650969044496394369";
+//const char* n_str="1000000000000000000000002426064136000000000000001360395300442658823";
 CONFIGURATION* configuration;
 DYNAMIC_VECTOR* primes_B;
-#define TEST_1_POL_FAMILY
+//#define TEST_1_POL_FAMILY
 #ifdef TEST_1_POL_FAMILY
 int main(){
 #else
@@ -26,6 +30,10 @@ int finalStepWrap(){
     struct polynomial pol;
     PRECOMPUTES *precomputes = preComputations(configuration, &pol,NULL);
     char** reportsPaths=findReportsLocally(1,REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX);
+    if(!(*reportsPaths)){
+        fprintf(stderr,"error in reports deserialization\n");
+        exit(EXIT_FAILURE);
+    }
     REPORTS* reports=loadReports(*reportsPaths);
     if(reports->relationsNum<(precomputes->primes.vectorSize+1)) {
         fprintf(stderr, "not founded enough reports for linear algebra phase\n");
@@ -43,6 +51,7 @@ int MAIN(){
 #else
 int main(int argc, char** argv){
     //FORKED WORKER PROCESS TO SIEVE BSMOOTH RELATION AND PARTIAL RELATION WITH POLINOMIO FAMILIES FROM a
+    _deleteLocalReports();          //TODO DEBUG RESET OLD SERIALIZED REPORTS
     if(argc < 5){           //TODO MOCKED ARGv
         printf("USAGE: N,M,B,a, ....\n");
         //exit(EXIT_FAILURE);
@@ -103,7 +112,7 @@ int main(int argc, char** argv){
             free(reportsFounded);
             exit(result);
         }
-        nextPolynomial_b_i(&(pol.b), j, precomputes);                           //change polynomial
+        nextPolynomial_b_i(&(pol.b),&(pol.a), j, precomputes);                           //change polynomial
     }
 
     for (u_int j = 1; j  < polynoamilFamilySize; ++j) {

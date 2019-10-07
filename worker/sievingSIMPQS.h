@@ -75,5 +75,6 @@ REPORTS* aggregateSieversWorkers(const unsigned int polynomialN);
 #define REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX  ".reportsfamilylist"
 #endif
 char** findReportsLocally(unsigned int numReports,const char* reportSuffix);
+void _deleteLocalReports();
 
 #endif //SIMPQS_SIEVINGSIMPQS_H

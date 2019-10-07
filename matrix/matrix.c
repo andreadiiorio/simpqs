@@ -241,6 +241,7 @@ int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
             goto exit;
         }
     }
+    printf("useless trys: %d\n",linearRelFoundedN);
     result=EXIT_FAILURE;
     exit:
     mpz_clears(X, Y_element, matrixRow, identityMatrixRow, NULL);
