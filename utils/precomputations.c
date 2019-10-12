@@ -1,3 +1,4 @@
+//developped by andysnake96
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
@@ -448,20 +449,21 @@ void freePrecomputations(PRECOMPUTES* precomputes){
     free(precomputes->polPrecomputedData.B_ainv_2Bj_p);
 
 }
-A_COEFF *genPolynomialFamilies_a(int numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,DYNAMIC_VECTOR *a_factors_pol_families) {
-
+A_COEFF *genPolynomialFamilies_a(int* numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,DYNAMIC_VECTOR *a_factors_pol_families) {
     //gen num families different a coefficients with at least 3 different primes for each 2-tuple
-    printf("Precomputing polynomial families (%d) a coefficients\n",numFamilies);
-    A_COEFF* polFamilies_coeff_a=calloc(numFamilies, sizeof(*polFamilies_coeff_a));
+    printf("Precomputing polynomial families (%d) a coefficients\n",*numFamilies);
+    A_COEFF* polFamilies_coeff_a=calloc(*numFamilies, sizeof(*polFamilies_coeff_a));
     if(!polFamilies_coeff_a){
         fprintf(stderr,"Out of mem at a polynomial families coeff precomputation");
         return NULL;
     }
     A_COEFF aCoeff;
-    for (int i = 0; i < numFamilies; ++i) {
+    for (int i = 0; i < *numFamilies; ++i) {
         aCoeff= gen_a_centered(precomputes->factorbase, precomputes->factorbaseDynamicVect.vectorSize, S, config, a_factors_pol_families);
-        if(!aCoeff.a_factors_indexes_FB || aCoeff.a_factors_num==0)
-            exit(EXIT_FAILURE);
+        if(!aCoeff.a_factors_indexes_FB || aCoeff.a_factors_num==0){
+            printf("factor base ended with selected centering at polynomial family:%d \n",i);
+            *numFamilies=i-1;
+        }
         polFamilies_coeff_a[i]=aCoeff;
 #ifdef VERBOSE
         gmp_printf("pol family i:%d \t %Zd\n",i,polFamilies_coeff_a[i].a);
@@ -529,4 +531,5 @@ void main(){
 //    for (int i = 0; i < POL_FAMILIES_N; ++i) {
 //        gmp_printf("pol family :%d\t%Zd\n",i,polFamilies[i]);
 //    }
+    return 0;
 }

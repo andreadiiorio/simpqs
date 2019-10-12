@@ -1,9 +1,9 @@
+//developped by andysnake96
 #include <stdio.h>
 #include "sievingSIMPQS.h"
 #include <unistd.h>
 #include <utils/utils.h>
 #include <signal.h>
-
 #define ENTRY_MAX_LEN 4096;
 
 #define WRITE_SEPARATOR(fd,sep) \

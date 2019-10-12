@@ -1,5 +1,5 @@
 //
-// Created by andysnake on 19/08/19.
+// Created by andysnake
 //
 
 #include <signal.h>

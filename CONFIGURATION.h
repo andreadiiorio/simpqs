@@ -1,19 +1,20 @@
+//developped by andysnake96
 #ifndef SIMPQS_CONFIGURATION_H
 #define SIMPQS_CONFIGURATION_H
 
 //// configuration of SIMPQS
 //dflt config of main algo parameters
 #define _ARRAY_IN_MEMORY_MAX_SIZE 200000      //max num of array elements holded in memory
-#define _M 100000
-#define _B 16000
-#define  MIN_FACTOR_A_COEFF 2011
-#define S 9
+#define _M 100000                               //2M will be the array size in the algo
+#define _B 16000                                //up limit of primes admitable to divide full reports
+#define  MIN_FACTOR_A_COEFF 2011                // minimium factor in F.B. sub interval cenetering
+#define S 5                                     //desired num of factors for a coeff
 #define _SIEVING_THREAD_NUM  7            //siever threads
 #define FINAL_RESIZE 1                       //EVERY DINAMIC ARRAY WILL BE RESIZED TO ACTUAL SIZE NEEDED
-#define DELTA_LOG_SIEVE_TOLLERATION 17       //tolleration constant for log threashold comparison for factorize job mark
+#define DELTA_LOG_SIEVE_TOLLERATION 13       //tolleration constant for log threashold comparison for factorize job mark
 #define LARGE_PRIME_THREASHOLD_FACTOR 20                            //will be accepted primes up to B*THIS_MACRO
 
-#define EXTRA_PRIMES 96960000
+#define EXTRA_PRIMES 96960000               //extra primes holded only for a generation
 
 
 //// dynamically resized array configurations

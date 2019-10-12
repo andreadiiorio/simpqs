@@ -1,6 +1,5 @@
 //
-// Created by andysnake on 19/08/19.
-//
+// developped by andysnake 96
 
 #ifndef QUADRATIC_SIEVE_UTILS_H
 #define QUADRATIC_SIEVE_UTILS_H
@@ -91,8 +90,9 @@ CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M
 
 void freePrecomputations(PRECOMPUTES* precomputes);
 struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial,bool precomputeUntilFactorBase);
-A_COEFF *genPolynomialFamilies_a(int numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,
-                                 DYNAMIC_VECTOR *a_factors_pol_families);
+
+
+A_COEFF *genPolynomialFamilies_a(int* numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,DYNAMIC_VECTOR *a_factors_pol_families);
 int changePolynomialFamily(PRECOMPUTES *precomputes, A_COEFF *new_a_pol_family, struct polynomial* pol);
 
 void nextPolynomial_b_i(mpz_t *b, unsigned int i, PRECOMPUTES *precomputes);

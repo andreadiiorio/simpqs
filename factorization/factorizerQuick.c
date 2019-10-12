@@ -1,3 +1,4 @@
+// developped by andysnake 96
 #include <unistd.h>
 #include "factorizerQuick.h"
 

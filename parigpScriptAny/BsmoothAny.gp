@@ -1,6 +1,6 @@
 #!/usr/bin/env gp
 
-
+\\developped by andysnake96
 
 genSemiPrime(kernelSize10)={
 	\\gen semiPrime grater then 10^kernelSize10

@@ -1,45 +1,22 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+developped by Andrea Di Iorio
+SIMPQS with large prime variation implementation based on Contini phD
+Self Initialization Multiple Polynomial Quadratic Sieve
+first precomputation will be done and will be generated POL_FAMILY_TRIES a coeffcient corresponding to same number of polynomial family
+each polynomial family is composed to serveral Mongomery polynomial where the a coeff is fixed and b coeff is changed expoliting Gray Code Contini implementation
+precomputation make computationally "light" to switch polynomial among polynomial family
+In This version Sieving phase is done concurrently on different process that will Sieve for different Polynomial Families
+         ( POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS process will concurrently sieve for POLYNOMIAL_FAMILIES_PER_SIEVER polynomial families)
+During 1 polynomial Sieve inside 1 process different thread will sieve the Array concurrently using log sieving as suggested by contini
+array entry that are likelly to be BSmooth will be Factorized and only entry that decompose in Factorbase Primes up to B SmoothnessBound will be used
+    (or entry that are like the previusly but have 1 large prime like B* LARGE_PRIME_THREASHOLD_FACTOR)
+Factorization is done in another set of thread inside the same process with an approch that I've invented callable ThreadGroupPool
+    each likellyToBeBsmooth entry will be Enqueued in a SYNC queue and a ThreadGroupManager will dequeue it
+    expoliting 2 barrier SYNC with a fixed number of iteration factorization of the entry will be searched concurrently in the Thread ThreadGroupManager
+    see factorizerQuick.c for implementation.
+After each sieving process (partial) relation will be collected and aggregated by the main process
+After sieving of each polynomial inside each generated polynomial family large primes will coupled generating new relations (like suggested in Crandal & Pomerance book)
+when at least cardinality of FB relation will be collected plus an extra Linear algebra step will be performed, solving a liner system of exponenet vectors of founded relations
+exponent vectors are exponents % 2 of each primes in factorization of founded relation
+Linear system solved with Gauss elimination algorithm with the optimization of using XOR at each row sum (in GF2 so sum is logically equivalent to XOR)
+after that Quadratic relation x^2==y^2 mod N will be builded and factorization will be tried with GCD(X+-Y,N)
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
-
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
-
----
-
-## Edit a file
-
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
-
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
-
----
-
-## Create a file
-
-Next, you’ll add a new file to this repository.
-
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
-
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
-
----
-
-## Clone a repository
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).

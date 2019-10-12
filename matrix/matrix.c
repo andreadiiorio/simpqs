@@ -238,6 +238,7 @@ int quadraticRelationTry(REPORTS* reports,MATRIX* matrix){
         if ((mpz_cmp(tmp,reports->n ) != 0 && mpz_cmp_ui(tmp, 1) != 0) || (mpz_cmp(tmp2,reports->n ) != 0 && mpz_cmp_ui(tmp2, 1) != 0)){
             mpz_cdiv_q(Y_element,reports->n , tmp);                        //set the other factor
             gmp_printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\tFOUNDED FACTORS: %Zd \t :%Zd\t!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",tmp,tmp2);
+            gmp_printf("with x:%Zd \t\t y:%Zd \n",X,Y_element);
             result=EXIT_SUCCESS;
             goto exit;
         }

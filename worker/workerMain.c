@@ -12,14 +12,21 @@
 #include "sievingSIMPQS.h"
 #include "../matrix/matrix.h"
 
-#define POL_FAMILY_TRIES 150
-///TODO CLEAN REPORTS FILES:  find -iname "reports_*" | xargs -d "\n" rm
-SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
+// developped by andysnake96
+// Highly Concurrent SIMPQS with Large Prime variation
+// based on Contini phD for SIMPQS Algo
+// see readme for algo information, see CONFIGURATION.h for algorithm parameter setting (widely used c
+#define POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS 3
+#define POLYNOMIAL_FAMILIES_PER_SIEVER 7
+#define LARGE_PRIMES_SURPLUS_EXPECTED 0
+int POL_FAMILY_TRIES=150;
+
+
+char* n;
 //const char* n_str=  "100000030925519250968982645360649"; //OLD
 //const char* n_str="100000030925519650969044496394369";
 const char* n_str="10000000000251715795601347229089999344259";
-//const char* n_str="100000000000000028598093420000002011524934548107677";
-
+//char* n_str= "100000000000000028598093420000002011524934548107677";
 //TOO LARGE TRYS
 //const char* n_str="100000000000000000000000000000024260646520000000000000000000001360395958358684667";
 //const char* n_str="1000000000000000000002859809340000000000002011524921863497539";
@@ -32,7 +39,7 @@ int main(){
 int finalStepWrap(){
 #endif
 
-    Configuration =initConfiguration(n_str, 0, 0, 0, 0);
+    Configuration =initConfiguration(n, 0, 0, 0, 0);
     struct polynomial pol;
     PRECOMPUTES *precomputes = preComputations(Configuration, &pol, true);
     char** reportsPaths=findReportsLocally(1,REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX);
@@ -56,20 +63,17 @@ int finalStepWrap(){
 int MAIN(){
 #else
 
-#define POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS 5
-#define POLYNOMIAL_FAMILIES_PER_SIEVER 5
-#define LARGE_PRIMES_SURPLUS_EXPECTED 0
 
 int main(int argc, char** argv){
     //FORKED WORKER PROCESS TO SIEVE BSMOOTH RELATION AND PARTIAL RELATION WITH POLINOMIO FAMILIES FROM a
     _deleteLocalReports(false);          //TODO DEBUG RESET OLD SERIALIZED REPORTS
-    if(argc < 5){           //TODO MOCKED ARGv
-        printf("USAGE: N,M,B,a, ....\n");
-        //exit(EXIT_FAILURE);
+    n=n_str;
+    if(argc > 1){
+        n=argv[1];
     }
 #endif
     /// init configuration, with argv, on un setted configuration defalut setting will be used
-    CONFIGURATION* configuration= initConfiguration(n_str, 0, 0, 0, 0);
+    CONFIGURATION* configuration= initConfiguration(n, 0, 0, 0, 0);
     Configuration=configuration;
     struct polynomial pol;
     /// init precomputation for polynomial family   todo next version computation of a coeff ... <- MASTER COMUNICATION
@@ -78,12 +82,11 @@ int main(int argc, char** argv){
         free(Configuration);
         exit(EXIT_FAILURE);
     }
-
     gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", pol.a.a, pol.b, *(pol.N));
 
     REPORTS *polynomialsReportsAggregated;
     A_COEFF *polynomialFamilyCoefficients,*polynomiallFamily_a_indx;
-    polynomialFamilyCoefficients = genPolynomialFamilies_a(POL_FAMILY_TRIES, Configuration, precomputes, configuration->a_factors_indexes_FB_families);
+    polynomialFamilyCoefficients = genPolynomialFamilies_a(&POL_FAMILY_TRIES, Configuration, precomputes, configuration->a_factors_indexes_FB_families);
     if(!polynomialFamilyCoefficients)
         exit(EXIT_FAILURE);
 
