@@ -17,8 +17,8 @@
 SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
 //const char* n_str=  "100000030925519250968982645360649"; //OLD
 //const char* n_str="100000030925519650969044496394369";
-//const char* n_str="10000000000251715795601347229089999344259";
-const char* n_str="100000000000000028598093420000002011524934548107677";
+const char* n_str="10000000000251715795601347229089999344259";
+//const char* n_str="100000000000000028598093420000002011524934548107677";
 
 //TOO LARGE TRYS
 //const char* n_str="100000000000000000000000000000024260646520000000000000000000001360395958358684667";
@@ -42,7 +42,7 @@ int finalStepWrap(){
     }
     REPORTS* reports=loadReports(*reportsPaths);
     if(reports->relationsNum<(precomputes->factorbaseSize)+1) {
-        fprintf(stderr, "not founded enough reports for linear algebra phase\n");
+        fprintf(stderr, "not founded enough reports for linear algebra phase \n founded:%lu vs %lu\n",reports->relationsNum,precomputes->factorbaseSize);
         exit(EXIT_FAILURE);
     }
     MATRIX matrix;
@@ -55,6 +55,11 @@ int finalStepWrap(){
 #ifdef TEST_1_POL_FAMILY
 int MAIN(){
 #else
+
+#define POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS 5
+#define POLYNOMIAL_FAMILIES_PER_SIEVER 5
+#define LARGE_PRIMES_SURPLUS_EXPECTED 0
+
 int main(int argc, char** argv){
     //FORKED WORKER PROCESS TO SIEVE BSMOOTH RELATION AND PARTIAL RELATION WITH POLINOMIO FAMILIES FROM a
     _deleteLocalReports(false);          //TODO DEBUG RESET OLD SERIALIZED REPORTS
@@ -75,12 +80,9 @@ int main(int argc, char** argv){
     }
 
     gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", pol.a.a, pol.b, *(pol.N));
-    // init local worker matrix, used to aggregate relations founded in the various sieving iteration
-//    MATRIX matrixWorker;
-//    init_matrix(&matrixWorker,1,precomputes->primes.vectorSize);
 
     REPORTS *polynomialsReportsAggregated;
-    A_COEFF *polynomialFamilyCoefficients;
+    A_COEFF *polynomialFamilyCoefficients,*polynomiallFamily_a_indx;
     polynomialFamilyCoefficients = genPolynomialFamilies_a(POL_FAMILY_TRIES, Configuration, precomputes, configuration->a_factors_indexes_FB_families);
     if(!polynomialFamilyCoefficients)
         exit(EXIT_FAILURE);
@@ -104,56 +106,78 @@ int main(int argc, char** argv){
         exit(EXIT_FAILURE);
     }
     unsigned int polynoamilFamilySize;
-    int polFamily_i = 1;
+    int polFamilies_series_i = 0;
+    bool firstPolynomialFamily=true;
 
-    polynomial_family_sieve:
-    polynoamilFamilySize = (1 << (pol.a.a_factors_num - 1));
-    char polynomial_str[440];
-//    fflush(0); printf("starting siever process in polynomial family of size:_%d\n",polynoamilFamilySize);fflush(0);
-    //  TODO DEBUG FORKED CHILD: set follow-fork-mode child \n set detach-on-fork off
-    for (u_int j = 1; j  < polynoamilFamilySize; ++j) {
-        gmp_snprintf(polynomial_str,440," polynomial:%d\ta=%Zd;\tb=%Zd;\n", j, pol.a.a, pol.b);
-        if (!fork()) {
-            REPORTS *reportsFounded = Sieve(Configuration, precomputes, &pol);
-            int result = EXIT_SUCCESS;
-            if (!reportsFounded) {
-                fprintf(stderr, "SIEVING ERROR\n");
-                result = EXIT_FAILURE;
-            }
-            if(reportsFounded->relationsNum || reportsFounded->partialRelationsNum ) {  //serialize reports only on need
-                if ((saveReports(reportsFounded, precomputes->factorbaseSize, false, false, &pol)) == EXIT_FAILURE) {
-                    fprintf(stderr, "REPORTS SERIALIZING ERROR\n");
-                    result = EXIT_FAILURE;
+    int polFamilyOffset;
+    polynomial_families_sieve:
+    printf("concurrent multiple polynomial families sieving :%d\t on preocesses start\n",polFamilies_series_i);
+    polFamilyOffset = polFamilies_series_i * POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS * POLYNOMIAL_FAMILIES_PER_SIEVER;
+    for (int sieverID = 0; sieverID < POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS; ++sieverID) {
+        if(!fork()) {           //SIEVER TASK WILL SEARCH ITERATIVELLY ON MULTIPLE POLYNOMIAL FAMILIES
+            REPORTS* sieverTaskReports;
+            REPORTS sieverTaskReportsAggregated; memset(&sieverTaskReportsAggregated,0, sizeof(sieverTaskReportsAggregated));
+            for (int polFamilyIndx = sieverID + polFamilyOffset,j=0; j < POLYNOMIAL_FAMILIES_PER_SIEVER && polFamilyIndx < POL_FAMILY_TRIES ; polFamilyIndx+=POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS,++j) {
+                if(firstPolynomialFamily){       //one time only do first polynomial family sieve
+                    firstPolynomialFamily=false;
+                    if(!(sieverTaskReports=Sieve(configuration,precomputes,&pol))){
+                        fprintf(stderr,"SIEVE ERROR\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    if(mergeReports(&sieverTaskReportsAggregated,sieverTaskReports,true)==EXIT_FAILURE)
+                        exit(EXIT_FAILURE);
+                }
+                polynomiallFamily_a_indx= polynomialFamilyCoefficients + polFamilyIndx;       //get process unique polynomial family a coeff.
+                if (changePolynomialFamily(precomputes, polynomiallFamily_a_indx, &pol) == EXIT_FAILURE){
+                    fprintf(stderr,"CHANGE POLYNOMIAL ERROR\n");
+                    exit(EXIT_FAILURE);
+                }
+                polynoamilFamilySize = (1 << (pol.a.a_factors_num - 1));
+                for (unsigned int p = 1; p <= polynoamilFamilySize; ++p) {
+                    if(!(sieverTaskReports=Sieve(configuration,precomputes,&pol))){
+                        fprintf(stderr,"SIEVE ERROR\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    if(mergeReports(&sieverTaskReportsAggregated,sieverTaskReports,true)==EXIT_FAILURE) {
+                        fprintf(stderr,"Merge reports error\n");
+                        exit(EXIT_FAILURE);
+                    }
+                    nextPolynomial_b_i(&(pol.b), p, precomputes);   //change polynomial inside the family
                 }
             }
-            fprintf(stderr,"EXITING WITH CODE %d SIEVER PROCESS founded full reports:%lu\tpartial reports:%lu\tOF POLYNOMIAL:\t%s\n",result,reportsFounded->relationsNum,reportsFounded->partialRelationsNum, polynomial_str);
-            free(reportsFounded);
-//            freePrecomputations(precomputes);
-            exit(result);
+            //// after all polynomial families search serialize aggregated reports
+            if(sieverTaskReportsAggregated.partialRelationsNum || sieverTaskReportsAggregated.relationsNum) {
+                if (saveReports(&sieverTaskReportsAggregated, precomputes->factorbaseSize, false, false, &pol) == EXIT_FAILURE)
+                    exit(EXIT_FAILURE);
+            }
+            fflush(0);fprintf(stderr,"SIEVER PROCESS founded full reports:%lu\tpartial reports:%lu\tOF %d POLYNOMIAL FAMILIES\n",sieverTaskReportsAggregated.relationsNum,sieverTaskReportsAggregated.partialRelationsNum, POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS);
+            exit(EXIT_SUCCESS);
         }
-        nextPolynomial_b_i(&(pol.b), j, precomputes);                           //change polynomial
+        if(firstPolynomialFamily)
+            firstPolynomialFamily=false;
     }
-
-    for (u_int j = 1; j  < polynoamilFamilySize; ++j) {
+    /// wait all polynomial families processes
+    for (u_int j = 0; j  < POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS; ++j) {
         int workerPolynomialRes=0;
         wait(&workerPolynomialRes);
         if(workerPolynomialRes!=EXIT_SUCCESS)
             exit(workerPolynomialRes);
     }
-    polynomialsReportsAggregated = aggregateSieversWorkers(polynoamilFamilySize, false,reportsAllWorker);
+    /// aggregate all reports founded until here (returned same pointer in last param) re iterate if needed
+    polynomialsReportsAggregated = aggregateSieversWorkers(POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS, false,reportsAllWorker);
     if(!polynomialsReportsAggregated){
         fprintf(stderr,"ERR DURING POLYNOMIAL REPORTS AGGREGATION");
         exit(EXIT_FAILURE);
     }
+    fflush(0);
     printf("\n\naggreagated reports:%lu	partialReports:%lu vs FB SIZE: %lu \n", polynomialsReportsAggregated->relationsNum,polynomialsReportsAggregated->partialRelationsNum,precomputes->factorbaseSize);
-    if(polynomialsReportsAggregated->relationsNum < precomputes->factorbaseSize - 88 && (polFamily_i) < POL_FAMILY_TRIES){
-        changePolynomialFamily(precomputes, polynomialFamilyCoefficients + polFamily_i++, &pol);
-        gmp_printf("Changed to polynomial family :%d\t new a=%Zd;\tb=%Zd;\n",polFamily_i,pol.a.a,pol.b);
-        goto polynomial_family_sieve;
+    if((polynomialsReportsAggregated->relationsNum < precomputes->factorbaseSize - LARGE_PRIMES_SURPLUS_EXPECTED) && (polFamilies_series_i++) < (POL_FAMILY_TRIES/POLYNOMIAL_FAMILIES_CONCURRENT_SIEVERS)){
+        goto polynomial_families_sieve;
     }
-    if(pairPartialReports(reportsAllWorker)==EXIT_FAILURE)
-        exit(EXIT_FAILURE);
-
+    if(polynomialsReportsAggregated->relationsNum<precomputes->factorbaseSize) {
+        if (pairPartialReports(reportsAllWorker) == EXIT_FAILURE)
+            exit(EXIT_FAILURE);
+    }
     printf("\n\n\n\n\n\nSERIALIZING POLYNOMIAL FAMILIES AGGREGATED REPORTS\n");fflush(0);
     if (saveReports(polynomialsReportsAggregated,precomputes->primes.vectorSize,false,true,&pol)==EXIT_FAILURE){
         fprintf(stderr, "REPORTS  AGGREGATED SERIALIZING ERROR\n");

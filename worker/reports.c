@@ -35,7 +35,7 @@ void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(const struct ArrayEntry* arrayEntry, mpz_
     if (mpz_tstbit(arrayEntry->exp_vector, 0) && mpz_cmp_ui(arrayEntry->element, 0) >= 0) {    //test sign bit
         fprintf(stderr, "missed sign bit\n");
     }
-    for (unsigned long i = 1,bit=0; i < FB.vectorSize; ++i) {              //test odd power bits
+    for (unsigned long i = 1,bit=0; i < FB.vectorLastIndex; ++i) {              //test odd power bits
         bit=mpz_tstbit(arrayEntry->exp_vector, i);
         dbg_exp = 0;
         mpz_set_ui(tmp,((u_int64_t *) FB.pntr)[i - 1]);
@@ -619,7 +619,9 @@ int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int
         mpz_mul(newReport->element,newReport->element,partialReportk->element);
         mpz_xor(newReport->exp_vector,newReport->exp_vector,partialReportk->exp_vector);
 #ifdef   DEBUG_CHECK
+#ifdef VERBOSE
         gmp_printf("coupled large prime entries in \t X=%Zd;\tY=%Zd\n",newReport->x,newReport->element);fflush(0);
+#endif
         if (mpz_cmp(partialReport0->largePrime,partialReportk->largePrime)) {
             gmp_fprintf(stderr, "Not matching large primes %Zd\t%Zd\n", partialReport0->largePrime,partialReportk->largePrime);
             exit(EXIT_FAILURE);
