@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <gmp.h>
+#include <stdbool.h>
 #include "CONFIGURATION.h"
 //initialize multiple precision int from sourceString in dest
 #define strToMpz(dest,sourceStr)\
@@ -86,8 +87,14 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
 
 struct polynomial* initializationVars(char** argv);         //TODO DEPRECATED HARDCODED CONFIG
 CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M, u_int64_t B, int sieverThreadsNum);
-struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial, A_COEFF *aCoeff);
 
-void nextPolynomial_b_i(mpz_t *b,mpz_t*a, unsigned int i, PRECOMPUTES *precomputes );
-A_COEFF* gen_a_centered(const u_int64_t* factorbase, u_int64_t factorBaseSize, int s,struct Configuration *configuration);
+
+struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial,bool precomputeUntilFactorBase);
+A_COEFF *genPolynomialFamilies_a(int numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,
+                                 DYNAMIC_VECTOR *a_factors_pol_families);
+int changePolynomialFamily(PRECOMPUTES *precomputes, A_COEFF *new_a_pol_family, struct polynomial* pol);
+
+void nextPolynomial_b_i(mpz_t *b, unsigned int i, PRECOMPUTES *precomputes);
+A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, int s, struct Configuration *config,
+                       DYNAMIC_VECTOR *a_factors_indexes_FB_families);
 #endif //QUADRATIC_SIEVE_UTILS_H

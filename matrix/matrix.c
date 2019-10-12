@@ -100,7 +100,7 @@ void checkMatrixReducted(MATRIX* matrix){
     }
     for (u_int64_t i = 0,j=0; i < matrix->colsN && j<matrix->rowsN; ++i,++j) {
         bit=mpz_tstbit(matrix->MATRIX[j],i);
-        while(bit==0){
+        while(bit==0 && i< matrix->colsN){
             bit=mpz_tstbit(matrix->MATRIX[j],++i);
         }//founded pivot -> all bellow has to 0
         for (u_int64_t k = j+1; k < matrix->rowsN; ++k) {
@@ -160,6 +160,7 @@ void gauss_elimination_over_GF2(MATRIX *matrix) {
 			}
 		}
 	}
+    fflush(0);printf("Check if matrix is correctly reduced\n");
 	checkMatrixReducted(matrix);
 }
 

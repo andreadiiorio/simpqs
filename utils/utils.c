@@ -2,6 +2,8 @@
 // Created by andysnake on 19/08/19.
 //
 
+#include <signal.h>
+#include <unistd.h>
 #include "utils.h"
 
 
@@ -23,21 +25,26 @@ int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial* polynomial) {
     mpz_t polVal,tmp;mpz_inits(polVal,tmp,NULL);
     u_int64_t prime,sieveJump;
     int result=EXIT_SUCCESS;
+    char polynomial_str[200];
+    gmp_snprintf(polynomial_str,200,"a:%Zd\tb:%Zd",polynomial->a.a,polynomial->b);
+    fflush(0);
     for (u_int i = 0; i < precomputes->factorbaseSize; ++i) {
         prime = precomputes->factorbase[i];
         sieveJump=precomputes->polPrecomputedData.sol1p[i];
         POLYNOMIAL_VAL_COMPUTE(sieveJump,polVal,polynomial);
         if(!mpz_divisible_ui_p(polVal,prime)) {
-            fprintf(stderr, "INVALID SIEVE JUMP AT INDEX %d\n", i);
-            result = EXIT_FAILURE;
+            fprintf(stderr, "INVALID SIEVE JUMP AT INDEX %d\t%s\n", i,polynomial_str);
+            result = EXIT_FAILURE;break;
         }
         sieveJump=precomputes->polPrecomputedData.sol2p[i];
         POLYNOMIAL_VAL_COMPUTE(sieveJump,polVal,polynomial);
         if(!mpz_divisible_ui_p(polVal,prime)) {
-            fprintf(stderr, "INVALID SIEVE JUMP AT INDEX %d\n", i);
-            result = EXIT_FAILURE;
+            fprintf(stderr, "INVALID SIEVE JUMP AT INDEX %d\t%s\n", i,polynomial_str);
+            result = EXIT_FAILURE;break;
         }
     }
+    if(result==EXIT_FAILURE)
+        kill( getpid(),SIGFPE);
     return result;
 }
 void printPrecomputations(struct Precomputes* precomputes, int blockPrint){

@@ -65,7 +65,7 @@ void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry);
 int mergeReports(REPORTS *dstReports, const REPORTS *new_reports);
 int checkReports(REPORTS *reports, bool aggregatedLargePrimeCheck);
 void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck);
-REPORTS* aggregateSieversWorkers(const unsigned int polynomialN);
+REPORTS *aggregateSieversWorkers(const unsigned int polynomialN, bool pairLargePrimeEntries,REPORTS*reportsAllMerged);
 
 #ifndef REPORTS_PATHS
 #define REPORTS_PATHS
@@ -75,6 +75,6 @@ REPORTS* aggregateSieversWorkers(const unsigned int polynomialN);
 #define REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX  ".reportsfamilylist"
 #endif
 char** findReportsLocally(unsigned int numReports,const char* reportSuffix);
-void _deleteLocalReports();
+void _deleteLocalReports(bool deletePolynomialReports);
 
 #endif //SIMPQS_SIEVINGSIMPQS_H

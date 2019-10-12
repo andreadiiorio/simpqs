@@ -12,35 +12,36 @@
 #include "sievingSIMPQS.h"
 #include "../matrix/matrix.h"
 
+#define POL_FAMILY_TRIES 150
 ///TODO CLEAN REPORTS FILES:  find -iname "reports_*" | xargs -d "\n" rm
 SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
-//const char* n_str="100000030925519250968982645360649"; //OLD
-const char* n_str="100000030925519650969044496394369";
+const char* n_str="100000030925519250968982645360649"; //OLD
+//const char* n_str="100000030925519650969044496394369";
 //const char* n_str="1000000000000000000000002426064136000000000000001360395300442658823";
-CONFIGURATION* configuration;
-DYNAMIC_VECTOR* primes_B;
+CONFIGURATION* Configuration;
 //#define TEST_1_POL_FAMILY
+
 #ifdef TEST_1_POL_FAMILY
 int main(){
 #else
 int finalStepWrap(){
 #endif
 
-    configuration = initConfiguration(n_str, 0, 0, 0, 0);
+    Configuration =initConfiguration(n_str, 0, 0, 0, 0);
     struct polynomial pol;
-    PRECOMPUTES *precomputes = preComputations(configuration, &pol,NULL);
+    PRECOMPUTES *precomputes = preComputations(Configuration, &pol, true);
     char** reportsPaths=findReportsLocally(1,REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX);
     if(!(*reportsPaths)){
         fprintf(stderr,"error in reports deserialization\n");
         exit(EXIT_FAILURE);
     }
     REPORTS* reports=loadReports(*reportsPaths);
-    if(reports->relationsNum<(precomputes->primes.vectorSize+1)) {
+    if(reports->relationsNum<(precomputes->factorbaseSize)+1) {
         fprintf(stderr, "not founded enough reports for linear algebra phase\n");
         exit(EXIT_FAILURE);
     }
     MATRIX matrix;
-    initMatrixFromRows(&matrix,reports->relationsNum,reports->bsmoothEntries,precomputes->primes.vectorSize+1);
+    initMatrixFromRows(&matrix,reports->relationsNum,reports->bsmoothEntries,precomputes->factorbaseSize+1);
     gauss_elimination_over_GF2(&matrix);
 //    print_matrix_matrix(&matrix);
 //    print_matrix_identity(&matrix);
@@ -51,27 +52,34 @@ int MAIN(){
 #else
 int main(int argc, char** argv){
     //FORKED WORKER PROCESS TO SIEVE BSMOOTH RELATION AND PARTIAL RELATION WITH POLINOMIO FAMILIES FROM a
-    _deleteLocalReports();          //TODO DEBUG RESET OLD SERIALIZED REPORTS
+    _deleteLocalReports(false);          //TODO DEBUG RESET OLD SERIALIZED REPORTS
     if(argc < 5){           //TODO MOCKED ARGv
         printf("USAGE: N,M,B,a, ....\n");
         //exit(EXIT_FAILURE);
     }
 #endif
     /// init configuration, with argv, on un setted configuration defalut setting will be used
-    configuration = initConfiguration(n_str, 0, 0, 0, 0);
+    CONFIGURATION* configuration= initConfiguration(n_str, 0, 0, 0, 0);
+    Configuration=configuration;
     struct polynomial pol;
     /// init precomputation for polynomial family   todo next version computation of a coeff ... <- MASTER COMUNICATION
-    PRECOMPUTES *precomputes = preComputations(configuration, &pol,NULL);
+    PRECOMPUTES *precomputes = preComputations(configuration, &pol, false);
     if (!precomputes ){
-        free(configuration);
+        free(Configuration);
         exit(EXIT_FAILURE);
     }
-    gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", pol.a, pol.b, *(pol.N));
 
+    gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", pol.a.a, pol.b, *(pol.N));
     // init local worker matrix, used to aggregate relations founded in the various sieving iteration
 //    MATRIX matrixWorker;
 //    init_matrix(&matrixWorker,1,precomputes->primes.vectorSize);
 
+    REPORTS *polynomialsReportsAggregated;
+    A_COEFF *polynomialFamilyCoefficients;
+    polynomialFamilyCoefficients = genPolynomialFamilies_a(POL_FAMILY_TRIES, Configuration, precomputes, configuration->a_factors_indexes_FB_families);
+    if(!polynomialFamilyCoefficients)
+        exit(EXIT_FAILURE);
+    
 #ifdef VERBOSE
     printPrecomputations(Precomputations,5);
 #endif
@@ -83,23 +91,24 @@ int main(int argc, char** argv){
      * and factorization of each LikellyBSmooth entry (identified by log sieving) will be done with 2 level of parallelism by FactorizerThreadGroupsPool
      * before each Process termination, the founded (partial) reports will be serialized to file with filename REPORTS_FILENAME_PREFIX N a b #rel #partialRel REPORTS_FILENAME_SUFFIX
      */
-    const unsigned int polynoamilFamilySize=(1 << (configuration->a_coefficient.a_factors_num - 1));
-//    int* polynomial_processes_pid=malloc(polynoamilFamilySize* sizeof(*polynomial_processes_pid));
-//    if(!polynomial_processes_pid){
-//        free(configuration);free(precomputes);
-//        exit(EXIT_FAILURE);
-//    }
-    //// polynomials family generation:
-#ifdef DEBUG
-    REPORTS *reportsFounded = Sieve(configuration, precomputes, &pol);
-    saveReports(reportsFounded, precomputes->factorbaseSize, true, &pol);
-        exit(!reportsFounded);
-#endif
+
+    REPORTS* reportsAllWorker=calloc(1, sizeof(*reportsAllWorker));
+    if(!reportsAllWorker) {
+        fprintf(stderr,"Out of mem at reports all calloc\n");
+        exit(EXIT_FAILURE);
+    }
+    unsigned int polynoamilFamilySize;
+    int polFamily_i = 1;
+
+    polynomial_family_sieve:
+    polynoamilFamilySize = (1 << (pol.a.a_factors_num - 1));
+    char polynomial_str[440];
+    fflush(0); printf("starting siever process in polynomial family of size:_%d\n",polynoamilFamilySize);fflush(0);
     //  TODO DEBUG FORKED CHILD: set follow-fork-mode child \n set detach-on-fork off
     for (u_int j = 1; j  < polynoamilFamilySize; ++j) {
-        gmp_printf("\n\n\n\npolynomial:%d\ta=%Zd;\tb=%Zd;\n", j, pol.a, pol.b);
+        gmp_snprintf(polynomial_str,440," polynomial:%d\ta=%Zd;\tb=%Zd;\n", j, pol.a.a, pol.b);
         if (!fork()) {
-            REPORTS *reportsFounded = Sieve(configuration, precomputes, &pol);
+            REPORTS *reportsFounded = Sieve(Configuration, precomputes, &pol);
             int result = EXIT_SUCCESS;
             if (!reportsFounded) {
                 fprintf(stderr, "SIEVING ERROR\n");
@@ -110,28 +119,39 @@ int main(int argc, char** argv){
                 result = EXIT_FAILURE;
             }
             free(reportsFounded);
+            fprintf(stderr,"EXITING WITH CODE %d SIEVER PROCESS founded reports:%lu\t%luOF POLYNOMIAL:\t%s\n",result,reportsFounded->relationsNum,reportsFounded->partialRelationsNum, polynomial_str);
             exit(result);
         }
-        nextPolynomial_b_i(&(pol.b),&(pol.a), j, precomputes);                           //change polynomial
+        nextPolynomial_b_i(&(pol.b), j, precomputes);                           //change polynomial
     }
 
     for (u_int j = 1; j  < polynoamilFamilySize; ++j) {
         int workerPolynomialRes=0;
         wait(&workerPolynomialRes);
-        printf("polynomial process returned: %s\n",workerPolynomialRes==EXIT_SUCCESS?"Exit success":"Exit failure");
+        printf("polynomial process returned: %d\n",workerPolynomialRes);
+        if(workerPolynomialRes!=EXIT_SUCCESS)
+            exit(workerPolynomialRes);
     }
     fflush(0);
-    REPORTS* polynomialsReportsAggregated=aggregateSieversWorkers(polynoamilFamilySize);
+    polynomialsReportsAggregated = aggregateSieversWorkers(polynoamilFamilySize, false,reportsAllWorker);
     if(!polynomialsReportsAggregated){
         fprintf(stderr,"ERR DURING POLYNOMIAL REPORTS AGGREGATION");
         exit(EXIT_FAILURE);
     }
+
+    if(polynomialsReportsAggregated->relationsNum < precomputes->factorbaseSize - 88 && (polFamily_i) < POL_FAMILY_TRIES){
+        changePolynomialFamily(precomputes, polynomialFamilyCoefficients + polFamily_i++, &pol);
+        gmp_printf("\n\n\n\n aggreagated reports:%lu\tpartialReports:%lu\nChanged to polynomial family :%d\t new a=%Zd;\tb=%Zd;\n",polynomialsReportsAggregated->relationsNum,polynomialsReportsAggregated->partialRelationsNum,polFamily_i,pol.a.a,pol.b);
+        goto polynomial_family_sieve;
+    }
+    if(pairPartialReports(reportsAllWorker)==EXIT_FAILURE)
+        exit(EXIT_FAILURE);
+
     printf("\n\n\n\n\n\nSERIALIZING AGGREGATED REPORTS\n");fflush(0);
     if (saveReports(polynomialsReportsAggregated,precomputes->primes.vectorSize,false,true,&pol)==EXIT_FAILURE){
         fprintf(stderr, "REPORTS  AGGREGATED SERIALIZING ERROR\n");
         exit(EXIT_FAILURE);
     }
-
 
     //TODO MATRIX STAGE HERE --> NEXT MOVE TO MASTER
 #ifndef TEST_1_POL_FAMILY
@@ -141,16 +161,22 @@ int main(int argc, char** argv){
 #endif
 }
 
-REPORTS* aggregateSieversWorkers(const unsigned int polynomialN) {
+
+REPORTS *aggregateSieversWorkers(const unsigned int polynomialN, bool pairLargePrimeEntries, REPORTS *reportsAllMerged) {
+    //aggregate polynomial siver outputs, if reportsAllMerged is null will allocated space for it otherwise reports will be concat there
+    //if pairLargePrimeEntries is true, large prime entries will be aggregated in new relations
+    //returned reportsAllMerged (allocated if needed)
+
+
     int result=EXIT_SUCCESS;
     char** reportsLocalFilenames=findReportsLocally(polynomialN,REPORTS_FILENAME_SUFFIX);
-    REPORTS** reportsAll=malloc(sizeof(*reportsAll)*polynomialN);       //will hold reports pointers
-    REPORTS* reportsAllMerged=calloc(1,sizeof(*reportsAllMerged));       //will hold reports pointers
+    REPORTS** reportsAll=malloc(sizeof(*reportsAll)*polynomialN);
+    if(!reportsAllMerged) reportsAllMerged=calloc(1, sizeof(*reportsAllMerged)); //allocate all reports if has been null passed
     if(!reportsLocalFilenames || !reportsAll || !reportsAllMerged){
         fprintf(stderr,"Out of Mem or reports paths retrive err\n");
         result =EXIT_FAILURE;goto exit;
     }
-    char* reportFilePath=*(reportsLocalFilenames);
+    char* reportFilePath=*(reportsLocalFilenames);          //filename of report file (init with first fo find cmd output
     unsigned int report_i;
     u_int64_t cumulativeReportsN=0,cumulativePartialReportsN=0;
     for (report_i = 0; report_i < polynomialN && reportFilePath; reportFilePath=reportsLocalFilenames[++report_i]) {
@@ -158,7 +184,6 @@ REPORTS* aggregateSieversWorkers(const unsigned int polynomialN) {
         if(!reportsAll[report_i]){
             fprintf(stderr,"invalid read\n");
             result =EXIT_FAILURE;goto exit;
-
         }
         cumulativeReportsN+=reportsAll[report_i]->relationsNum;
         cumulativePartialReportsN+=reportsAll[report_i]->partialRelationsNum;
@@ -185,18 +210,19 @@ REPORTS* aggregateSieversWorkers(const unsigned int polynomialN) {
         }
     }*/
     //// try to pair partial reports in extra reports
-    if(pairPartialReports(reportsAllMerged)==EXIT_FAILURE){
+    if(pairLargePrimeEntries && pairPartialReports(reportsAllMerged)==EXIT_FAILURE){
         fprintf(stderr,"error during partial reports pairing\n");
         result =EXIT_FAILURE;goto exit;                                 ///TODO SKIPPABLE EXIT
     }
     exit:
-        free(reportsAll);free(reportsLocalFilenames);//TODO FREE REPORTS FILE PATHS NESTED POINTERS
-        if(result==EXIT_FAILURE){
-            if(reportsAllMerged){
-                free(reportsAllMerged->largePrimesEntries);free(reportsAllMerged->bsmoothEntries);
-                return NULL;
-            }
-            free(reportsAllMerged);
+    free(reportsAll);free(reportsLocalFilenames);//TODO FREE REPORTS FILE PATHS NESTED POINTERS
+    if(result==EXIT_FAILURE){
+        if(reportsAllMerged){
+            free(reportsAllMerged->largePrimesEntries);free(reportsAllMerged->bsmoothEntries);
+            return NULL;
         }
+        free(reportsAllMerged);
+    }
+    _deleteLocalReports(true);
     return reportsAllMerged;
 }

@@ -7,6 +7,8 @@
 typedef struct DynamicVector{
     void* pntr;                         //to cast pntr
     u_int64_t vectorSize;               //actual vector size
+    u_int64_t vectorLastIndex;               //actual vector size
+
 }DYNAMIC_VECTOR ;
 
 ///precomputated vars
@@ -30,20 +32,21 @@ struct precomputatios_polynomial{   //precomputations polynomial dependent -> wi
 
 /// compute (aj+b)
 #define POLYNOMIAL_VAL_COMPUTE_X(j, outputVal, polynomial)\
-    mpz_mul_si(outputVal, (polynomial->a), j );    \
+    mpz_mul_si(outputVal, (polynomial->a.a), j );    \
     mpz_add(outputVal,outputVal,(polynomial->b));
 
 /// compute (aj+b)^2-n
 #define POLYNOMIAL_VAL_COMPUTE(j, outputVal, polynomial)\
-    mpz_mul_si(outputVal, (polynomial->a), j );    \
+    mpz_mul_si(outputVal, (polynomial->a.a), j );    \
     mpz_add(outputVal,outputVal,(polynomial->b)); \
     mpz_pow_ui(outputVal, outputVal, 2); \
     mpz_sub(outputVal,outputVal,(*(polynomial->N)));
 
 typedef struct a_mongomeryPol_coeff{
-    mpz_t* a;       //point to stored a coeff
+    mpz_t a;       //point to stored a coeff
     u_int* a_factors_indexes_FB;    //indexes of factors of a in precomputes->factorbase (also passed from master)
-    u_int a_factors_num;                 //number of factors of a
+    DYNAMIC_VECTOR* a_factors_indexes_FB_families;    //indexes of factors of a of all polynomial families
+    u_int64_t a_factors_num;                 //number of factors of a
 } A_COEFF;
 typedef struct Precomputes{ //precomputation for the SELF INIT of SIMPQS
     //factor base, prime up to B for witch N is a quadratic residue
@@ -63,16 +66,18 @@ typedef struct Configuration {
     mpz_t N;
     u_int64_t B;        //FactorBase threshold
     u_int64_t M;        //sieve array of size 2*M
-    A_COEFF a_coefficient;
     /// memory configuration
     u_int64_t ARRAY_IN_MEMORY_MAX_SIZE;
     /// concurrency configuration
     int SIEVING_THREAD_NUM;
+    DYNAMIC_VECTOR *a_factors_indexes_FB_families;
 } CONFIGURATION;
-extern CONFIGURATION* configuration; //GLOBAL REF TO CONFIG
-extern DYNAMIC_VECTOR* primes_B;
+//GLOBAL REF TO CONFIG
+//extern DYNAMIC_VECTOR* primes_B;
+extern DYNAMIC_VECTOR FB;
+extern CONFIGURATION* Configuration;
 struct polynomial{   //Mongomery polynomial to sieving
-    mpz_t a;
+    A_COEFF a;
     mpz_t b;
     mpz_t c;
     mpz_t*N;

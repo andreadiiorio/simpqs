@@ -25,7 +25,7 @@ void polynomialValueQuick(int64_t j, mpz_t outputVal, struct polynomial polynomi
 //    }
 //#endif
     //a*j
-    mpz_mul_si(outputVal, polynomial.a, j );
+    mpz_mul_si(outputVal, polynomial.a.a, j );
     //a*j+b
     mpz_add(outputVal,outputVal,polynomial.b);
     //(a*j+b)^2
@@ -148,7 +148,7 @@ void* siever_thread_logic(void* arg){
             }}
         }
     }
-    fprintf(stderr,"founded %lu likelly to be BSmooth array entries \tvs\t array share of size %lu \t starting from:%ld\n",probablyBsmoothsNum,sieverArg.arrayShareSize,sieverArg.j_start);fflush(0);
+//    fprintf(stderr,"founded %lu likelly to be BSmooth array entries \tvs\t array share of size %lu \t starting from:%ld\n",probablyBsmoothsNum,sieverArg.arrayShareSize,sieverArg.j_start);fflush(0);
     ProbablyBsmoothArrayEntries[probablyBsmoothsNum]=NULL;              //set end dynamically allocated array end
 
     /////// FACTORIZE LIKELLY BSMOOTH ENTRIES WITH MULTIPLE CONCURRENT PARALLEL FACTORIZATIONS
@@ -206,7 +206,7 @@ void* siever_thread_logic(void* arg){
 #endif
     }
 #ifdef FACTORIZE_JOB_BLOCK_APPEND
-    if((blockIndex=(probablyBsmoothsNum-1)%FACTORIZE_JOB_BLOCK_APPEND!=0)) {
+    if(probablyBsmoothsNum && (blockIndex=(probablyBsmoothsNum-1)%FACTORIZE_JOB_BLOCK_APPEND!=0)) {
         LOCK_MUTEX( &(sieverArg.factorizeJobQueue->mutex),errCode)
         appendBlockJobs(sieverArg.factorizeJobQueue, factorizeJobsBlock[0], factorizeJobsBlock[blockIndex]);
         UNLOCK_MUTEX( &(sieverArg.factorizeJobQueue->mutex),errCode)
@@ -247,7 +247,9 @@ void* siever_thread_logic(void* arg){
 
     }
 
-    printf("\n founded useless rel:%d\trelations:%d\t,partialRelation:%d\n", uselessEntry, foundedBsmoothEntries, foundedLargePrimes);
+#ifdef VERBOSE
+    printf("founded useless rel:%d\trelations:%d\t,partialRelation:%d\n", uselessEntry, foundedBsmoothEntries, foundedLargePrimes);
+#endif
     // 1)useless entry => skip
     // 2) BSmooth entry => matrix row compute &store -> localMatrixRow list append -> later aggregated
     // 3) "partial" BSmooth relation=> localLargePrimes list append -> later aggregated
@@ -303,11 +305,14 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
         result=EXIT_FAILURE;
         goto exit;
     }
-    gmp_printf("START SUB SIEVING ARRAY BLOCK DISPATCHING ON N:%Zd POLYNOMIAL a=%Zd\tb=%Zd\n",*actualPol->N,actualPol->a,actualPol->b);fflush(0);
     /////iterate trough j in [-M,M] with a block per time so a fixed and configurable ammount of MEM will be used for the array
 
     for(int64_t j= config->M * (-1),upLimit=config->M;  j <= upLimit; j+=config->ARRAY_IN_MEMORY_MAX_SIZE) { //move sieve array index j of block jumps to keep in mem only an array block of fixed size
+#ifdef DEBUG_CHECK
+#ifdef VERBOSE_0
         printf("---\tnew array block loading of %lu elements starting from index j:%ld\n",config->ARRAY_IN_MEMORY_MAX_SIZE, j);
+#endif
+#endif
         u_int64_t blockToAssignShare = (arrayInMemSize) / config->SIEVING_THREAD_NUM;//fair share of array block to assign to each siever thread
         u_int64_t blockToAssignShareReminder = (arrayInMemSize) % config->SIEVING_THREAD_NUM;//last thread takes reminder too
         //// division of array block in subset to assign to siever threads
@@ -329,7 +334,9 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
                 result = EXIT_FAILURE;
                 goto exit;
             }
+#ifdef VERBOSE
             printf(">>>\tcreated thread with array start address:%p\t j in [%ld,%ld]\n", sieverThreadArgs[t].arrayBlockPntr,sieverThreadArgs[t].j_start,sieverThreadArgs[t].j_start+sieverThreadArgs[t].arrayShareSize);fflush(0);
+#endif
         }
         ///start factorizers thread manager --> subsequentially workers :=)
         factorizersThreadManagers = StartFactorizerThreadGroups(factorizeJobQueue, NUM_FACTORIZER_GROUPS);
@@ -347,7 +354,9 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
         REPORTS *reportsFounded=NULL;
         for (int t = 0; t < config->SIEVING_THREAD_NUM; t++) {
             int threadRetErrCode;
+#ifdef VERBOSE
             printf("joining siever thread\t:%d \t %lu \n",t,sieversThreads[t]);fflush(0);
+#endif
             if ((threadRetErrCode = pthread_join(sieversThreads[t], (void **) &reportsFounded))) {
                 fprintf(stderr, "siever JOIN ERR\n %s__\n", strerror(threadRetErrCode));
                 result = EXIT_FAILURE;
@@ -366,7 +375,7 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
     }
 
     exit:
-    printf("Done with polynomial\n");
+//    printf("Done with polynomial\n");
     free(sieversThreads);free(sieverThreadArgs);free(sieveArrayBlock);
     pthread_cond_destroy(&factorizeJobQueue->emptyAndClosedQueue);
     pthread_mutex_destroy(&factorizeJobQueue->mutex);

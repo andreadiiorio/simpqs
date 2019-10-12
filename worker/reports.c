@@ -17,7 +17,9 @@ if(fwrite(&WORD_SEPARATOR, sizeof(WORD_SEPARATOR),1,fd)!=1){\
 const char WORD_SEPARATOR='\t';
 const char LINE_SEPARATOR='\n';
 unsigned int dbg_h,dbg_exp=0; u_int64_t tmpFactor;mpz_t tmpL;           //TODO DEBUG
-DYNAMIC_VECTOR* primes_B;
+//DYNAMIC_VECTOR* primes_B;
+DYNAMIC_VECTOR FB;
+CONFIGURATION* Configuration;
 //#define NULL_FILTER_RACE_COND //TODO ROBSTNESS DEBUG MACRO
 
 
@@ -29,8 +31,8 @@ DYNAMIC_VECTOR* primes_B;
 void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck) {
     dbg_h = EXIT_SUCCESS;
     mpz_pow_ui(tmp, arrayEntry->x, 2);
-    mpz_mod(tmp, tmp, configuration->N);
-    mpz_mod(tmp2,arrayEntry->element, configuration->N);
+    mpz_mod(tmp, tmp, Configuration->N);
+    mpz_mod(tmp2,arrayEntry->element, Configuration->N);
     if (mpz_cmp(tmp, tmp2)) {
         gmp_fprintf(stderr, "Mismatch X(j)^2:\t%Zd !== af(j):\t %Zd\n ", tmp, tmp2);
         dbg_h = EXIT_FAILURE;
@@ -38,13 +40,13 @@ void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp,
     if (mpz_tstbit(arrayEntry->exp_vector, 0) && mpz_cmp_ui(arrayEntry->element, 0) >= 0) {    //test sign bit
         fprintf(stderr, "missed sign bit\n");
     }
-    for (unsigned int i = 1,bit=0; i < primes_B->vectorSize; ++i) {              //test odd power bits
+    for (unsigned long i = 1,bit=0; i < FB.vectorSize; ++i) {              //test odd power bits
         bit=mpz_tstbit(arrayEntry->exp_vector, i);
         dbg_exp = 0;
-        mpz_set_ui(tmp,((u_int64_t *) primes_B->pntr)[i - 1]);
+        mpz_set_ui(tmp,((u_int64_t *) FB.pntr)[i - 1]);
         while (mpz_divisible_p(arrayEntry->element, tmp)) {
             dbg_exp++;
-            mpz_mul_ui(tmp,tmp,((u_int64_t *) primes_B->pntr)[i - 1]);
+            mpz_mul_ui(tmp,tmp,((u_int64_t *) FB.pntr)[i - 1]);
         }
         if ((dbg_exp%2)!=bit) {
             fprintf(stderr, "bit missetted at i:%d exp->%d \n", i,dbg_exp);
@@ -65,7 +67,7 @@ void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp,
     }
     if (dbg_h == EXIT_FAILURE) {
         gmp_fprintf(stderr,"\nY=%Zd\n", arrayEntry->element);
-        kill(getpid(), SIGFPE);
+        kill(0,SIGFPE);
     }
 }
 int checkReports(REPORTS *reports, bool aggregatedLargePrimeCheck) {
@@ -198,7 +200,6 @@ void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix) {
 }
 
 
-
 /*
  * REPORTS_FILE_ORGANIZATION
  * N\ta\tb\tNumReports\tNumPartialReports\n
@@ -224,7 +225,7 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
     //repot filename identified by N & polynomial
     if(!polynomialFamily) {
         if ((writtenInBuf = gmp_snprintf(outBuf, formattedOutputBufLen, "%s%Zd_%Zd_%Zd_%lu_%lu%s",
-                                        REPORTS_FILENAME_PREFIX, *(polynomial->N), polynomial->a, polynomial->b,
+                                        REPORTS_FILENAME_PREFIX, *(polynomial->N), polynomial->a.a, polynomial->b,
                                          reports->relationsNum, reports->partialRelationsNum,
                                          REPORTS_FILENAME_SUFFIX)) >= formattedOutputBufLen) {
             fprintf(stderr, "snprintf hasn't founded enough space to output to buf\n");
@@ -233,7 +234,7 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
         }
     }else { // if polynomialFamily is true reports are the aggregation of all polynomial family reports-> skip b in name to distinguish
         if ((writtenInBuf = gmp_snprintf(outBuf, formattedOutputBufLen, "%s%Zd_%Zd_%lu_%lu%s",
-                                         REPORTS_FILENAME_PREFIX, *(polynomial->N), polynomial->a,
+                                         REPORTS_FILENAME_PREFIX, *(polynomial->N), polynomial->a.a,
                                          reports->relationsNum, reports->partialRelationsNum,
                                          REPORTS_POLYNOMIAL_FAMILY_FILENAME_SUFFIX)) >= formattedOutputBufLen) {
             fprintf(stderr, "snprintf hasn't founded enough space to output to buf\n");
@@ -242,7 +243,7 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
         }
 
     }
-    fprintf(stderr,"serializing %s\n",outBuf);
+//    fprintf(stderr,"serializing %s\n",outBuf);
     FILE*reportFp=fopen(outBuf, "w");
     
     if(!reportFp){
@@ -256,7 +257,7 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
         result=EXIT_FAILURE;goto exit;
     }
     WRITE_SEPARATOR(reportFp,'\t')
-    if(!(writtenInFile=mpz_out_raw(reportFp, (polynomial->a)))){                                       //a
+    if(!(writtenInFile=mpz_out_raw(reportFp, (polynomial->a.a)))){                                       //a
         fprintf(stderr,"header write error \t a \n");
         result=EXIT_FAILURE;goto exit;
     }
@@ -356,8 +357,12 @@ int saveReports(REPORTS *reports, u_int64_t colsN, bool printReports,bool polyno
     fclose(reportFp);
     return result;
 }
-void _deleteLocalReports() {
-    char *cmd = "find -iname \"reports_*\" | xargs -d \"\\n\" rm";
+
+void _deleteLocalReports(bool deletePolynomialReports) {
+    char *cmd;
+    cmd = "find -iname \"reports_*\" | xargs -d \"\\n\" rm";
+    if(deletePolynomialReports)
+        cmd = "find -iname \"reports_*reportslist\" | xargs -d \"\\n\" rm";
     FILE *fp = popen(cmd, "r");
     if (fp == NULL) {
         printf("Failed to run command find\n");
@@ -382,14 +387,14 @@ char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
     printf("searching reports file with cmd str:\t%s\n",findCmdBuf);
     const int MAX_PATH_SIZE = 2048;
 //    const char* FIND_REPORTS_BASH_CMD_LINUX="find -iname 'reports_*'";
-    char **paths = calloc(1, numReports * sizeof(*paths));
+    char **paths = calloc(numReports,  sizeof(*paths));
     if (!paths) {
         fprintf(stderr,"Out of Mem at path** calloc\n");
         return NULL;
     }
     /* Open the command  find for reading. */
-    FILE *fp = popen(findCmdBuf, "r");
-    if (fp == NULL) {
+    FILE *findPipe = popen(findCmdBuf, "r");
+    if (findPipe == NULL) {
         printf("Failed to run command find\n");
         return NULL;
     }
@@ -401,9 +406,9 @@ char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
             fprintf(stderr,"Out of mem at path allocation :%d\n",i);
             goto exit_failure;
         }
-        commandOutTerminated = (fgets(*destPathBuf, MAX_PATH_SIZE - 1, fp))==NULL;
+        commandOutTerminated = (fgets(*destPathBuf, MAX_PATH_SIZE - 1, findPipe)) == NULL;
         //// remove trailing newline
-        for (int j = MAX_PATH_SIZE-1; j >=0 ; --j) {
+        for (int j=0;j<MAX_PATH_SIZE;j++){
             if ((*destPathBuf)[j] == '\n') {
                 (*destPathBuf)[j] = 0;
                 break;
@@ -417,7 +422,7 @@ char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
 
         printf("founded reports file:%s \n",*destPathBuf);
     }
-    pclose(fp);
+    pclose(findPipe);
     return paths;
     exit_failure:
     if(paths){
@@ -449,7 +454,7 @@ REPORTS *loadReports(char *filePath) {
     }
     mpz_init_set(reports->n,N);                                         //set n in reports for convenience on later restart
     sep=fgetc(reportsFp);
-    if(!(nread =mpz_inp_raw(polynomial.a,reportsFp))){                      //a
+    if(!(nread =mpz_inp_raw(polynomial.a.a,reportsFp))){                      //a
         fprintf(stderr,"invalid read of N in header \n");
         result=EXIT_FAILURE;goto exit;
     }
@@ -472,7 +477,7 @@ REPORTS *loadReports(char *filePath) {
         result=EXIT_FAILURE;goto exit;
     }
     sep=fgetc(reportsFp);               //newline
-    gmp_printf("de serializing N:%Zd\ta: %Zd\tb:%Zd\t reportsN:%lu\tpartialReportsN:%lu\n",N,polynomial.a,polynomial.b,reportsN,partialReportsN);fflush(0);
+    gmp_printf("de serializing N:%Zd\ta: %Zd\tb:%Zd\t reportsN:%lu\tpartialReportsN:%lu\n",N,polynomial.a.a,polynomial.b,reportsN,partialReportsN);fflush(0);
 
     ///// allocate reports Num
     if(!(reports->bsmoothEntries=malloc(sizeof(*(reports->bsmoothEntries))*reportsN))){
@@ -573,7 +578,6 @@ void sortPartialReports(REPORTS* reports){
 //    }
 //    fflush(0);
 }
-
 int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int matchFounded) {
     /*
      * Pair large prime partial reports from startAddr to startAddr+matchFounded
@@ -621,7 +625,6 @@ int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int
     }
     return EXIT_SUCCESS;
 }
-
 int pairPartialReports(REPORTS* reports) {
     //pair partialReports (that has been sorted by large prime
     sortPartialReports(reports);
