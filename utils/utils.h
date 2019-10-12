@@ -50,7 +50,7 @@ int checkSieveJumps(PRECOMPUTES* precomputes,struct polynomial* polynomial);
 //read primes from precomputed primes list file until reached smoothnessBound
 DYNAMIC_VECTOR* ReadPrimes(char *primesListPath, u_int64_t smoothnessBound );
 //read primes until bound reached and filter them for them with legendre (N/p)==1
-DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N);
+DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N, u_int64_t M);
 
 //// wrap resizing evalutation and realloc for a dynamic list
 #define REALLOC_WRAP(cumulativeCount,dynamicVectSize,dynamicVectPntr,DYNAMIC_VECT_BLOCK_SIZE)\
@@ -89,6 +89,7 @@ struct polynomial* initializationVars(char** argv);         //TODO DEPRECATED HA
 CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M, u_int64_t B, int sieverThreadsNum);
 
 
+void freePrecomputations(PRECOMPUTES* precomputes);
 struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial,bool precomputeUntilFactorBase);
 A_COEFF *genPolynomialFamilies_a(int numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,
                                  DYNAMIC_VECTOR *a_factors_pol_families);

@@ -26,7 +26,7 @@ set(SOURCES_MASTER
         master/masterMain.c
         )
 set(GCC_FLAGS
-        "-Wall -Wextra -lgmp -lmpfr -pthread -lm -ggdb "
+        "-Wall -Wextra -lgmp -lmpfr -pthread -lm -ggdb -O2"
         )
 add_executable(SIMQS_Worker ${SOURCES_COMMON} ${SOURCES_WORKER})
 add_executable(SIMQS_Master ${SOURCES_COMMON} ${SOURCES_MASTER})

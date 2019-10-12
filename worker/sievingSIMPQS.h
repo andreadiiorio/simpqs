@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define DEBUG_CHECK
+//#define DEBUG_CHECK
 #define SAVE_FACTORS  //save factorization of entry other then exponent vector
 
 typedef struct factor{
@@ -62,9 +62,10 @@ void print_reports(REPORTS *reports, u_int64_t colsN, bool printMatrix);
 void sortPartialReports(REPORTS* reports);
 int pairPartialReports(REPORTS* reports);
 void arrayEntryCopy(struct ArrayEntry *destEntry, struct ArrayEntry *entry);
-int mergeReports(REPORTS *dstReports, const REPORTS *new_reports);
+int mergeReports(REPORTS *dstReports, REPORTS *new_reports, bool freeSourceReports);
+void freeReports(REPORTS* reports);
 int checkReports(REPORTS *reports, bool aggregatedLargePrimeCheck);
-void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck);
+void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(const struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck);
 REPORTS *aggregateSieversWorkers(const unsigned int polynomialN, bool pairLargePrimeEntries,REPORTS*reportsAllMerged);
 
 #ifndef REPORTS_PATHS

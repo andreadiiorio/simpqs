@@ -9,11 +9,6 @@
 #define WRITE_SEPARATOR(fd,sep) \
     fputc(sep,fd);
 
-#define WRITE_WORD_SEPARATOR_raw(fd) \
-if(fwrite(&WORD_SEPARATOR, sizeof(WORD_SEPARATOR),1,fd)!=1){\
-        fprintf(stderr,"separator write error\n");\
-        result=EXIT_FAILURE;goto exit;}
-
 const char WORD_SEPARATOR='\t';
 const char LINE_SEPARATOR='\n';
 unsigned int dbg_h,dbg_exp=0; u_int64_t tmpFactor;mpz_t tmpL;           //TODO DEBUG
@@ -21,14 +16,14 @@ unsigned int dbg_h,dbg_exp=0; u_int64_t tmpFactor;mpz_t tmpL;           //TODO D
 DYNAMIC_VECTOR FB;
 CONFIGURATION* Configuration;
 //#define NULL_FILTER_RACE_COND //TODO ROBSTNESS DEBUG MACRO
-
+#define DEBUG_CHECK
 
 /*
  * DEBUG CHECKS ON REPORT ELEMENTS:
  *  - CHECKED IF X^2==a_fx MOD N
  *  - CHECKED IF BIT_i=1 IN EXP VECTOR OF a_fx CORRESPOND TO A p_i THAT DIVDE a_fx AN ODD NUMBER OF TIMES (notting dbg_exp)
  */
-void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck) {
+void CHECK_X_SQURARE_CONGRUENT_Y_MOD_N(const struct ArrayEntry* arrayEntry, mpz_t tmp, mpz_t tmp2, bool largePrimeAggregatedEntryCheck) {
     dbg_h = EXIT_SUCCESS;
     mpz_pow_ui(tmp, arrayEntry->x, 2);
     mpz_mod(tmp, tmp, Configuration->N);
@@ -84,7 +79,7 @@ int checkReports(REPORTS *reports, bool aggregatedLargePrimeCheck) {
     return result;
 }
 
-int mergeReports(REPORTS *dstReports, const REPORTS *new_reports) {
+int mergeReports(REPORTS *dstReports, REPORTS *new_reports, bool freeSourceReports) {
     //merge founded reports  into dstReports
     /// realloc array  entries of enough space to hold newly founded (partial) reports
     u_int64_t newPartialReportsN = dstReports->partialRelationsNum, newReportsN = dstReports->relationsNum;
@@ -125,7 +120,26 @@ int mergeReports(REPORTS *dstReports, const REPORTS *new_reports) {
 #ifdef DEBUG_CHECK
     return checkReports(dstReports, false);
 #endif
+    if(freeSourceReports)  //ondemand release all mem allocated for already copied new reports
+        freeReports(new_reports);
     return EXIT_SUCCESS;
+}
+
+void freeReports(REPORTS* reports) {
+
+    struct ArrayEntry* entry;
+    for (u_int64_t i = 0; i < reports->relationsNum; ++i) {
+        entry= reports->bsmoothEntries + i;
+        mpz_clears(entry->x,entry->exp_vector,entry->element,NULL);
+        free(entry->factors);
+    }
+    for (u_int64_t i = 0; i < reports->partialRelationsNum; ++i) {
+        entry= reports->largePrimesEntries + i;
+        mpz_clears(entry->x,entry->exp_vector,entry->element,entry->largePrime,NULL);
+        free(entry->factors);
+    }
+    free(reports->largePrimesEntries);free(reports->bsmoothEntries);
+    free(reports);
 }
 int mergeReportsFast(REPORTS *dstReports, const REPORTS *new_reports) { //TODO DEBUG MEMMOVE CORRUPT EVERYTHING
     //merge founded reports  into dstReports
@@ -384,7 +398,6 @@ char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
         return NULL;
     }
     snprintf(findCmdBuf,MAX_FIND_CMD_SIZE,"%s\"%s",FIND_REPORTS_BASH_CMD_LINUX,reportSuffix);
-    printf("searching reports file with cmd str:\t%s\n",findCmdBuf);
     const int MAX_PATH_SIZE = 2048;
 //    const char* FIND_REPORTS_BASH_CMD_LINUX="find -iname 'reports_*'";
     char **paths = calloc(numReports,  sizeof(*paths));
@@ -417,10 +430,10 @@ char** findReportsLocally(unsigned int numReports,const char* reportSuffix) {
         if (commandOutTerminated){
             free(*destPathBuf);
             *destPathBuf=NULL;
+#ifdef VERBOSE
             printf("terminated before expected\n");
+#endif
         }
-
-        printf("founded reports file:%s \n",*destPathBuf);
     }
     pclose(findPipe);
     return paths;
@@ -477,14 +490,16 @@ REPORTS *loadReports(char *filePath) {
         result=EXIT_FAILURE;goto exit;
     }
     sep=fgetc(reportsFp);               //newline
+#ifdef VERBOSE
     gmp_printf("de serializing N:%Zd\ta: %Zd\tb:%Zd\t reportsN:%lu\tpartialReportsN:%lu\n",N,polynomial.a.a,polynomial.b,reportsN,partialReportsN);fflush(0);
+#endif
 
     ///// allocate reports Num
-    if(!(reports->bsmoothEntries=malloc(sizeof(*(reports->bsmoothEntries))*reportsN))){
+    if(!(reports->bsmoothEntries=calloc(1,sizeof(*(reports->bsmoothEntries))*reportsN))){
         fprintf(stderr,"Out of mem at reports allocation\n");
         result=EXIT_FAILURE;goto exit;
     }
-    if(!(reports->largePrimesEntries=malloc(sizeof(*(reports->largePrimesEntries))*partialReportsN))){
+    if(!(reports->largePrimesEntries=calloc(1,sizeof(*(reports->largePrimesEntries))*partialReportsN))){
         fprintf(stderr,"Out of mem at partial reports allocation\n");
         result=EXIT_FAILURE;goto exit;
     }
@@ -554,7 +569,6 @@ REPORTS *loadReports(char *filePath) {
         sep=fgetc(reportsFp);                   //newline
 
     }
-
     exit:
         fclose(reportsFp);
         if(result==EXIT_FAILURE) {
@@ -620,6 +634,7 @@ int  pairLargePrimeEntries(REPORTS *report, unsigned int startAddr, unsigned int
             fprintf(stderr, "Invalid Large prime exponent :%d\n", dbg_exp);
             exit(EXIT_FAILURE);
         }
+        mpz_clear(tmpL);
 #endif
         newReport++;
     }

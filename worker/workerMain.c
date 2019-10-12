@@ -15,9 +15,14 @@
 #define POL_FAMILY_TRIES 150
 ///TODO CLEAN REPORTS FILES:  find -iname "reports_*" | xargs -d "\n" rm
 SIEVE_ARRAY_BLOCK SieveArrayBlock;              ///array block in memory
-const char* n_str="100000030925519250968982645360649"; //OLD
+//const char* n_str=  "100000030925519250968982645360649"; //OLD
 //const char* n_str="100000030925519650969044496394369";
-//const char* n_str="1000000000000000000000002426064136000000000000001360395300442658823";
+//const char* n_str="10000000000251715795601347229089999344259";
+const char* n_str="100000000000000028598093420000002011524934548107677";
+
+//TOO LARGE TRYS
+//const char* n_str="100000000000000000000000000000024260646520000000000000000000001360395958358684667";
+//const char* n_str="1000000000000000000002859809340000000000002011524921863497539";
 CONFIGURATION* Configuration;
 //#define TEST_1_POL_FAMILY
 
@@ -79,7 +84,8 @@ int main(int argc, char** argv){
     polynomialFamilyCoefficients = genPolynomialFamilies_a(POL_FAMILY_TRIES, Configuration, precomputes, configuration->a_factors_indexes_FB_families);
     if(!polynomialFamilyCoefficients)
         exit(EXIT_FAILURE);
-    
+
+
 #ifdef VERBOSE
     printPrecomputations(Precomputations,5);
 #endif
@@ -103,7 +109,7 @@ int main(int argc, char** argv){
     polynomial_family_sieve:
     polynoamilFamilySize = (1 << (pol.a.a_factors_num - 1));
     char polynomial_str[440];
-    fflush(0); printf("starting siever process in polynomial family of size:_%d\n",polynoamilFamilySize);fflush(0);
+//    fflush(0); printf("starting siever process in polynomial family of size:_%d\n",polynoamilFamilySize);fflush(0);
     //  TODO DEBUG FORKED CHILD: set follow-fork-mode child \n set detach-on-fork off
     for (u_int j = 1; j  < polynoamilFamilySize; ++j) {
         gmp_snprintf(polynomial_str,440," polynomial:%d\ta=%Zd;\tb=%Zd;\n", j, pol.a.a, pol.b);
@@ -114,12 +120,15 @@ int main(int argc, char** argv){
                 fprintf(stderr, "SIEVING ERROR\n");
                 result = EXIT_FAILURE;
             }
-            if ((saveReports(reportsFounded, precomputes->factorbaseSize, false,false, &pol)) == EXIT_FAILURE) {
-                fprintf(stderr, "REPORTS SERIALIZING ERROR\n");
-                result = EXIT_FAILURE;
+            if(reportsFounded->relationsNum || reportsFounded->partialRelationsNum ) {  //serialize reports only on need
+                if ((saveReports(reportsFounded, precomputes->factorbaseSize, false, false, &pol)) == EXIT_FAILURE) {
+                    fprintf(stderr, "REPORTS SERIALIZING ERROR\n");
+                    result = EXIT_FAILURE;
+                }
             }
+            fprintf(stderr,"EXITING WITH CODE %d SIEVER PROCESS founded full reports:%lu\tpartial reports:%lu\tOF POLYNOMIAL:\t%s\n",result,reportsFounded->relationsNum,reportsFounded->partialRelationsNum, polynomial_str);
             free(reportsFounded);
-            fprintf(stderr,"EXITING WITH CODE %d SIEVER PROCESS founded reports:%lu\t%luOF POLYNOMIAL:\t%s\n",result,reportsFounded->relationsNum,reportsFounded->partialRelationsNum, polynomial_str);
+//            freePrecomputations(precomputes);
             exit(result);
         }
         nextPolynomial_b_i(&(pol.b), j, precomputes);                           //change polynomial
@@ -128,26 +137,24 @@ int main(int argc, char** argv){
     for (u_int j = 1; j  < polynoamilFamilySize; ++j) {
         int workerPolynomialRes=0;
         wait(&workerPolynomialRes);
-        printf("polynomial process returned: %d\n",workerPolynomialRes);
         if(workerPolynomialRes!=EXIT_SUCCESS)
             exit(workerPolynomialRes);
     }
-    fflush(0);
     polynomialsReportsAggregated = aggregateSieversWorkers(polynoamilFamilySize, false,reportsAllWorker);
     if(!polynomialsReportsAggregated){
         fprintf(stderr,"ERR DURING POLYNOMIAL REPORTS AGGREGATION");
         exit(EXIT_FAILURE);
     }
-
+    printf("\n\naggreagated reports:%lu	partialReports:%lu vs FB SIZE: %lu \n", polynomialsReportsAggregated->relationsNum,polynomialsReportsAggregated->partialRelationsNum,precomputes->factorbaseSize);
     if(polynomialsReportsAggregated->relationsNum < precomputes->factorbaseSize - 88 && (polFamily_i) < POL_FAMILY_TRIES){
         changePolynomialFamily(precomputes, polynomialFamilyCoefficients + polFamily_i++, &pol);
-        gmp_printf("\n\n\n\n aggreagated reports:%lu\tpartialReports:%lu\nChanged to polynomial family :%d\t new a=%Zd;\tb=%Zd;\n",polynomialsReportsAggregated->relationsNum,polynomialsReportsAggregated->partialRelationsNum,polFamily_i,pol.a.a,pol.b);
+        gmp_printf("Changed to polynomial family :%d\t new a=%Zd;\tb=%Zd;\n",polFamily_i,pol.a.a,pol.b);
         goto polynomial_family_sieve;
     }
     if(pairPartialReports(reportsAllWorker)==EXIT_FAILURE)
         exit(EXIT_FAILURE);
 
-    printf("\n\n\n\n\n\nSERIALIZING AGGREGATED REPORTS\n");fflush(0);
+    printf("\n\n\n\n\n\nSERIALIZING POLYNOMIAL FAMILIES AGGREGATED REPORTS\n");fflush(0);
     if (saveReports(polynomialsReportsAggregated,precomputes->primes.vectorSize,false,true,&pol)==EXIT_FAILURE){
         fprintf(stderr, "REPORTS  AGGREGATED SERIALIZING ERROR\n");
         exit(EXIT_FAILURE);
@@ -187,7 +194,7 @@ REPORTS *aggregateSieversWorkers(const unsigned int polynomialN, bool pairLargeP
         }
         cumulativeReportsN+=reportsAll[report_i]->relationsNum;
         cumulativePartialReportsN+=reportsAll[report_i]->partialRelationsNum;
-        if(mergeReports(reportsAllMerged,reportsAll[report_i])==EXIT_FAILURE){
+        if(mergeReports(reportsAllMerged, reportsAll[report_i], true) == EXIT_FAILURE){
             fprintf(stderr,"merge reports error\n");
             result =EXIT_FAILURE;goto exit;
         }
@@ -218,7 +225,8 @@ REPORTS *aggregateSieversWorkers(const unsigned int polynomialN, bool pairLargeP
     free(reportsAll);free(reportsLocalFilenames);//TODO FREE REPORTS FILE PATHS NESTED POINTERS
     if(result==EXIT_FAILURE){
         if(reportsAllMerged){
-            free(reportsAllMerged->largePrimesEntries);free(reportsAllMerged->bsmoothEntries);
+//            free(reportsAllMerged->largePrimesEntries);free(reportsAllMerged->bsmoothEntries);
+            freeReports(reportsAllMerged);
             return NULL;
         }
         free(reportsAllMerged);

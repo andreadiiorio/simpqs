@@ -11,9 +11,9 @@
 #include <unistd.h>
 
 #define OVERFLOW_CHECK_POLYNOMIAL   //perform overflow check
-#define DELTA_LOG_SIEVE_TOLLERATION 10       //tolleration constant for log threashold comparison for factorize job mark
 //SIEVE_ARRAY_BLOCK  SieveArrayBlock;
 
+//#define SIEVE_JUMP_CHECK
 struct polynomial* polRef;
 void polynomialValueQuick(int64_t j, mpz_t outputVal, struct polynomial polynomial){
     //return a*j^2+2*b*j+c in outputVal
@@ -48,7 +48,7 @@ void sieveSubArrayForPrime(SIEVE_ARRAY_BLOCK subArray, u_int64_t subArrayLen, u_
     firstSieveDeltha<0?firstSieveDeltha=prime+firstSieveDeltha:firstSieveDeltha;         //eventually handle negative sphasement with prime complement
     for(u_int64_t i=firstSieveDeltha;i<subArrayLen;i+=prime){
         subArray[i].logSieveCumulative+=log_p;              //add log p to log cumulative
-#ifdef DEBUG_CHECK
+#ifdef SIEVE_JUMP_CHECK
         mpz_t tmpDebug,tmp;mpz_inits(tmpDebug,tmp,NULL);
         POLYNOMIAL_VAL_COMPUTE(i + j_start, tmpDebug,polRef);
         if(!mpz_divisible_ui_p(tmpDebug,prime)) {
@@ -137,7 +137,6 @@ void* siever_thread_logic(void* arg){
     long double LogThreashold=mpfr_get_ld(LOG_THREASHOLD,MPFR_RNDN);
     LogThreashold+=log(sieverArg.configuration->M);                         //log(sqrt(N)*M)
     LogThreashold-=DELTA_LOG_SIEVE_TOLLERATION;
-    fflush(0);
     long int logThresh=lrintl(LogThreashold);
     for(i = 0; i < sieverArg.arrayShareSize; i++){
         if(subArray[i].logSieveCumulative>logThresh){
@@ -151,7 +150,8 @@ void* siever_thread_logic(void* arg){
 //    fprintf(stderr,"founded %lu likelly to be BSmooth array entries \tvs\t array share of size %lu \t starting from:%ld\n",probablyBsmoothsNum,sieverArg.arrayShareSize,sieverArg.j_start);fflush(0);
     ProbablyBsmoothArrayEntries[probablyBsmoothsNum]=NULL;              //set end dynamically allocated array end
 
-    /////// FACTORIZE LIKELLY BSMOOTH ENTRIES WITH MULTIPLE CONCURRENT PARALLEL FACTORIZATIONS
+    mpfr_clears(LOG_THREASHOLD,Ncpy,NULL);
+/////// FACTORIZE LIKELLY BSMOOTH ENTRIES WITH MULTIPLE CONCURRENT PARALLEL FACTORIZATIONS
     /*
      * each likelly to be Bsmooth entry will be appended in thread safe queue in a block of entries
      * each factorize thread manager will dequeue these entries 1 by 1 and try factorizing it with other factorize thread
@@ -161,7 +161,6 @@ void* siever_thread_logic(void* arg){
     struct ArrayEntryList* factorizeJobsBlock[FACTORIZE_JOB_BLOCK_APPEND+1];    //+1 for fast next block assignement
     memset(factorizeJobsBlock,0, sizeof(*factorizeJobsBlock)*(FACTORIZE_JOB_BLOCK_APPEND+1));
     int errCode=0;
-    mpz_t tmp;mpz_init(tmp);
     for(u_int64_t w=0; w<probablyBsmoothsNum; w++) {
         bsmoothToFactPntr = ProbablyBsmoothArrayEntries[w];
         /*because only entry that are likelly to be BSmooth (see log sieving) will be factorized and eventually added to founded reports
@@ -308,10 +307,8 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
     /////iterate trough j in [-M,M] with a block per time so a fixed and configurable ammount of MEM will be used for the array
 
     for(int64_t j= config->M * (-1),upLimit=config->M;  j <= upLimit; j+=config->ARRAY_IN_MEMORY_MAX_SIZE) { //move sieve array index j of block jumps to keep in mem only an array block of fixed size
-#ifdef DEBUG_CHECK
-#ifdef VERBOSE_0
+#ifdef VERBOSE
         printf("---\tnew array block loading of %lu elements starting from index j:%ld\n",config->ARRAY_IN_MEMORY_MAX_SIZE, j);
-#endif
 #endif
         u_int64_t blockToAssignShare = (arrayInMemSize) / config->SIEVING_THREAD_NUM;//fair share of array block to assign to each siever thread
         u_int64_t blockToAssignShareReminder = (arrayInMemSize) % config->SIEVING_THREAD_NUM;//last thread takes reminder too
@@ -327,7 +324,6 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
 
             if (t == config->SIEVING_THREAD_NUM - 1)    //last thread takes the reminder too
                 sieverThreadArgs[t].arrayShareSize += blockToAssignShareReminder;
-            fflush(0);
             //// start siever threads
             if (pthread_create(sieversThreads + t, NULL, siever_thread_logic, (void *) (sieverThreadArgs + t)) != 0) {
                 fprintf(stderr, " siever creataing error");
@@ -363,15 +359,13 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
                 goto exit;
             }
 //            print_reports(reportsFounded, precomputes->primes.vectorSize);
-            if (mergeReports(polynomialReports, (REPORTS *) reportsFounded) == EXIT_FAILURE) {
+            if (mergeReports(polynomialReports, (REPORTS *) reportsFounded, true) == EXIT_FAILURE) {
                 fprintf(stderr, "MERGE POLYNOMIAL REPORTS ERR\n");
                 result = EXIT_FAILURE;
                 goto exit;
             }
         }
-        fflush(0);
         resetFactorizeJobQueue(factorizeJobQueue, config->SIEVING_THREAD_NUM, NUM_FACTORIZER_GROUPS);
-        free(reportsFounded);
     }
 
     exit:

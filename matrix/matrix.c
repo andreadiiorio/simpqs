@@ -141,13 +141,13 @@ void gauss_elimination_over_GF2(MATRIX *matrix) {
 
 		if (next_pivot == -1)   //[0] col
         {
-            fprintf(stderr, "NOT FOUNDED PIVOT at col\t%lu\n",col);
+//            fprintf(stderr, "NOT FOUNDED PIVOT at col\t%lu\n",col);
             continue;
         }
 
 		if (next_pivot != (next_row - 1)) /* current row is not the pivot, switch rows */
 		{
-		    printf("Sw\n");fflush(0);
+//		    printf("Sw\n");fflush(0);
 			mpz_swap(m[next_pivot], m[next_row - 1]);
 			mpz_swap(I[next_pivot], I[next_row - 1]);
 		}

@@ -114,8 +114,7 @@ void* FactorizeTrialDivide(void* args) {
     int factorizerID = factorizerArgs->factorizerID;
     int exp;    int barrierWaitReturn;
     ///timer vars for timed factorizations ierations
-    STOPWATCH_INIT;  struct timeval FACTORIZE_BARRIER_SYNC_TIMEOUT =
-            (struct timeval) {.tv_sec=FACTORIZE_BARRIER_SYNC_TIMEOUT_SEC,.tv_usec=FACTORIZE_BARRIER_SYNC_TIMEOUT_USEC};
+//    STOPWATCH_INIT;  struct timeval FACTORIZE_BARRIER_SYNC_TIMEOUT = (struct timeval) {.tv_sec=FACTORIZE_BARRIER_SYNC_TIMEOUT_SEC,.tv_usec=FACTORIZE_BARRIER_SYNC_TIMEOUT_USEC};
     ///vars accessed only by thread manager
     int totalFoundedFactors = 0;                //total founded factors in all iterations
     int factorizeIteration = 0;                 //iteration elapsed since factorization start

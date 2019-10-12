@@ -52,6 +52,7 @@ typedef struct Precomputes{ //precomputation for the SELF INIT of SIMPQS
     //factor base, prime up to B for witch N is a quadratic residue
     //because of limited size of B (for several reason) it's enough 64 bit integers
     DYNAMIC_VECTOR primes;
+    DYNAMIC_VECTOR factorbaseDynamicVect;        //all primes up to B that make N quadratic  residue
     u_int64_t* factorbase;        //all primes up to B that make N quadratic  residue
     u_int64_t factorbaseSize;
     //sqrt(N) mod p for each p

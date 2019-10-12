@@ -3,20 +3,27 @@
 #include <time.h>
 #include "utils.h"
 #include "gmp_patch.h"
+#include "../CONFIGURATION.h"
 struct Configuration  Config;
 DYNAMIC_VECTOR FB;
 
 int genSqrtN_modp(struct Precomputes *precomputation) {
     //generate sqrt(N) mod p where p is in FactorBase
     //Shanks-Tonelli algoritm used
-
-    if(!(precomputation->sqrtN_mod_p=calloc(precomputation->factorbaseSize, sizeof(mpz_t))))
+#ifdef EXTRA_PRIMES
+    u_int64_t sqrtModN_num=precomputation->factorbaseDynamicVect.vectorSize;  //GEN MORE SQRT MOD BECAUSE OF HUGE A FACTORS
+#else
+    u_int64_t sqrtModN_num=precomputation->factorbaseSize;
+#endif
+    if(!(precomputation->sqrtN_mod_p=calloc(sqrtModN_num, sizeof(mpz_t)))) {
+        fprintf(stderr, "invalid calloc at sqrt mod N\n");
         return EXIT_FAILURE;
+    }
     mpz_t tmem_p,primeTmp;           //sqrt(N) mod prime
     mpz_init(tmem_p);
     mpz_init(primeTmp);
     int result=EXIT_SUCCESS;
-    for(u_int64_t i=0; i<precomputation->factorbaseSize;i++){
+    for(u_int64_t i=0; i<sqrtModN_num;i++){
         mpz_set_ui(primeTmp, precomputation->factorbase[i]);
 #ifdef LEGANDRE_EXTRA_CHECK_SQRTM
         if(mpz_sqrtm(tmem_p,Config.N,primeTmp)==EXIT_FAILURE){
@@ -26,7 +33,7 @@ int genSqrtN_modp(struct Precomputes *precomputation) {
 #else
         mpz_sqrtm(tmem_p,N,primeTmp);
 #endif
-        mpz_set(precomputation->sqrtN_mod_p[i],tmem_p); //set the sqrt of N mod p in his field
+        mpz_init_set(precomputation->sqrtN_mod_p[i],tmem_p); //set the sqrt of N mod p in his field
     }
     exit:
     mpz_clears(tmem_p,primeTmp,NULL);
@@ -93,7 +100,9 @@ int gen_a_inv_modp(A_COEFF *a, struct Precomputes *precomputations, bool firstPo
 //        mpz_init(*a_inv_p_i);
         mpz_set_ui(primeTmp,precomputations->factorbase[p]);
         if(!mpz_invert(*a_inv_p_i,(a->a),primeTmp)){
+#ifdef VERBOSE
             gmp_fprintf(stderr,"not existent inverse %Zd mod %Zd \n",a->a,primeTmp);
+#endif
             mpz_set_ui(precomputations->a_inv_mod_p[p], 0);
             continue;
         }
@@ -152,13 +161,13 @@ mpz_t *genB(struct Precomputes *precomputations, mpz_t *b, A_COEFF a_coefficient
         mpz_mod_ui(gamma,gamma,ql);                     //finally gamma= tmem_p*(a/ql)^-1 mod ql
         if(mpz_cmp_ui(gamma,(ql/2))>0) {
             mpz_sub(gamma, ql_tmp, gamma);                    // on gamma >ql/2 replace with ql-gamma
-            printf("gamma > ql/2\n");
+//            printf("gamma > ql/2\n");
         }
         B_l=&(precomputations->polPrecomputedData.B_l[l]);
         mpz_set_ui(*B_l,0);
         mpz_mul(*B_l,a_ql,gamma);                            //finally get B_l
         //cumulate computed Bl in first B (gray code 111...11)
-        gmp_printf("gamma :%Zd \t a_ql:%Zd\tql:%lu B_l:%Zd\n",gamma,a_ql,ql,*B_l);fflush(0);
+//        gmp_printf("gamma :%Zd \t a_ql:%Zd\tql:%lu B_l:%Zd\n",gamma,a_ql,ql,*B_l);fflush(0);
         mpz_add(*result, *result, *B_l);
 
     }
@@ -169,7 +178,7 @@ mpz_t *genB(struct Precomputes *precomputations, mpz_t *b, A_COEFF a_coefficient
             mpz_clear(*result);free(result);  // on non memory every fault free malloced b
             return NULL;
         }
-        gmp_printf("for a: %Zd \t first b generated: %Zd \n",a_coefficient.a,*result);
+//        gmp_printf("for a: %Zd \t first b generated: %Zd \n",a_coefficient.a,*result);
         return result;
 }
 CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M, u_int64_t B, int sieverThreadsNum) {
@@ -200,7 +209,7 @@ CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M
         fprintf(stderr, "Out of mem at dynamic vector a coeff factors for all polynomials families\n");
         return NULL;
     }
-    if(!(config->a_factors_indexes_FB_families->pntr=calloc(1,sizeof(u_int64_t)*DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES_REALLOC_BLOCK))){
+    if(!(config->a_factors_indexes_FB_families->pntr=calloc(1,DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES_REALLOC_BLOCK))){
         fprintf(stderr,"Out of mem at a coeff factors initialization");
         return NULL;
     }
@@ -208,7 +217,7 @@ CONFIGURATION* initConfiguration(const char* n, int arrayInMemMaxSize, int64_t M
     return config;
 }
 
-#define DEBUG_CHECK
+//#define DEBUG_CHECK
 #define DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES 2
 
 bool isFactorAlreadyUsed(u_int64_t primeIndx, u_int *a_factors,u_int factorsNum){
@@ -237,8 +246,8 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
         return aCoeff;
     }
     /// get a ideally value ~ SQRT(2N)/M
-    mpz_t ideal_a_value;
-    mpz_init_set(ideal_a_value, config->N);
+    mpz_t ideal_a_value,a_factors_center; mpz_inits(ideal_a_value,a_factors_center,NULL);
+    mpz_set(ideal_a_value, config->N);
     mpz_mul_ui(ideal_a_value,ideal_a_value,2);
     mpz_sqrt(ideal_a_value,ideal_a_value);
     mpz_div_ui(ideal_a_value, ideal_a_value, config->M);
@@ -246,22 +255,22 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
 
     int newFactors=0;
     /// get a factors center
-    mpz_t a_factors_center; mpz_init_set(a_factors_center,ideal_a_value);
+    mpz_set(a_factors_center,ideal_a_value);
     mpz_root(a_factors_center,a_factors_center,s);
     if (mpz_cmp_ui(a_factors_center,MIN_FACTOR_A_COEFF)<0 ) {
         gmp_printf("too little a factor center achived by (sqrt(2N)/M)^(1/s) : %Zd... rounding up to :%d\n",a_factors_center,MIN_FACTOR_A_COEFF);
         mpz_set_ui(a_factors_center, MIN_FACTOR_A_COEFF);
     }
-    //get factor center index near to ideal a factor
+    //get factor center index near to ideal a factor where a has s factors
     u_int64_t a_factor_center=mpz_get_ui(a_factors_center);
     u_int64_t a_factor_center_indx;
     for (a_factor_center_indx=0; a_factor_center_indx < factorBaseSize ; ++a_factor_center_indx) {
         if(a_factor_center-1<factorbase[a_factor_center_indx])
             break;
     }
+
     //aggregate factor until reached threashold
     mpz_init_set_ui(aCoeff.a,1);
-    DYNAMIC_VECTOR a_factors_used={.pntr=aCoeff.a_factors_indexes_FB,.vectorSize=0};
     // aggregate a factors swinging around a_factor_center_indx until the ideal threshold has been reached
     u_int64_t prime,primeIndx, swing,i;
     for(primeIndx = a_factor_center_indx,swing=0,i=1; mpz_cmp(aCoeff.a , ideal_a_value) < 0 && primeIndx<factorBaseSize ;swing++) { //centered aggregation of factors
@@ -273,7 +282,6 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
             newFactors++;
         }
         prime=factorbase[primeIndx];
-        a_factors_used.vectorSize=aCoeff.a_factors_num; a_factors_used.vectorLastIndex=aCoeff.a_factors_num-1;
         //avoid too mutch replicated factors to avoid redundant reports after sieve stage (contini advice)
         //in case of re center it's important to check if redundant factors has already been used ( property of a coeff)
         if((newFactors  >= DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES && !isFactorAlreadyUsed(primeIndx,aCoeff.a_factors_indexes_FB,aCoeff.a_factors_num))
@@ -286,14 +294,12 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
         printf("taked prime for a: %lu with index %lu\n",prime,primeIndx);
 #endif
             aCoeff.a_factors_indexes_FB[aCoeff.a_factors_num++] = primeIndx;
-            DYNAMIC_VECTOR *a_pol_families_fact_indxs = a_factors_indexes_FB_families;
-            u_int64_t* a_factorsIndexesPntr=a_pol_families_fact_indxs->pntr;
-            REALLOC_WRAP(a_pol_families_fact_indxs->vectorLastIndex, a_pol_families_fact_indxs->vectorSize,
-                         (a_factorsIndexesPntr), DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES_REALLOC_BLOCK)
-            exit(99);
+            REALLOC_WRAP(a_factors_indexes_FB_families->vectorLastIndex+1, a_factors_indexes_FB_families->vectorSize,
+                         ( a_factors_indexes_FB_families->pntr ), DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES_REALLOC_BLOCK)
+                exit(99);
             }}
 
-            ((u_int64_t *)a_pol_families_fact_indxs->pntr)[a_pol_families_fact_indxs->vectorLastIndex++]=primeIndx; //updated used a factors
+            ((u_int64_t *)a_factors_indexes_FB_families->pntr)[a_factors_indexes_FB_families->vectorLastIndex++]=primeIndx; //updated used a factors
         }
         primeIndx=((swing)%2 ? (a_factor_center_indx+ (i++)):(a_factor_center_indx-i));
     }
@@ -302,8 +308,8 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
     aFactorsIndexes[a_factors_num--]=0;
 #endif
 
-    gmp_printf("generated a coeff with s:%d factors\t a:%Zd at \n",aCoeff.a_factors_num,(aCoeff.a));fflush(0);
     mpz_clears(ideal_a_value,a_factors_center,NULL);
+    gmp_printf("generated a coeff with s:%d factors\t a:%Zd at \n",aCoeff.a_factors_num,(aCoeff.a));
     return (aCoeff);
 }
 
@@ -324,6 +330,7 @@ void nextPolynomial_b_i(mpz_t *b, unsigned int i, PRECOMPUTES *precomputes) {
     mpz_t tmp; mpz_init_set_si(tmp,2*signExp);
     mpz_mul(tmp,tmp,*B_v);                                  //tmp = B_v*2*(-1)^(ceil(i/2<<v))
     mpz_add(*b,*b,tmp);
+    mpz_clear(tmp);
     //check if b is even
 //    if(mpz_divisible_ui_p(*b,2))
 //        mpz_add(*b,*b,*a);
@@ -349,7 +356,6 @@ void nextPolynomial_b_i(mpz_t *b, unsigned int i, PRECOMPUTES *precomputes) {
 }
 DYNAMIC_VECTOR* primes_B;
 
-#define EXTRA_PRIMES 2596
 
 struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynomial *dstPolynomial,bool precomputeUntilFactorBase) {
     //smart precomputations stored to reduce computational cost for each sieve iteration on each polynomial
@@ -366,14 +372,15 @@ struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynom
         fprintf(stderr,"primes read error\n");
         return NULL;
     }
-    DYNAMIC_VECTOR factorBase=ReadFactorBase(*primes, configuration->N);
+    DYNAMIC_VECTOR factorBase= ReadFactorBase(*primes, configuration->N, configuration->B);
     if(!factorBase.pntr){
         fprintf(stderr,"factor base gen error\n");
         result=NULL; goto exit;
     }
     precomputations->primes=*primes;
-    precomputations->factorbase=factorBase.pntr; precomputations->factorbaseSize=factorBase.vectorSize;
-
+    precomputations->factorbaseDynamicVect=factorBase;
+    precomputations->factorbaseSize=factorBase.vectorLastIndex;
+    precomputations->factorbase=factorBase.pntr;
     primes_B=primes;
     FB=factorBase;
     if(precomputeUntilFactorBase) return result;           //truncate precomputation up to a on request if a already setted non zero
@@ -383,8 +390,10 @@ struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynom
         result=NULL; goto exit;
     }
     A_COEFF a =(gen_a_centered(factorBase.pntr, factorBase.vectorSize, S, configuration, configuration->a_factors_indexes_FB_families));
-    //SQRT(N) MOD P GEN
-    printf("sqrt of N mod p in primes generated\n");
+    if(a.a_factors_num==0){
+        fprintf(stderr,"TOO FEW PRIMES LOADED FOR CENTERED a GENERATION\n");
+        result=NULL;goto exit;
+    }
 
     ///B_l GENERATION
     mpz_t* b_first= genB(precomputations, NULL, a);
@@ -419,7 +428,26 @@ struct Precomputes *preComputations(CONFIGURATION *configuration, struct polynom
         }
         return result;
 }
+void freePrecomputations(PRECOMPUTES* precomputes){
+    free(precomputes->factorbase);
+    free(precomputes->primes.pntr);
+    free(precomputes->polPrecomputedData.sol2p);free(precomputes->polPrecomputedData.sol1p);
+    for (u_int64_t i = 0; i < precomputes->factorbaseSize; ++i) {
+        mpz_clear(precomputes->a_inv_mod_p[i]);
+        mpz_clear(precomputes->sqrtN_mod_p[i]);
+    }
+    free(precomputes->sqrtN_mod_p);
+    free(precomputes->a_inv_mod_p);
+    for (int s = 0; s < precomputes->polPrecomputedData.s; ++s) {
+        mpz_clear(precomputes->polPrecomputedData.B_l[s]);
+        for (u_int64_t i = 0; i < precomputes->factorbaseSize; ++i) {
+            mpz_clear(precomputes->polPrecomputedData.B_ainv_2Bj_p[s*precomputes->polPrecomputedData.s+i]);
+        }
+    }
+    free(precomputes->polPrecomputedData.B_l);
+    free(precomputes->polPrecomputedData.B_ainv_2Bj_p);
 
+}
 A_COEFF *genPolynomialFamilies_a(int numFamilies, CONFIGURATION *config, PRECOMPUTES *precomputes,DYNAMIC_VECTOR *a_factors_pol_families) {
 
     //gen num families different a coefficients with at least 3 different primes for each 2-tuple
@@ -431,8 +459,8 @@ A_COEFF *genPolynomialFamilies_a(int numFamilies, CONFIGURATION *config, PRECOMP
     }
     A_COEFF aCoeff;
     for (int i = 0; i < numFamilies; ++i) {
-        aCoeff= gen_a_centered(precomputes->factorbase, precomputes->factorbaseSize, S, config, a_factors_pol_families);
-        if(!aCoeff.a_factors_indexes_FB)
+        aCoeff= gen_a_centered(precomputes->factorbase, precomputes->factorbaseDynamicVect.vectorSize, S, config, a_factors_pol_families);
+        if(!aCoeff.a_factors_indexes_FB || aCoeff.a_factors_num==0)
             exit(EXIT_FAILURE);
         polFamilies_coeff_a[i]=aCoeff;
 #ifdef VERBOSE
@@ -488,7 +516,6 @@ void main(){
             }
             nextPolynomial_b_i(&pol.b, j, precomputes);
         }
-        fflush(0);
 //        A_COEFF aCoeff= gen_a_centered(precomputes->factorbase, precomputes->factorbaseSize, S, config, NULL);
 
         changePolynomialFamily(precomputes,aCoeffs+i,&pol);

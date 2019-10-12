@@ -9,7 +9,7 @@
 
 #define DIGITNUM_PRINT 5
 #define PRIMES_LIST_WORD_SIZE sizeof(int)
-#define DEBUG_CHECK
+//#define DEBUG_CHECK
 void printSievingJumps(struct Precomputes* precomputes, int blockPrint) {
     printf("\n sieve jumps <sol1_p,sol2_p> \n");
     __uint64_t sizeFB=precomputes->factorbaseSize;
@@ -154,8 +154,9 @@ DYNAMIC_VECTOR* ReadPrimes(char *primesListPath, u_int64_t smoothnessBound) {
     return outVect;
 }
 
-DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N){
-    DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0};
+DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N, u_int64_t B) {
+    //take all primes in primes that has lejandre simbole (N/p)=1, mark last prime < B in lastIndex field of Dynamic vector
+    DYNAMIC_VECTOR outVect=(DYNAMIC_VECTOR){.pntr=NULL,.vectorSize=0,.vectorLastIndex=0};
     size_t dynamicFactorBaseSize = FACTOR_BASE_BLOCK_REALLOC_N;
     u_int64_t* factorBase=malloc(sizeof(*factorBase) * dynamicFactorBaseSize);
     if (!factorBase)
@@ -167,6 +168,8 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N){
     u_int64_t* primesList=(u_int64_t *)primes.pntr;
     for(u_int64_t i=0;i<primes.vectorSize;i++){
         prime=primesList[i];
+        if(!outVect.vectorLastIndex && prime>B )
+            outVect.vectorLastIndex=factorBaseIndx-1;                  //mark end of FB primes up to B smoothness bound
         mpz_set_ui(primeMpz,prime);
         if(mpz_legendre(N,primeMpz)==1) {            //prime ok for FactorBase
             REALLOC_WRAP(factorBaseIndx,dynamicFactorBaseSize,factorBase,FACTOR_BASE_BLOCK_REALLOC_N)
@@ -188,7 +191,7 @@ DYNAMIC_VECTOR ReadFactorBase(DYNAMIC_VECTOR primes, mpz_t N){
 #endif
     outVect.pntr=(void*)factorBase;
     outVect.vectorSize=factorBaseIndx;
-    printf("factor base of %lu primes \n",factorBaseIndx);
+    printf("factor base of %lu primes -> last :%lu\n",factorBaseIndx,factorBase[factorBaseIndx-1]);
     return outVect;
 }
 

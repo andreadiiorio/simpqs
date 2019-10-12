@@ -19,6 +19,7 @@ CMakeFiles/SIMQS_Worker.dir/utils/gmp_patch.c.o: ../utils/gmp_patch.c
 
 CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: .././CONFIGURATION.h
 CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: .././SIMPQS.h
+CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: ../CONFIGURATION.h
 CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: ../utils/gmp_patch.h
 CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: ../utils/precomputations.c
 CMakeFiles/SIMQS_Worker.dir/utils/precomputations.c.o: ../utils/utils.h
