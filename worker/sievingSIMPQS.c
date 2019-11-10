@@ -13,6 +13,7 @@
 #define OVERFLOW_CHECK_POLYNOMIAL   //perform overflow check
 //SIEVE_ARRAY_BLOCK  SieveArrayBlock;
 
+bool auditExtra;
 //#define SIEVE_JUMP_CHECK
 struct polynomial* polRef;
 void polynomialValueQuick(int64_t j, mpz_t outputVal, struct polynomial polynomial){
@@ -150,6 +151,8 @@ void* siever_thread_logic(void* arg){
 //    fprintf(stderr,"founded %lu likelly to be BSmooth array entries \tvs\t array share of size %lu \t starting from:%ld\n",probablyBsmoothsNum,sieverArg.arrayShareSize,sieverArg.j_start);fflush(0);
     ProbablyBsmoothArrayEntries[probablyBsmoothsNum]=NULL;              //set end dynamically allocated array end
 
+    AUDIT_EXTRA
+    if (!probablyBsmoothsNum) gmp_printf("no likelly BSmooth for LogSieve->useless array chunk from :%lld of %lu \t pol: %Zd - %Zd\n",sieverArg.j_start,sieverArg.arrayShareSize,sieverArg.actualPol.a.a,sieverArg.actualPol.b);
     mpfr_clears(LOG_THREASHOLD,Ncpy,NULL);
 /////// FACTORIZE LIKELLY BSMOOTH ENTRIES WITH MULTIPLE CONCURRENT PARALLEL FACTORIZATIONS
     /*
@@ -246,9 +249,8 @@ void* siever_thread_logic(void* arg){
 
     }
 
-#ifdef VERBOSE
-    printf("founded useless rel:%d\trelations:%d\t,partialRelation:%d\n", uselessEntry, foundedBsmoothEntries, foundedLargePrimes);
-#endif
+    //TODO DEBUG
+    AUDIT_EXTRA        if(auditExtra)     printf("founded useless rel:%d\trelations:%d\t,partialRelation:%d vs likellYBSmooth :%d\n", uselessEntry, foundedBsmoothEntries, foundedLargePrimes,probablyBsmoothsNum);
     // 1)useless entry => skip
     // 2) BSmooth entry => matrix row compute &store -> localMatrixRow list append -> later aggregated
     // 3) "partial" BSmooth relation=> localLargePrimes list append -> later aggregated
@@ -274,7 +276,6 @@ void* siever_thread_logic(void* arg){
     return (void*) reportsOut;
 }
 
-
 REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, struct polynomial* actualPol) {
     /*sieve concurrently an array of 1 Mongomery polynomial values divided it in fixed sized blocks sieveArrayBlock
       precomputations will be used to find quickly array location divisible per primes in factorbase
@@ -285,6 +286,7 @@ REPORTS* Sieve(struct Configuration *config, struct Precomputes *precomputes, st
       Bsmooth values will produce relation
       relation will produce matrix rows for matrix step
     */
+    if(auditExtra)     gmp_printf("start Sieving process on polynomial %Zd - %Zd \n",actualPol->a.a,actualPol->b);fflush(0);
     int result=EXIT_SUCCESS;
     pthread_t *factorizersThreadManagers=NULL;
     pthread_t* sieversThreads= calloc(config->SIEVING_THREAD_NUM, sizeof(*sieversThreads));

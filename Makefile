@@ -31,20 +31,16 @@ TESTCONFIG_MACRO+= -D TEST_QUIET_PRINT		#DISABLE SOME PRINT DURING TEST
 #############################################################
 
 ##basic source files vars
-MASTER=$(shell find master -iname "*.c" )
 WORKER=$(shell find worker -iname "*.c" )
 CFILES_COMMON=$(shell find utils -iname "*.c" )
-CFILES_FACTORIZE=$(shell find factorization -iname "*.c" )
+CFILES_COMMON+=$(shell find utils -iname "*.h" )
+CFILES_COMMON+=SIMPQS.h CONFIGURATION.h
+CFILES_FACTORIZE= factorization/factorizerQuick.h factorization/factorizerQuick.c matrix/matrix.c matrix/matrix.h
 HEADERS=$(shell find -iname "*.h" )
-testFactorize.o: $(CFILES_COMMON) $(CFILES_FACTORIZE) $(HEADERS)
-	$(CC) -o $@ $(CFLAGS)  $(CFILES_COMMON) $(CFILES_FACTORIZE)
 worker.o:  $(WORKER) $(CFILES_COMMON) $(CFILES_FACTORIZE) $(HEADERS)
 	$(CC) -o $@ $(WORKER) $(CFLAGS)  $(CFILES_COMMON) $(CFILES_FACTORIZE)
 print:
 	@echo ${TESTCONFIG_MACRO} $(_EXIT_SUCCESS)
-test: all
-	$(CC) -o tests/test.o tests/trasmissionTest.c $(CFLAGS) $(TESTCONFIG_MACRO)
-	$(CC) -o tests/test_concurrent.o tests/multiTX_test.c $(CFLAGS)
 clean:
 	rm worker.o
 

@@ -236,7 +236,6 @@ bool isFactorAlreadyUsedGlobally(u_int64_t primeIndx, DYNAMIC_VECTOR *usedFactor
     return false;
 }
 
-//#define  GEN_A_UNDER_THRESHOLD
 A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, int s, struct Configuration *config,DYNAMIC_VECTOR *a_factors_indexes_FB_families) {
     //generate a coefficient s.t. a=p1* ... * ps=~(Sqrt(2*N)/M)
     //simply aggregate factors until ideall value reached, aggregation factors ceneterd at ideal^(1/s)
@@ -247,7 +246,7 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
         return aCoeff;
     }
     /// get a ideally value ~ SQRT(2N)/M
-    mpz_t ideal_a_value,a_factors_center; mpz_inits(ideal_a_value,a_factors_center,NULL);
+    mpz_t ideal_a_value,a_factors_center,tmp; mpz_inits(ideal_a_value,a_factors_center,tmp,NULL);
     mpz_set(ideal_a_value, config->N);
     mpz_mul_ui(ideal_a_value,ideal_a_value,2);
     mpz_sqrt(ideal_a_value,ideal_a_value);
@@ -279,7 +278,11 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
             swing=0;
         if((newFactors)==DIFFERENT_FACTORS_A_POLYNOMIAL_FAMILIES) {
             primeIndx = a_factor_center_indx;//re center after at least some new factor has been chosen for a to avoid factors navigation to diverge next to FB borders
+#ifdef _RND_A_FB_RECENTER
             i=1+random()%3;
+#else
+            i=1;
+#endif
             newFactors++;
         }
         prime=factorbase[primeIndx];
@@ -305,12 +308,14 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
         primeIndx=((swing)%2 ? (a_factor_center_indx+ (i++)):(a_factor_center_indx-i));
     }
 #ifdef GEN_A_UNDER_THRESHOLD
-    mpz_div_ui(a_tmp,a_tmp,prime);              //remove last prime for a gen under threshold ( last prime caused for condition become false)
-    aFactorsIndexes[a_factors_num--]=0;
+    mpz_div_ui(aCoeff.a,aCoeff.a,prime);              //remove last prime for a gen under threshold ( last prime caused for condition become false)
+    aCoeff.a_factors_indexes_FB[aCoeff.a_factors_num--]=0;
 #endif
 
-    mpz_clears(ideal_a_value,a_factors_center,NULL);
-    gmp_printf("generated a coeff with s:%d factors\t a:%Zd at \n",aCoeff.a_factors_num,(aCoeff.a));
+    mpz_sub(tmp,ideal_a_value,aCoeff.a);
+    size_t deltaSize=mpz_sizeinbase(tmp,10);
+    gmp_printf("generated a coeff with s:%d factors\t a:%Zd \tideal: %Zd \t delta:%Zd\t~%lu digits\n",aCoeff.a_factors_num,(aCoeff.a),ideal_a_value,tmp,deltaSize);
+    mpz_clears(ideal_a_value,a_factors_center,tmp,NULL);
     return (aCoeff);
 }
 
@@ -460,15 +465,17 @@ A_COEFF *genPolynomialFamilies_a(int* numFamilies, CONFIGURATION *config, PRECOM
     A_COEFF aCoeff;
     for (int i = 0; i < *numFamilies; ++i) {
         aCoeff= gen_a_centered(precomputes->factorbase, precomputes->factorbaseDynamicVect.vectorSize, S, config, a_factors_pol_families);
-        if(!aCoeff.a_factors_indexes_FB || aCoeff.a_factors_num==0){
-            printf("factor base ended with selected centering at polynomial family:%d \n",i);
-            *numFamilies=i-1;
+        if(!aCoeff.a_factors_indexes_FB || aCoeff.a_factors_num<=0 || mpz_cmp_ui(aCoeff.a,MIN_FACTOR_A_COEFF)<0){
+            fprintf(stderr,"factor base ended with selected centering at polynomial family:%d \n",i);
+            *numFamilies=i-1;   //will set correct num of families and aloso break
         }
         polFamilies_coeff_a[i]=aCoeff;
 #ifdef VERBOSE
         gmp_printf("pol family i:%d \t %Zd\n",i,polFamilies_coeff_a[i].a);
 #endif
     }
+    printf("\nGenerated a coeff for %d Polynomial Families\n",*numFamilies);
+//    exit(0);
     return polFamilies_coeff_a;
 }
 int changePolynomialFamily(PRECOMPUTES *precomputes, A_COEFF *new_a_pol_family, struct polynomial* pol) {
