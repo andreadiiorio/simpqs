@@ -251,7 +251,7 @@ A_COEFF gen_a_centered(const u_int64_t *factorbase, u_int64_t factorBaseSize, in
     mpz_mul_ui(ideal_a_value,ideal_a_value,2);
     mpz_sqrt(ideal_a_value,ideal_a_value);
     mpz_div_ui(ideal_a_value, ideal_a_value, config->M);
-    gmp_printf("ideal value of a is about: %Zd\n",ideal_a_value);
+    gmp_printf("%p\tideal value of a is about: %Zd\n",factorbase,ideal_a_value);
 
     int newFactors=0;
     /// get a factors center
@@ -464,11 +464,12 @@ A_COEFF *genPolynomialFamilies_a(int* numFamilies, CONFIGURATION *config, PRECOM
     }
     A_COEFF aCoeff;
     for (int i = 0; i < *numFamilies; ++i) {
-        aCoeff= gen_a_centered(precomputes->factorbase, precomputes->factorbaseDynamicVect.vectorSize, S, config, a_factors_pol_families);
+        aCoeff= gen_a_centered(precomputes->factorbaseDynamicVect.pntr, precomputes->factorbaseDynamicVect.vectorSize, S, config, a_factors_pol_families);
         if(!aCoeff.a_factors_indexes_FB || aCoeff.a_factors_num<=0 || mpz_cmp_ui(aCoeff.a,MIN_FACTOR_A_COEFF)<0){
             fprintf(stderr,"factor base ended with selected centering at polynomial family:%d \n",i);
             *numFamilies=i-1;   //will set correct num of families and aloso break
         }
+        printf("%d\n",i);
         polFamilies_coeff_a[i]=aCoeff;
 #ifdef VERBOSE
         gmp_printf("pol family i:%d \t %Zd\n",i,polFamilies_coeff_a[i].a);

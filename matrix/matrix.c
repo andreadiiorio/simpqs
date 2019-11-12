@@ -36,7 +36,6 @@ int setIdentityMatrix(MATRIX* matrix){
 int initMatrixFromRows(MATRIX *matrix, uint64_t rowsN,struct ArrayEntry* rowsRaw, uint64_t cols) {
     //initialize exponent vector matrix from reports aggregated in rowsRaw
     //identity matrix will be setted after the standard one
-
     matrix->MATRIX = calloc(1, sizeof(*(matrix->MATRIX))*rowsN);
     if(!(matrix->MATRIX)){
         fprintf(stderr,"Out of meme at matrix calloc\n");
@@ -45,10 +44,13 @@ int initMatrixFromRows(MATRIX *matrix, uint64_t rowsN,struct ArrayEntry* rowsRaw
 
     for (u_int64_t i = 0; i < rowsN; ++i) {
         mpz_init_set(matrix->MATRIX[i],rowsRaw[i].exp_vector);
+
     }
     matrix->rowsN = rowsN;
     matrix->colsN = cols;
     matrix->next_free_row = rowsN;
+
+
     printf("new matrix rows: %lu x cols:%lu\n",matrix->rowsN,cols);
     return setIdentityMatrix(matrix);
 }

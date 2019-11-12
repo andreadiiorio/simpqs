@@ -27,6 +27,7 @@ char* n;
 //const char* n_str="100000030925519650969044496394369";
 //const char* n_str="10000000000251715795601347229089999344259";   //~40
 char* n_str= "100000000000000028598093420000002011524934548107677";//~50
+//char* n_str= "1000000000000000000002426064040000000000001360395223980847119";//~60
 //TOO LARGE TRYS
 //const char* n_str="100000000000000000000000000000024260646520000000000000000000001360395958358684667";
 //const char* n_str="1000000000000000000002859809340000000000002011524921863497539";
@@ -82,6 +83,7 @@ int main(int argc, char** argv){
         free(Configuration);
         exit(EXIT_FAILURE);
     }
+//    printPrecomputations(precomputes,10);
     gmp_printf("\n DONE precomputation for polynomial: a: %Zd b: %Zd factorizing N: %Zd \n", pol.a.a, pol.b, *(pol.N));
     REPORTS *polynomialsReportsAggregated;
     A_COEFF *polynomialFamilyCoefficients,*polynomialFamily_a;

@@ -43,6 +43,7 @@ void sieveSubArrayForPrime(SIEVE_ARRAY_BLOCK subArray, u_int64_t subArrayLen, u_
     //later entries witch will be more than LOG_THREASHOLD will be tried factorized
 
     long int log_p=lrint(ceil(log(prime)));    //TODO PRECOMPUTE ????
+//    double log_p=log(prime);    //TODO PRECOMPUTE ????
     int64_t firstSieveDeltha;
     int64_t j_start=subArray->j;
     firstSieveDeltha = ((sol_p - j_start) % (int64_t )prime); //deltha firstIndx<->startSubArray simplyfied expression
